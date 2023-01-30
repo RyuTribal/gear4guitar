@@ -1,8 +1,12 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express= require('express')
 const app= express()
+const product_routes = require('./routes/products')
 
-app.get("/api", (req, res) => {
-    res.json("dahello")
-})
+const port = process.env.PORT || 8080
 
-app.listen(8080, () => {console.log("Server started on port 8080 // press this link http://localhost:8080/api to access")})
+app.use("/api/products/", product_routes);
+
+app.listen(port, () => {console.log("Listening on port: "+ port)})
