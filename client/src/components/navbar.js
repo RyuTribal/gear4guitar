@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -51,6 +52,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+
+    const history = useNavigate();
+
+    const handleSearch = (query) => {
+        history({
+            pathname: `/search/${query}`,
+            state: { argument: query }
+        });
+    };
+
+    const [query, setValue] = React.useState('');
     return (
         <Box sx={{ width: "100%" }}>
             <AppBar position="static">
@@ -72,8 +84,14 @@ export default function SearchAppBar() {
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
+                                onChange={(value) => setValue(value.target.value)}
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onKeyDown={(e) => {
+                                    if (e.code === 'Enter') {
+                                        handleSearch(query)
+                                    }
+                                }}
                             />
                         </Search>
                     </Box>
