@@ -8,8 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-
-// shift+alt+f
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -39,26 +38,36 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '40ch',
-        '&:focus': {
-          width: '50ch',
+        padding: theme.spacing(1, 1, 1, 0),
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '40ch',
+            '&:focus': {
+                width: '50ch',
+            },
         },
-      },
     },
-  }));
+}));
 
 export default function SearchAppBar() {
+
+    const history = useNavigate();
+
+    const handleSearch = (query) => {
+        history({
+            pathname: `/search/${query}`,
+            state: { argument: query }
+        });
+    };
+
+    const [query, setValue] = React.useState('');
     return (
         <Box sx={{ width: "100%" }}>
             <AppBar position="static">
                 <Toolbar>
-                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start'}}>
+                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
                         <Typography
                             variant="h6"
                             noWrap
@@ -69,19 +78,25 @@ export default function SearchAppBar() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{flexGrow: 2, display: 'flex', justifyContent: 'center'}}>
+                    <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
                         <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
+                                onChange={(value) => setValue(value.target.value)}
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onKeyDown={(e) => {
+                                    if (e.code === 'Enter') {
+                                        handleSearch(query)
+                                    }
+                                }}
                             />
                         </Search>
                     </Box>
 
-                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-end'}}>
+                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                         <IconButton
                             size="large"
                             edge="start"
