@@ -18,14 +18,20 @@ exports.register = async function (req, res) {
       .send({ error: "Password must be at least 8 characters" });
   }
 
+  let is_admin = false;
+  if (req.body.is_admin) {
+    is_admin = true;
+  }
+
   const encryptedPassword = await bcrypt.hash(req.body.password, saltRounds);
   connection.query(
-    "INSERT INTO users(email, hashed_password, first_name, last_name) VALUES($1, $2, $3, $4)",
+    "INSERT INTO users(email, hashed_password, first_name, last_name, is_admin) VALUES($1, $2, $3, $4, $5)",
     [
       req.body.email.toLowerCase(),
       encryptedPassword,
       req.body.first_name.toLowerCase(),
       req.body.last_name.toLowerCase(),
+      is_admin
     ],
     (err, result) => {
       if (err && err.code === "23505") {
@@ -59,7 +65,7 @@ exports.edit_creds = async function (req, res) {
       return res.status(400).send({ error: "Email already exists" });
     }
     if (err) {
-      return res.status(500).send({ error: "Internal server error: " + err});
+      return res.status(500).send({ error: "Internal server error: " + err });
     }
     return res.status(200).send({ message: "User updated" });
   });
@@ -97,4 +103,27 @@ exports.login = async function (req, res) {
       return res.status(200).send({ message: "Logged in", token: accessToken });
     }
   );
+};
+
+exports.get_user = async function (req, res) {
+  connection.query(
+    "SELECT * FROM users WHERE id = $1",
+    [req.user],
+    (err, result) => {
+      if (err) {
+        return res.status(500).send({ error: "Internal server error" });
+      }
+      if (result.rows.length === 0) {
+        return res.status(400).send({ error: "User does not exist" });
+      }
+      return res.status(200).send(result.rows[0]);
+    }
+  );
+};
+
+exports.is_logged_in = async function (req, res) {
+  if (!req.user) {
+    return res.status(401).send({ error: "Not logged in" });
+  }
+  return res.status(200).send({ message: "Logged in" });
 };
