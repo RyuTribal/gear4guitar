@@ -1,6 +1,12 @@
 {
+  "scripts": {
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "client-mobile": "npm run mobile-dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev-mobile": "concurrently \"npm run server\" \"npm run client-mobile\""
+  },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3"
+    "concurrently": "^7.6.0"
   }
 }
