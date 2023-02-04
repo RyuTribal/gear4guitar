@@ -10,6 +10,8 @@ dotenv.config();
 
 const product_routes = require('./routes/products')
 const user_routes = require('./routes/users')
+const basket= require('./routes/basket')
+
 
 const port = process.env.PORT || 8080
 
@@ -21,5 +23,6 @@ app.use(function (req, res, next) {
 
 app.use("/api/products/", product_routes);
 app.use("/api/users/", user_routes);
+app.use("/api/basket/", basket);
 
 app.listen(port, () => { console.log("Listening on port: " + port) })

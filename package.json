@@ -1,7 +1,7 @@
 {
   "scripts": {
     "server": "npm run dev --prefix server",
-    "client": "npm run dev --prefix client",
+    "client": "npm run start --prefix client",
     "client-mobile": "npm run mobile-dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "dev-mobile": "concurrently \"npm run server\" \"npm run client-mobile\""
