@@ -3,10 +3,12 @@ import './search.css';
 import { getSearchFeed } from "../../api_calls/search";
 import Results from './components/results';
 import withRouter from '../../components/routes'
+import { useNavigate } from 'react-router-dom';
 
 class Search extends React.Component {
     constructor(props) {
         super(props);
+        this.navigateProduct = this.navigateProduct.bind(this);
         this.state = {
             search_results: [],
         }
@@ -29,11 +31,14 @@ class Search extends React.Component {
         this.setState({ search_results: res });
     };
 
+    navigateProduct(id) {
+        this.props.navigate(`/productPage/${id}`)
+    }
+
     render() {
         return (
             <div>
-                Balls 2.0
-                <Results search_results={this.state.search_results} />
+                <Results buttonFunction={(id) => this.navigateProduct(id)} search_results={this.state.search_results} />
             </div>
         )
     }

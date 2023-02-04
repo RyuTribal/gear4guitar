@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -11,6 +12,7 @@ import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
 import theme from "../themes/theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,7 +62,6 @@ export default function SearchAppBar() {
       state: { argument: query },
     });
   };
-
   const [query, setValue] = React.useState("");
   return (
     <Box sx={{ width: "100%" }}>

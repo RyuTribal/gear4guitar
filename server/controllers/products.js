@@ -8,3 +8,10 @@ exports.search = function (req, res) {
         .then(result => res.send(result.rows))
         .catch(err => console.error('Error: ', err))
 }
+
+exports.product = function (req, res) {
+    id = req.params.id
+    db.query(`SELECT * FROM products WHERE id = '${id}'`)
+        .then(result => res.send(result.rows))
+        .catch(err => console.error('Error: ', err))
+}
