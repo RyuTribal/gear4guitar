@@ -59,6 +59,20 @@ function render(results, buttonFunction, submit, comment, setValue) {
                                     ))}
                                 </List>
                             </Box>
+                            <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    <StyledInputBase
+                                        onChange={(value) => setValue(value.target.value)}
+                                        placeholder="Comment"
+                                        inputProps={{ 'aria-label': 'comment' }}
+                                        onKeyDown={(e) => {
+                                            if (e.code === 'Enter') {
+                                                submit(result.id, comment)
+                                            }
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
                         </Box>
                         <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px' }}>
                             <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px' }}>
@@ -66,23 +80,9 @@ function render(results, buttonFunction, submit, comment, setValue) {
                                 <Button onClick={() => buttonFunction(result.id)} sx={{ fontSize: '1.5rem', fontWeight: 'bold', "&:hover": { backgroundColor: "#FA9600" }, backgroundColor: '#FA8600', color: 'white' }} >Add To Basket</Button>
                             </Box>
                         </Box>
-
                     </Box>
                 ))}
-                <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px' }}>
-                    <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px' }}>
-                        <StyledInputBase
-                            onChange={(value) => setValue(value.target.value)}
-                            placeholder="Comment"
-                            inputProps={{ 'aria-label': 'comment' }}
-                            onKeyDown={(e) => {
-                                if (e.code === 'Enter') {
-                                    submit(comment)
-                                }
-                            }}
-                        />
-                    </Box>
-                </Box>
+
             </Box>
         )
     }
@@ -111,6 +111,7 @@ function renderComment(comments) {
                         <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '0px 0px 0px 20px' }}>
                             <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column', padding: '0px 0px 0px 0px' }}>
                                 <Box flexBasis={0} flexShrink={1} flexGrow={1} sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    <Typography >{comment.first_name} {comment.last_name}</Typography>
                                     <Typography >{comment.comment}</Typography>
                                 </Box>
                             </Box>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './productPage.css';
 import Product from './components/product';
 import withRouter from '../../components/routes'
-import { getProductInfo, getComments } from "../../api_calls/productInfo";
+import { getProductInfo, getComments, addComments } from "../../api_calls/productInfo";
 
 class productPage extends React.Component {
     constructor(props) {
@@ -35,14 +35,15 @@ class productPage extends React.Component {
         console.log(id)
     }
 
-    submitButton(comment) {
-        console.log(comment)
+    submitButton = async (id, comment) => {
+        console.log('id: ' + id + 'comment: ' + comment)
+        let res = await addComments(id, comment);
     }
 
     render() {
         return (
             <div>
-                <Product submit={(comment) => this.submitButton(comment)} buttonFunction={(id) => this.navigateProduct(id)} results={this.state.results} comments={this.state.comments} />
+                <Product submit={(id, comment) => this.submitButton(id, comment)} buttonFunction={(id) => this.navigateProduct(id)} results={this.state.results} comments={this.state.comments} />
             </div>
         )
     }
