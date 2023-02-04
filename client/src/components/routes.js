@@ -8,6 +8,7 @@ export default function withRouter(Component) {
         let params = useParams();
         return (
             <Component
+                navigate={navigate}
                 {...props}
                 router={{ location, navigate, params }}
             />

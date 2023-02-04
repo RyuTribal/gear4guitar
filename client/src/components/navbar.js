@@ -9,6 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -76,6 +77,7 @@ export default function SearchAppBar() {
                         >
                             Logo
                         </Typography>
+                        <Button sx={{ display: 'flex' }} onClick={() => history('/')}>Home</Button>
                     </Box>
 
                     <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>

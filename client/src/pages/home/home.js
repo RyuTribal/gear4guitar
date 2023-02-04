@@ -7,7 +7,7 @@ function Home() {
         <div className="Home">
             <img src={logo} className="Home-logo" alt="logo" />
             <h1>
-                Testicals
+                Home
             </h1>
         </div>
     );
