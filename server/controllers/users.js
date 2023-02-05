@@ -111,7 +111,9 @@ exports.login = async function (req, res) {
         return res.status(400).send({ error: "Invalid email or password" });
       }
       let id = result.rows[0].id;
-      const accessToken = jwt.sign({ id }, process.env.JWT_TOKEN_SECRET, {
+      let is_admin = result.rows[0].is_admin;
+      let email = result.rows[0].email;
+      const accessToken = jwt.sign({ id, is_admin, email }, process.env.JWT_TOKEN_SECRET, {
         expiresIn: "86400s",
       });
       return res.status(200).send({ message: "Logged in", token: accessToken });
@@ -121,7 +123,7 @@ exports.login = async function (req, res) {
 
 exports.get_user = async function (req, res) {
   connection.query(
-    "SELECT * FROM users WHERE id = $1",
+    "SELECT email, first_name, last_name, id, is_admin FROM users WHERE id = $1",
     [req.user],
     (err, result) => {
       if (err) {

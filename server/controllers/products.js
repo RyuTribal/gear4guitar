@@ -13,9 +13,25 @@ exports.search = function (req, res) {
 
 exports.product = function (req, res) {
   id = req.params.id;
-  db.query(`SELECT * FROM products WHERE id = '${id}'`)
-    .then((result) => res.send(result.rows))
-    .catch((err) => console.error("Error: ", err));
+  db.query(
+    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade
+  FROM products
+  LEFT JOIN grades ON products.id = grades.product_id
+  WHERE products.id = ${id}
+  GROUP BY products.id;`
+  )
+    .then((result) => res.status(200).send(result.rows[0]))
+    .catch((err) => res.status(500).send({ message: "Error: " + err }));
+};
+
+exports.get_variants = function (req, res) {
+  id = req.params.id;
+  db.query(
+    "SELECT products.* FROM products JOIN variations ON products.id = variations.variation_id WHERE variations.product_id = $1",
+    [id]
+  )
+    .then((result) => res.status(200).send(result.rows))
+    .catch((err) => res.status(500).send({ message: "Error: " + err }));
 };
 
 exports.comment = function (req, res) {
