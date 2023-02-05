@@ -18,6 +18,20 @@ exports.register = async function (req, res) {
       .send({ error: "Password must be at least 8 characters" });
   }
 
+  let validRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  if (!validRegex.test(req.body.email)) {
+    return res
+      .status(400)
+      .send({ error: "Please enter a valid email address" });
+  }
+  if (req.body.first_name.length < 1) {
+    return res.status(400).send({ error: "Please enter a first name" });
+  }
+  if (req.body.last_name.length < 1) {
+    return res.status(400).send({ error: "Please enter a last name" });
+  }
+
   let is_admin = false;
   if (req.body.is_admin) {
     is_admin = true;
@@ -31,7 +45,7 @@ exports.register = async function (req, res) {
       encryptedPassword,
       req.body.first_name.toLowerCase(),
       req.body.last_name.toLowerCase(),
-      is_admin
+      is_admin,
     ],
     (err, result) => {
       if (err && err.code === "23505") {

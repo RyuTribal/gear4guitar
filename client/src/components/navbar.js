@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -10,9 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { ButtonBase, Button, IconButton, Badge } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
+import logo_mobile from "./images/logo_small.png";
 import theme from "../themes/theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-
+import PersonIcon from "@mui/icons-material/Person";
+import { useSelector } from "react-redux";
+import useWindowSize from "../redundant_functions/WindowSize";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import LoginIcon from "@mui/icons-material/Login";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,12 +53,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function SearchAppBar(props) {
   const history = useNavigate();
-  const [user, setUser] = React.useState(null);
-  if (localStorage.getItem("user") !== null) {
-    setUser(JSON.parse(localStorage.getItem("user")));
-  }
+  const size = useWindowSize();
+  const [token, setToken] = React.useState(null);
+  const [searchbar, setSearchbar] = React.useState(false);
+  let token_state = useSelector((state) => state.jwtReducer.jwt_token);
+  React.useEffect(() => {
+    setToken(token_state);
+  }, [token_state]);
 
   const handleSearch = (query) => {
     history({
@@ -67,26 +74,20 @@ export default function SearchAppBar() {
     <Box sx={{ width: "100%" }}>
       <AppBar
         sx={{ background: theme.palette.secondary.main, color: "text.primary" }}
-        position="static"
+        position="sticky"
       >
-        <Toolbar>
-          <Box
-            sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-start" }}
-          >
-            <ButtonBase to="/" component={Link}>
-              <Box
-                component="img"
-                sx={{
-                  objectFit: "contain",
-                  maxWidth: "256px",
-                }}
-                alt="Company logo"
-                src={logo}
-              ></Box>
-            </ButtonBase>
-          </Box>
-          <Box sx={{ flexGrow: 3, display: "flex", justifyContent: "center" }}>
-            <Search>
+        {searchbar && size.width <= 851 ? (
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="cart"
+              onClick={() => setSearchbar(false)}
+            >
+              <ChevronLeftIcon color="inherit" />
+            </IconButton>
+            <Search sx={{ borderRadius: "10px" }}>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
@@ -101,45 +102,113 @@ export default function SearchAppBar() {
                 }}
               />
             </Search>
-            <Button
-              sx={{ borderRadius: "0px 10px 10px 0px" }}
-              variant="contained"
+          </Toolbar>
+        ) : (
+          <Toolbar>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
             >
-              Find guitar
-            </Button>
-          </Box>
-          <Box
-            sx={{
-              gap: 5,
-              flexGrow: 2,
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="cart"
+              <ButtonBase to="/" component={Link}>
+                <Box
+                  component="img"
+                  sx={{
+                    objectFit: "contain",
+                    maxWidth: size.width > 851 ? "256px" : "5rem",
+                  }}
+                  alt="Company logo"
+                  src={size.width > 851 ? logo : logo_mobile}
+                ></Box>
+              </ButtonBase>
+            </Box>
+            {size.width > 851 && (
+              <Box
+                sx={{ flexGrow: 3, display: "flex", justifyContent: "center" }}
+              >
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    onChange={(value) => setValue(value.target.value)}
+                    placeholder="Search…"
+                    inputProps={{ "aria-label": "search" }}
+                    onKeyDown={(e) => {
+                      if (e.code === "Enter") {
+                        handleSearch(query);
+                      }
+                    }}
+                  />
+                </Search>
+                <Button
+                  sx={{ borderRadius: "0px 10px 10px 0px" }}
+                  variant="contained"
+                >
+                  Find guitar
+                </Button>
+              </Box>
+            )}
+
+            <Box
+              sx={{
+                gap: 5,
+                flexGrow: 2,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
             >
-              <Badge badgeContent={4} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-            {user ? (
+              {size.width < 851 && (
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="search"
+                  onClick={() => setSearchbar(true)}
+                >
+                  <SearchIcon />
+                </IconButton>
+              )}
               <IconButton
                 size="large"
                 edge="start"
                 color="inherit"
-                aria-label="account"
-              ></IconButton>
-            ) : (
-              <Button variant="contained" component={Link} to="/sign_in">
-                Sign in
-              </Button>
-            )}
-          </Box>
-        </Toolbar>
+                aria-label="cart"
+              >
+                <Badge badgeContent={4} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+              {token ? (
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="account"
+                >
+                  <PersonIcon />
+                </IconButton>
+              ) : size.width > 851 ? (
+                <Button variant="contained" component={Link} to="/sign_in">
+                  Sign in
+                </Button>
+              ) : (
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="login"
+                  component={Link}
+                  to="/sign_in"
+                >
+                  <LoginIcon />
+                </IconButton>
+              )}
+            </Box>
+          </Toolbar>
+        )}
       </AppBar>
     </Box>
   );

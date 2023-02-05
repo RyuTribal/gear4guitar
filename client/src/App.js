@@ -1,4 +1,3 @@
-
 import Navbar from "./components/navbar";
 import React from "react";
 import Home from "./pages/home/home";
@@ -9,26 +8,28 @@ import Registration from "./pages/registration/Registration";
 import { ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import theme from "./themes/theme";
-import Product from './pages/productPage/productPage';
-
+import Product from "./pages/productPage/productPage";
+import StorageChecker from "./pages/StorageChecker";
 
 function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
+        <Navbar />
+        <StorageChecker />
         <Box
           sx={{
             height: "100%",
+            backgroundColor: "background.default",
           }}
         >
-          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/sign_in" element={<SignIn />} />
             <Route path="/register" element={<Registration />} />
-            <Route path='/productPage/:id' element={<Product/>} />
+            <Route path="/productPage/:id" element={<Product />} />
           </Routes>
         </Box>
       </ThemeProvider>
