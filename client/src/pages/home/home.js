@@ -1,16 +1,15 @@
-import React from 'react';
-import logo from './react.png';
-import './home.css';
+import React from "react";
+import withRouter from "../../components/routes";
+import HomeView from "./components/Home";
 
-function Home() {
-    return (
-        <div className="Home">
-            <img src={logo} className="Home-logo" alt="logo" />
-            <h1>
-                Home
-            </h1>
-        </div>
-    );
+class Home extends React.Component {
+
+    componentDidMount = async () => {
+
+    }
+  render() {
+    return <HomeView products={[]}/>;
+  }
 }
 
-export default Home;
+export default withRouter(Home);

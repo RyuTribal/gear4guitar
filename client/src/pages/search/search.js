@@ -15,19 +15,18 @@ class Search extends React.Component {
     }
 
     componentDidMount = async () => {
-        console.log(this.props.router.params.query)
         this.link(this.props.router.params.query);
     }
 
     componentDidUpdate = async (prevProps) => {
         if (this.props.router.params.query !== prevProps.router.params.query) {
-            console.log(this.props.router.params.query)
             this.link(this.props.router.params.query);
         }
     }
 
     link = async (query) => {
         let res = await getSearchFeed(query);
+        console.log(res)
         this.setState({ search_results: res });
     };
 

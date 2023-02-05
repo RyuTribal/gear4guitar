@@ -21,14 +21,18 @@ const theme = createTheme({
       primary: "#d1cfcf",
       secondary: "#d1cfcf",
     },
-    background:{
+    background: {
       default: "#262725",
     },
     error: {
       main: "#f44336",
     },
   },
-  typography: {},
+  typography: {
+    h3: { color: "#ffb800"},
+    h4: { color: "#d1cfcf"},
+    h5: { color: "#d1cfcf"},
+  },
   spacing: 10,
 });
 
