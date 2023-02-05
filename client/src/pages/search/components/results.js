@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import SkeletonText from "./skeleton";
 
@@ -35,7 +35,7 @@ function render(search_results, buttonFunction) {
 export default function Results(props) {
     return (
         <Box sx={{ display: 'flex', width: '100%' }}>
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', width: '100%' }}>
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-evenly' }}>
                 {render(props.search_results.data, props.buttonFunction)}
             </Box>
         </Box>

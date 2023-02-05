@@ -1,9 +1,20 @@
-import { Box, Typography, Button, Input } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import React from "react";
 import { List, ListItem } from "@mui/material";
 import SkeletonText from "./skeleton";
 import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
+const options = [
+  'Edit',
+  'Delete',
+];
+
+const ITEM_HEIGHT = 48;
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "black",
@@ -17,7 +28,7 @@ function convertJSON_toIslam(json) {
   return json;
 }
 
-function render(results, buttonFunction, submit, comment, setValue) {
+function render(results, buttonFunction, submit, comment, setValue, reset) {
   if (!results || results.length === 0) {
     return (
       <Box
@@ -165,6 +176,9 @@ function render(results, buttonFunction, submit, comment, setValue) {
                       }
                     }}
                   />
+                  <Button onClick={() => submit(result.id, comment)}>
+                    Submit
+                  </Button>
                 </Box>
               </Box>
             </Box>
@@ -218,7 +232,7 @@ function render(results, buttonFunction, submit, comment, setValue) {
   }
 }
 
-function renderComment(comments) {
+function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption) {
   if (!comments || comments.length === 0) {
     return (
       <Box
@@ -318,7 +332,44 @@ function renderComment(comments) {
                   <Typography>
                     {comment.first_name} {comment.last_name}
                   </Typography>
-                  <Typography>{comment.comment}</Typography>
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Box sx={{ display: "flex", flexDirection: "row" }}>
+                      <Typography>{comment.comment}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row" }}>
+                      <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={open ? 'long-menu' : undefined}
+                        aria-expanded={open ? 'true' : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="long-menu"
+                        MenuListProps={{
+                          'aria-labelledby': 'long-button',
+                        }}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        PaperProps={{
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '20ch',
+                          },
+                        }}
+                      >
+                        {options.map((option) => (
+                          <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => chooseOption(option)}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
             </Box>
@@ -331,13 +382,27 @@ function renderComment(comments) {
 
 export default function Results(props) {
   const [comment, setValue] = React.useState("");
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    
+    setAnchorEl(event.currentTarget);
+  };
+  const chooseOption = (option) => {
+    console.log(option)
+  }
+  const handleClose = () => {
+    console.log('option')
+    setAnchorEl(null);
+  };
+
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
       <Box sx={{ display: "flex", width: "100%", flexDirection: "column" }}>
         <Box
           sx={{
             display: "flex",
-            width: "100%",
             justifyContent: "space-evenly",
             width: "100%",
           }}
@@ -353,12 +418,11 @@ export default function Results(props) {
         <Box
           sx={{
             display: "flex",
-            width: "100%",
             justifyContent: "space-evenly",
             width: "100%",
           }}
         >
-          {renderComment(props.comments.data)}
+          {renderComment(props.comments.data, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption)}
         </Box>
       </Box>
     </Box>
