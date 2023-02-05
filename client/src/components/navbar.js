@@ -183,14 +183,14 @@ export default function SearchAppBar(props) {
                 </Badge>
               </IconButton>
               {token ? (
-                <IconButton
+                <IconButton variant="contained" component={Link} to="/profile"
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="account"
                 >
                   <PersonIcon />
-                </IconButton>
+                </IconButton >
               ) : size.width > 851 ? (
                 <Button variant="contained" component={Link} to="/sign_in">
                   Sign in

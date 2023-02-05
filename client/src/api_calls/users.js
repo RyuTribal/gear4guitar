@@ -27,3 +27,12 @@ export async function register(email, password, first_name, last_name){
 
     return data;
 }
+
+export async function get_user_cred(){
+    let data = await axios({
+        method: "get",
+        url: `http://localhost:8080/api/users/get_user/`,
+    });
+
+    return data.data;
+}
