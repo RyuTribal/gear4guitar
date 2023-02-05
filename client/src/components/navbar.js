@@ -73,8 +73,15 @@ export default function SearchAppBar(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <AppBar
-        sx={{ background: theme.palette.secondary.main, color: "text.primary" }}
-        position="sticky"
+        sx={{
+          background: theme.palette.secondary.main,
+          color: "text.primary",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0px 10px",
+        }}
+        position="fixed"
       >
         {searchbar && size.width <= 851 ? (
           <Toolbar>
@@ -104,7 +111,7 @@ export default function SearchAppBar(props) {
             </Search>
           </Toolbar>
         ) : (
-          <Toolbar>
+          <Toolbar sx={{ maxWidth: "1251px", width: "100%" }}>
             <Box
               sx={{
                 flexGrow: 1,

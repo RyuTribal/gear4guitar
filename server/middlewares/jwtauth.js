@@ -9,6 +9,8 @@ module.exports = {
     try {
       const user = jwt.verify(token, process.env.JWT_TOKEN_SECRET);
       req.user = user.id;
+      req.user_admin = user.is_admin;
+      req.user_email = user.email;
       next();
     } catch (error) {
       return res.status(401).json("no token, authorization denied");

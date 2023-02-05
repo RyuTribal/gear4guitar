@@ -1,23 +1,37 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Breadcrumbs } from "@mui/material";
 import React from "react";
 import { List, ListItem } from "@mui/material";
 import SkeletonText from "./skeleton";
 import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import HomeIcon from "@mui/icons-material/Home";
+import { Link } from "react-router-dom";
+import {
+  Link as MUILink,
+  Grid,
+  ButtonBase,
+  Rating,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
+import CarouselNav from "react-multi-carousel";
+import useWindowSize from "../../../redundant_functions/WindowSize";
+import "react-multi-carousel/lib/styles.css";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import CircleIcon from "@mui/icons-material/Circle";
+import GetColorFromString from "../../../redundant_functions/colors";
 
-const options = [
-  'Edit',
-  'Delete',
-];
+const options = ["Edit", "Delete"];
 
 const ITEM_HEIGHT = 48;
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "black",
   padding: 10,
   borderRadius: 4,
   border: "1px solid #989898",
@@ -28,211 +42,15 @@ function convertJSON_toIslam(json) {
   return json;
 }
 
-function render(results, buttonFunction, submit, comment, setValue, reset) {
-  if (!results || results.length === 0) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "center",
-          padding: "10px 30px",
-        }}
-      >
-        <SkeletonText />
-      </Box>
-    );
-  } else {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          justifyContent: "center",
-          width: "70%",
-        }}
-      >
-        {results.map((result) => (
-          <Box
-            flexBasis={0}
-            flexShrink={1}
-            flexGrow={1}
-            sx={{ display: "flex", flexDirection: "row", padding: "20px 20px" }}
-          >
-            <Box
-              flexBasis={0}
-              flexShrink={1}
-              flexGrow={1}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "20px 20px",
-              }}
-            >
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px 20px",
-                }}
-              >
-                <Typography variant="h4" sx={{ color: "#434649" }}>
-                  {result.title}
-                </Typography>
-              </Box>
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px 20px",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={result.images[0]}
-                  alt="image"
-                  width={600}
-                  height={600}
-                />
-              </Box>
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px 20px",
-                }}
-              >
-                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                  Description
-                </Typography>
-
-                <Typography>
-                  {convertJSON_toIslam(result.description)}
-                </Typography>
-                <br />
-              </Box>
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px 20px",
-                }}
-              >
-                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                  Specifications
-                </Typography>
-                <List sx={{ listStyleType: "disc", pl: 6 }}>
-                  {result.specs.map((spec) => (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      {spec["content"].map((item) => (
-                        <ListItem
-                          sx={{ display: "list-item", paddingLeft: "0px" }}
-                        >
-                          {item}
-                        </ListItem>
-                      ))}
-                    </Box>
-                  ))}
-                </List>
-              </Box>
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
-                <Box
-                  flexBasis={0}
-                  flexShrink={1}
-                  flexGrow={1}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  <StyledInputBase
-                    onChange={(value) => setValue(value.target.value)}
-                    placeholder="Comment"
-                    inputProps={{ "aria-label": "comment" }}
-                    onKeyDown={(e) => {
-                      if (e.code === "Enter") {
-                        submit(result.id, comment);
-                      }
-                    }}
-                  />
-                  <Button onClick={() => submit(result.id, comment)}>
-                    Submit
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-            <Box
-              flexBasis={0}
-              flexShrink={1}
-              flexGrow={1}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "20px 20px",
-              }}
-            >
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "20px 20px",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                    color: "#d00000",
-                  }}
-                >
-                  {result.price} kr
-                </Typography>
-                <Button
-                  onClick={() => buttonFunction(result.id)}
-                  sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                    "&:hover": { backgroundColor: "#FA9600" },
-                    backgroundColor: "#FA8600",
-                    color: "white",
-                  }}
-                >
-                  Add To Basket
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        ))}
-      </Box>
-    );
-  }
-}
-
-function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption) {
+function renderComment(
+  comments,
+  anchorEl,
+  setAnchorEl,
+  open,
+  handleClick,
+  handleClose,
+  chooseOption
+) {
   if (!comments || comments.length === 0) {
     return (
       <Box
@@ -340,8 +158,8 @@ function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handl
                       <IconButton
                         aria-label="more"
                         id="long-button"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
                       >
@@ -350,7 +168,7 @@ function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handl
                       <Menu
                         id="long-menu"
                         MenuListProps={{
-                          'aria-labelledby': 'long-button',
+                          "aria-labelledby": "long-button",
                         }}
                         anchorEl={anchorEl}
                         open={open}
@@ -358,12 +176,16 @@ function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handl
                         PaperProps={{
                           style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
+                            width: "20ch",
                           },
                         }}
                       >
                         {options.map((option) => (
-                          <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => chooseOption(option)}>
+                          <MenuItem
+                            key={option}
+                            selected={option === "Pyxis"}
+                            onClick={() => chooseOption(option)}
+                          >
                             {option}
                           </MenuItem>
                         ))}
@@ -380,50 +202,392 @@ function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handl
   }
 }
 
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 3, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 3,
+    slidesToSlide: 3, // optional, default to 1.
+  },
+};
+
+function ProductMain(props) {
+  const size = useWindowSize();
+  const [selected, setSelected] = React.useState(0);
+  if (props.product) {
+    return (
+      <Grid container spacing={3} sx={{ padding: "0px 20px" }}>
+        <Grid item container xs={12} md={7} spacing={1}>
+          <Grid item xs={12}>
+            <Typography sx={{ color: "text.third" }} variant="h4">
+              {props.product.title}
+            </Typography>
+          </Grid>
+          <Grid sx={{ height: "auto" }} item xs={12}>
+            <Box
+              component="img"
+              sx={{
+                maxWidth: "100%",
+                objectFit: "cover",
+              }}
+              src={props.product.images[selected]}
+              alt={props.product.title}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <CarouselNav
+              swipeable={true}
+              draggable={false}
+              responsive={responsive}
+              infinite={false}
+              autoPlay={false}
+              autoPlaySpeed={1000}
+              keyBoardControl={true}
+              deviceType={size.width > 1024 ? "desktop" : "mobile"}
+              transitionDuration={500}
+              containerClass="carousel-container"
+              focusOnSelect={false}
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              onChange={(value) => setSelected(value)}
+            >
+              {props.product.images.map((image, index) => (
+                <ButtonBase
+                  onClick={() => setSelected(index)}
+                  sx={{
+                    border:
+                      index === selected
+                        ? "2px solid #ffb800"
+                        : "2px solid white",
+                    maxHeight: "100%",
+                    maxWidth: "90%",
+                  }}
+                >
+                  <Box
+                    key={index}
+                    component="img"
+                    sx={{
+                      objectFit: "cover",
+                      maxHeight: "100%",
+                      maxWidth: "100%",
+                    }}
+                    src={image}
+                    alt={props.product.title}
+                  />
+                </ButtonBase>
+              ))}
+            </CarouselNav>
+          </Grid>
+        </Grid>
+        <Grid item container xs={12} sm={5} spacing={2}>
+          <Grid
+            item
+            sx={{
+              display: "flex",
+              flexDirection: size.width > 851 ? "column" : "row",
+              alignItem: "flex-end",
+              gap: "10px",
+            }}
+            xs={12}
+          >
+            <Typography
+              sx={{
+                textAlign: "end",
+                color: "text.primary",
+              }}
+              variant="subtitle"
+            >
+              {`(Ref.id): ${props.product.id}`}
+            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Rating
+                name="product-rating"
+                value={parseFloat(props.product.average_grade)}
+                readOnly
+                precision={0.2}
+                size="large"
+                emptyIcon={
+                  <StarBorderIcon
+                    style={{ color: "#ffb800" }}
+                    fontSize="inherit"
+                  />
+                }
+              />
+            </Box>
+          </Grid>
+          <Grid container item xs={12}>
+            <Grid item xs={6}>
+              <Typography sx={{ color: "text.third" }} variant="h5">
+                {props.product.price} SEK
+              </Typography>
+            </Grid>
+
+            <Grid item xs={6}>
+              <Button variant="contained" sx={{ width: "100%" }}>
+                Add to cart
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12}>
+            <Grid item xs={12} md={4}>
+              <Typography sx={{ color: "text.third" }} variant="h5">
+                Description
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={8}>
+              <Typography sx={{ color: "text.primary" }} variant="body1">
+                {props.product.description}
+              </Typography>
+            </Grid>
+          </Grid>
+          {props.product.color && (
+            <Grid container item xs={12}>
+              <Grid item xs={4}>
+                <Typography sx={{ color: "text.third" }} variant="h5">
+                  Color
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <CircleIcon
+                  style={{ color: GetColorFromString(props.product.color) }}
+                />
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+function ProductSpecs(props) {
+  const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
+  if (props.product) {
+    return (
+      <Grid item xs={12} spacing={2} container sx={{ padding: "20px" }}>
+        <Grid item xs={12}>
+          <Typography sx={{ color: "text.third" }} variant="h5">
+            Details
+          </Typography>
+        </Grid>
+        <Grid item container xs={12} spacing={1}>
+          {props.product.specs.map((spec, index) => {
+            return (
+              <Grid sx={{ padding: "20px" }} md={4} xs={12}>
+                <Typography
+                  key={index}
+                  sx={{ color: "text.primary", fontWeight: "bold" }}
+                >
+                  {spec.title}
+                </Typography>
+                {spec.content.map((content, index) => {
+                  let str = Array.from(content.matchAll(bold_reg), (m) => {
+                    return (
+                      <Typography
+                        key={index}
+                        sx={{ color: "text.primary", padding: 0 }}
+                      >
+                        {`\u2022 `}
+                        <strong>{m[1]}</strong>
+                        {m[2]}
+                      </Typography>
+                    );
+                  });
+                  return str;
+                })}
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+const responsive_variation = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+};
+
+function ProductVariations(props) {
+  const size = useWindowSize();
+  if (props.variations) {
+    return (
+      <Grid item xs={12} spacing={2} container>
+        <Grid sx={{ display: "flex", justifyContent: "center" }} item xs={12}>
+          <Typography sx={{ color: "text.third" }} variant="h5">
+            Similar products
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ padding: "20px", margin: "0 auto" }}>
+            <CarouselNav
+              swipeable={true}
+              draggable={false}
+              responsive={responsive_variation}
+              infinite={false}
+              autoPlay={false}
+              autoPlaySpeed={1000}
+              keyBoardControl={true}
+              partialVisible={true}
+              transitionDuration={500}
+              containerClass="carousel-container"
+              focusOnSelect={false}
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              itemClass="carousel-item-space"
+            >
+              {props.variations.map((variation, index) => (
+                <Card key={index} sx={{ maxWidth: "90%" }}>
+                  <CardActionArea
+                    component={Link}
+                    to={`/productPage/${variation.id}`}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={variation.images[0]}
+                      alt={variation.title}
+                      sx={{ objectFit: "contain" }}
+                    />
+                    <CardContent sx={{ backgroundColor: "background.default" }}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {variation.title}
+                      </Typography>
+                      <Typography variant="body2" color="primary.main">
+                        {variation.price} SEK
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              ))}
+            </CarouselNav>
+          </Box>
+          <Grid />
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
 export default function Results(props) {
   const [comment, setValue] = React.useState("");
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
-    
     setAnchorEl(event.currentTarget);
   };
   const chooseOption = (option) => {
-    console.log(option)
-  }
+    console.log(option);
+  };
   const handleClose = () => {
-    console.log('option')
     setAnchorEl(null);
   };
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
-      <Box sx={{ display: "flex", width: "100%", flexDirection: "column" }}>
-        <Box
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        margin: 0,
+        backgroundColor: "secondary.main",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          flexDirection: "column",
+        }}
+      >
+        {props.product && (
+          <Breadcrumbs aria-label="breadcrumb">
+            <MUILink underline="hover" component={Link} color="inherit" to="/">
+              <HomeIcon />
+            </MUILink>
+            {props.product.indirect_category !== "Home" && (
+              <MUILink
+                component={Link}
+                underline="hover"
+                color="inherit"
+                sx={{ color: "text.main", textDecoration: "none" }}
+                to={`/search?indirect_cat=${props.product.indirect_category}`}
+              >
+                {props.product.indirect_category}
+              </MUILink>
+            )}
+            <MUILink
+              component={Link}
+              underline="hover"
+              sx={{ color: "text.main", textDecoration: "none" }}
+              color="inherit"
+              to={`/search?indirect_cat=${props.product.indirect_category}&category=${props.product.category}`}
+            >
+              {props.product.category}
+            </MUILink>
+
+            <MUILink
+              component={Link}
+              underline="hover"
+              sx={{ color: "text.main", textDecoration: "none" }}
+              color="inherit"
+              to={`/search?indirect_cat=${props.product.indirect_category}&category=${props.product.category}&direct_cat=${props.product.direct_category}`}
+            >
+              {props.product.direct_category}
+            </MUILink>
+          </Breadcrumbs>
+        )}
+
+        <Grid sx={{ marginTop: "2rem" }} container spacing={2}>
+          <Grid item container xs={12}>
+            <ProductMain product={props.product} />
+          </Grid>
+          <Grid item container xs={12}>
+            <ProductSpecs product={props.product} />
+          </Grid>
+          <Grid item xs={12}>
+            <ProductVariations variations={props.variations} />
+          </Grid>
+          <Grid item xs={12}></Grid>
+        </Grid>
+
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-evenly",
             width: "100%",
           }}
         >
-          {render(
-            props.results.data,
-            props.buttonFunction,
-            props.submit,
-            comment,
-            setValue
+          {renderComment(
+            props.comments.data,
+            anchorEl,
+            setAnchorEl,
+            open,
+            handleClick,
+            handleClose,
+            chooseOption
           )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            width: "100%",
-          }}
-        >
-          {renderComment(props.comments.data, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption)}
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

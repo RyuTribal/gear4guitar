@@ -1,67 +1,86 @@
-import React from 'react';
-import './productPage.css';
-import Product from './components/product';
-import withRouter from '../../components/routes'
-import { getProductInfo, getComments, addComments, editComments, deleteComments } from "../../api_calls/productInfo";
+import React from "react";
+import "./productPage.css";
+import Product from "./components/product";
+import withRouter from "../../components/routes";
+import {
+  getProductInfo,
+  getComments,
+  addComments,
+  editComments,
+  deleteComments,
+  getProductVariations,
+} from "../../api_calls/productInfo";
 
 class productPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            results: [],
-            comments: []
-        }
-    }
-
-    componentDidMount = async () => {
-        this.link(this.props.router.params.id);
-        this.comment(this.props.router.params.id);
-    }
-
-    link = async (id) => {
-        let res = await getProductInfo(id);
-        this.setState({ results: res });
-        console.log(this.state.results)
+  constructor(props) {
+    super(props);
+    this.state = {
+      product: null,
+      comments: [],
     };
+  }
 
-    comment = async (id) => {
-        let res = await getComments(id);
-        this.setState({ comments: res });
-        console.log(this.state.comments)
-    };
+  componentDidMount = async () => {
+    this.link(this.props.router.params.id);
+    this.comment(this.props.router.params.id);
+    this.loadVariations(this.props.router.params.id);
+  };
 
-    navigateProduct(id) {
-        console.log(id)
+  loadVariations = async (id) => {
+    let res = await getProductVariations(id);
+    if (res.status === 200) {
+      this.setState({ variations: res.data });
     }
+  };
 
-    submitButton = async (id, comment) => {
-        if (comment === "") {
-            return;
-        }
-        await addComments(id, comment);
-        window.location.reload(false);
+  link = async (id) => {
+    let res = await getProductInfo(id);
+    if (res.status === 200) {
+      this.setState({ product: res.data });
     }
+  };
 
-    editComment = async (id, comment) => {
-        if (comment === "") {
-            return;
-        }
-        await editComments(id, comment);
-        window.location.reload(false);
-    }
+  comment = async (id) => {
+    let res = await getComments(id);
+    this.setState({ comments: res.data });
+  };
 
-    deleteComment = async (id) => {
-        await deleteComments(id);
-        window.location.reload(false);
-    }
+  navigateProduct(id) {
+    console.log(id);
+  }
 
-    render() {
-        return (
-            <div>
-                <Product submit={(id, comment) => this.submitButton(id, comment)} buttonFunction={(id) => this.navigateProduct(id)} results={this.state.results} comments={this.state.comments} />
-            </div>
-        )
+  submitButton = async (id, comment) => {
+    if (comment === "") {
+      return;
     }
+    await addComments(id, comment);
+    window.location.reload(false);
+  };
+
+  editComment = async (id, comment) => {
+    if (comment === "") {
+      return;
+    }
+    await editComments(id, comment);
+    window.location.reload(false);
+  };
+
+  deleteComment = async (id) => {
+    await deleteComments(id);
+    window.location.reload(false);
+  };
+
+  render() {
+    return (
+      <Product
+        submit={(id, comment) => this.submitButton(id, comment)}
+        buttonFunction={(id) => this.navigateProduct(id)}
+        product={this.state.product}
+        comments={this.state.comments}
+        variations={this.state.variations}
+      />
+    );
+  }
 }
 
 export default withRouter(productPage);

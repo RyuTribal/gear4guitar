@@ -1,10 +1,42 @@
-import { Box, Button, ButtonBase, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonBase,
+  Grid,
+  Typography,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
 import electric from "../images/electric.png";
 import acoustic from "../images/acoustic.png";
 import ukulele from "../images/ukulele.png";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import CarouselNav from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import useWindowSize from "../../../redundant_functions/WindowSize";
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+};
 
 export default function HomeView(props) {
+  const size = useWindowSize();
   return (
     <Grid
       sx={{ height: "100%", width: "100%", margin: 0 }}
@@ -26,15 +58,24 @@ export default function HomeView(props) {
         item
         xs={12}
       >
-        <Typography marginLeft={5} fontWeight="bold" variant="h3">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          fontWeight="bold"
+          variant={size.width > 851 ? "h3" : "h5"}
+          sx={{ color: "primary.main" }}
+        >
           Plug in, rock out
         </Typography>
-        <Typography marginLeft={5} variant="h5">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          sx={{ color: "text.primary" }}
+          variant={size.width > 851 ? "h5" : "subtitle"}
+        >
           Elevate your sound with electric power.
         </Typography>
         <Box
-          marginLeft={5}
-          marginBottom={5}
+          marginLeft={size.width > 851 ? 5 : 0}
+          marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
           <Button variant="contained">Electric Guitars</Button>
@@ -51,21 +92,30 @@ export default function HomeView(props) {
           alignItems: "flex-start",
           justifyContent: "flex-end",
           gap: "20px",
-          minHeight: "30vh"
+          minHeight: "30vh",
         }}
         item
-        sm={6}
+        md={6}
         xs={12}
       >
-        <Typography marginLeft={5} fontWeight="bold" variant="h3">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          fontWeight="bold"
+          variant={size.width > 851 ? "h3" : "h5"}
+          sx={{ color: "primary.main" }}
+        >
           Strum natural, play pure.
         </Typography>
-        <Typography marginLeft={5} variant="h5">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          sx={{ color: "text.primary" }}
+          variant={size.width > 851 ? "h5" : "subtitle"}
+        >
           Discover the timeless beauty of acoustic sound.
         </Typography>
         <Box
-          marginLeft={5}
-          marginBottom={5}
+          marginLeft={size.width > 851 ? 5 : 0}
+          marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
           <Button variant="contained">Acoustic Guitars</Button>
@@ -85,57 +135,87 @@ export default function HomeView(props) {
         }}
         item
         xs={12}
-        sm={6}
+        md={6}
       >
-        <Typography marginLeft={5} fontWeight="bold" variant="h3">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          fontWeight="bold"
+          variant={size.width > 851 ? "h3" : "h5"}
+          sx={{ color: "primary.main" }}
+        >
           Ukulele: a smile in every strum.
         </Typography>
-        <Typography marginLeft={5} variant="h5">
+        <Typography
+          marginLeft={size.width > 851 ? 5 : 0}
+          sx={{ color: "text.primary" }}
+          variant={size.width > 851 ? "h5" : "subtitle"}
+        >
           Bring happiness to your music with the ukulele.
         </Typography>
         <Box
-          marginLeft={5}
-          marginBottom={5}
+          marginLeft={size.width > 851 ? 5 : 0}
+          marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
           <Button variant="contained">Ukuleles</Button>
           <Button variant="contained">Accessories</Button>
         </Box>
       </Grid>
-      <Grid sx={{padding: "10px", height: "fit-content"}} item container xs={12} spacing={1}>
+      <Grid
+        sx={{ padding: "10px", height: "fit-content" }}
+        item
+        container
+        xs={12}
+        spacing={1}
+      >
         <Grid item xs={12}>
-          <Typography sx={{fontSize: "1.5rem", color: "text.primary"}} textAlign="center">
+          <Typography
+            sx={{ fontSize: "1.5rem", color: "text.primary" }}
+            textAlign="center"
+          >
             BEST SELLERS
           </Typography>
         </Grid>
-        <Grid sx={{height: "100%"}} item xs={12} container spacing={1}>
-        {props.products.map((product, index) => (
-          <Grid key={index} item md={3} xs={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "secondary.main",
-                  textDecoration: "none"
-                }}
-                component={Link}
-                to={`/productPage/${product.id}`}
-              >
-                <Box
-                  sx={{ flexGrow: 4 }}
-                  component="img"
-                  src={product.images[0]}
-                />
-
-                <Box sx={{ flexGrow: 1, flexShring: 1, flexBasis: 0, padding: "10px", display: "flex", gap: "5px", flexDirection: "column" }}>
-                  <Typography sx={{fontSize: "1.2rem", color: "text.primary"}}>{product.title.length <= 18 ? product.title: (product.title.substr(0, 24) + "...")}</Typography>
-                  <Typography sx={{fontSize: "1rem", color: "primary.main" }}>
-                    {Math.round(product.price)} SEK
-                  </Typography>
-                </Box>
-              </Box>
-          </Grid>
-        ))}
+        <Grid sx={{ height: "100%" }} item xs={12}>
+          <CarouselNav
+            swipeable={true}
+            draggable={false}
+            responsive={responsive}
+            infinite={false}
+            autoPlay={false}
+            autoPlaySpeed={1000}
+            keyBoardControl={true}
+            partialVisible={true}
+            transitionDuration={500}
+            containerClass="carousel-container"
+            focusOnSelect={false}
+            removeArrowOnDeviceType={["tablet", "mobile"]}
+            itemClass="carousel-item-space"
+          >
+            {props.products.map((product, index) => (
+              <Card key={index} sx={{ maxWidth: "90%" }}>
+                <CardActionArea
+                  component={Link}
+                  to={`/productPage/${product.id}`}
+                >
+                  <CardMedia
+                    component="img"
+                    image={product.images[0]}
+                    alt={product.title}
+                    sx={{ objectFit: "contain" }}
+                  />
+                  <CardContent sx={{ backgroundColor: "secondary.main" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {product.title}
+                    </Typography>
+                    <Typography variant="body2" color="primary.main">
+                      {product.price} SEK
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))}
+          </CarouselNav>
         </Grid>
       </Grid>
     </Grid>

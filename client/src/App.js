@@ -20,7 +20,9 @@ function App() {
         <Box
           sx={{
             minHeight: "100%",
-            backgroundColor: "background.default",
+            maxWidth: "1251px",
+            margin: "0 auto",
+            marginTop: "2rem",
           }}
         >
           <Routes>
