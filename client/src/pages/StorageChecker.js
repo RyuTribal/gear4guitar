@@ -5,12 +5,10 @@ import axios from "axios";
 class StorageChecker extends React.Component {
   constructor(props) {
     super(props);
+    axios.defaults.headers.common['X-Auth-Token'] = localStorage.getItem("token");
+    this.props.addToken(localStorage.getItem("token"));
     this.state = {};
   }
-
-  componentDidMount = async () => {
-    this.props.addToken(localStorage.getItem("token"));
-  };
 
   componentDidUpdate = async (prevProps) => {
     if (this.props.token !== prevProps.token) {

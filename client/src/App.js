@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import theme from "./themes/theme";
 import Product from "./pages/productPage/productPage";
+import CreateProduct from "./pages/productPage/CreateProduct";
 import StorageChecker from "./pages/StorageChecker";
 
 function App() {
@@ -16,22 +17,24 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <Navbar />
-        <StorageChecker />
-        <Box
-          sx={{
-            minHeight: "100%",
-            backgroundColor: "background.default",
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/search/:query" element={<Search />} />
-            <Route path="/sign_in" element={<SignIn />} />
-            <Route path="/register" element={<Registration />} />
-            <Route path="/productPage/:id" element={<Product />} />
-          </Routes>
-        </Box>
+        <StorageChecker>
+          <Box
+            sx={{
+              minHeight: "100%",
+              backgroundColor: "background.default",
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/search/:query" element={<Search />} />
+              <Route path="/sign_in" element={<SignIn />} />
+              <Route path="/register" element={<Registration />} />
+              <Route path="/productPage/:id" element={<Product />} />
+              <Route path="/CreateProduct" element={<CreateProduct />} />
+            </Routes>
+          </Box>
+        </StorageChecker>
       </ThemeProvider>
     </Router>
   );

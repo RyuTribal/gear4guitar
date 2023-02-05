@@ -2,18 +2,20 @@ import React from 'react';
 import './productPage.css';
 import Product from './components/product';
 import withRouter from '../../components/routes'
-import { getProductInfo, getComments, addComments, editComments, deleteComments } from "../../api_calls/productInfo";
+import { getProductInfo, getComments, addComments, editComments, deleteComments, getUser } from "../../api_calls/productInfo";
 
 class productPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             results: [],
-            comments: []
+            comments: [],
+            user_info: [],
         }
     }
 
     componentDidMount = async () => {
+        this.get_user();
         this.link(this.props.router.params.id);
         this.comment(this.props.router.params.id);
     }
@@ -42,7 +44,7 @@ class productPage extends React.Component {
         window.location.reload(false);
     }
 
-    editComment = async (id, comment) => {
+    edit_comment = async (id, comment) => {
         if (comment === "") {
             return;
         }
@@ -50,15 +52,22 @@ class productPage extends React.Component {
         window.location.reload(false);
     }
 
-    deleteComment = async (id) => {
+    delete_comment = async (id) => {
         await deleteComments(id);
         window.location.reload(false);
+    }
+
+    get_user = async () => {
+        let res = await getUser();
+        this.setState({ user_info: res });
+        console.log(this.state.user_info)
+        return res;
     }
 
     render() {
         return (
             <div>
-                <Product submit={(id, comment) => this.submitButton(id, comment)} buttonFunction={(id) => this.navigateProduct(id)} results={this.state.results} comments={this.state.comments} />
+                <Product commentDelete={(id) => this.delete_comment(id)} submit={(id, comment) => this.submitButton(id, comment)} buttonFunction={(id) => this.navigateProduct(id)} results={this.state.results} comments={this.state.comments} user_info={this.state.user_info} />
             </div>
         )
     }

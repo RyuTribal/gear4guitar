@@ -22,3 +22,17 @@ exports.addCommentSecure = function (req, res) {
         .then(result => res.status(200).send({ message: 'Comment added' }))
         .catch(err => res.status(500).send({ error: 'Internal server error' }))
 }
+
+exports.deleteCommentSecure = function (req, res) {
+    id = req.params.id
+    db.query(`DELETE FROM comments WHERE id = ${id}`)
+        .then(result => res.status(200).send({ message: 'Comment deleted' }))
+        .catch(err => res.status(500).send({ error: 'Internal server error' }))
+}
+
+exports.editCommentSecure = function (req, res) {
+    id = req.params.id
+    db.query(`UPDATE comments SET comment = '${req.body.comment}' WHERE id = ${id}`)
+        .then(result => res.status(200).send({ message: 'Comment deleted' }))
+        .catch(err => res.status(500).send({ error: 'Internal server error' }))
+}

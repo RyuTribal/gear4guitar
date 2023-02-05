@@ -28,7 +28,7 @@ function convertJSON_toIslam(json) {
   return json;
 }
 
-function render(results, buttonFunction, submit, comment, setValue, reset) {
+function render(results, buttonFunction, submit, comment, setValue) {
   if (!results || results.length === 0) {
     return (
       <Box
@@ -232,7 +232,7 @@ function render(results, buttonFunction, submit, comment, setValue, reset) {
   }
 }
 
-function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption) {
+function renderComment(comments, anchorEl, open, handleClick, handleClose, chooseOption, user_info) {
   if (!comments || comments.length === 0) {
     return (
       <Box
@@ -336,39 +336,16 @@ function renderComment(comments, anchorEl, setAnchorEl, open, handleClick, handl
                     <Box sx={{ display: "flex", flexDirection: "row" }}>
                       <Typography>{comment.comment}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "row" }}>
-                      <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClick}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                      <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                          'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        PaperProps={{
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
-                          },
-                        }}
-                      >
-                        {options.map((option) => (
-                          <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => chooseOption(option)}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                    </Box>
+                    {user_info.id === comment.user_id && (
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <Button onClick={() => chooseOption('Delete', comment.id)}>
+                          <Typography>Delete</Typography>
+                        </Button>
+                        <Button onClick={() => chooseOption('Edit', comment.id)}>
+                          <Typography>Edit</Typography>
+                        </Button>
+                      </Box>
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -386,14 +363,17 @@ export default function Results(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
-    
+
     setAnchorEl(event.currentTarget);
   };
-  const chooseOption = (option) => {
-    console.log(option)
+  const chooseOption = (option, id) => {
+    if (option === 'Delete') {
+      props.commentDelete(id)
+    } else if (option === 'Edit') {
+      console.log('edit')
+    }
   }
   const handleClose = () => {
-    console.log('option')
     setAnchorEl(null);
   };
 
@@ -412,7 +392,7 @@ export default function Results(props) {
             props.buttonFunction,
             props.submit,
             comment,
-            setValue
+            setValue,
           )}
         </Box>
         <Box
@@ -422,9 +402,44 @@ export default function Results(props) {
             width: "100%",
           }}
         >
-          {renderComment(props.comments.data, anchorEl, setAnchorEl, open, handleClick, handleClose, chooseOption)}
+          {renderComment(props.comments.data, anchorEl, open, handleClick, handleClose, chooseOption, props.user_info.data)}
         </Box>
       </Box>
     </Box>
   );
 }
+
+/*
+<IconButton
+                          aria-label="more"
+                          id="long-button"
+                          aria-controls={open ? 'long-menu' : undefined}
+                          aria-expanded={open ? 'true' : undefined}
+                          aria-haspopup="true"
+                          onClick={handleClick}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                          id="long-menu"
+                          MenuListProps={{
+                            'aria-labelledby': 'long-button',
+                          }}
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          PaperProps={{
+                            style: {
+                              maxHeight: ITEM_HEIGHT * 4.5,
+                              width: '20ch',
+                            },
+                          }}
+                          
+                        >
+                          {options.map((option, ) => (
+                            <MenuItem key={option} selected={option === 'Pyxis'} onClick={() => chooseOption(option, comment.id)}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+*/
