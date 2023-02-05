@@ -141,3 +141,9 @@ exports.is_logged_in = async function (req, res) {
   }
   return res.status(200).send({ message: "Logged in" });
 };
+
+exports.save_user_data = async function (req, res) {
+  connection.query("UPDATE users SET is_saved = $1 WHERE id = $2",[req.body.is_saved, req.body.id])
+    .catch(err => console.error('Error: ', err))
+  return res.status(200).send({ message: "Saved" });
+};

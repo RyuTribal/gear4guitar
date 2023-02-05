@@ -7,5 +7,8 @@ router.post("/login", controller.login);
 router.get("/is_logged_in", controller.is_logged_in);
 router.get("/get_user", jwtauth.jwtauth, controller.get_user);
 router.post("/edit_creds", jwtauth.jwtauth, controller.edit_creds);
+router.post("/save_data", jwtauth.jwtauth, controller.save_user_data);
+
+
 
 module.exports = router;
