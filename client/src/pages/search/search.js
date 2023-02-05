@@ -26,7 +26,6 @@ class Search extends React.Component {
 
     link = async (query) => {
         let res = await getSearchFeed(query);
-        console.log(res)
         this.setState({ search_results: res });
     };
 

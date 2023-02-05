@@ -15,7 +15,7 @@ function render(search_results, buttonFunction) {
                 {search_results.map((result) => (
                     <Box component={'button'} onClick={() => buttonFunction(result.id)} sx={{ display: 'flex', justifyContent: 'flex-start', alignContent: 'flex-start', flexDirection: 'row', padding: '20px 20px', cursor: 'pointer', border: '1px solid rgba(0, 0, 0, 0.3)' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px', justifyContent: 'flex-start', alignContent: 'flex-start' }}>
-                            <Box component="img" src={result.image} alt="image" width={100} height={100} />
+                            <Box component="img" src={result.images[0]} alt="image" width={100} height={100} />
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', padding: '20px 20px', justifyContent: 'flex-start', alignContent: 'flex-start' }}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignContent: 'flex-start' }}>
