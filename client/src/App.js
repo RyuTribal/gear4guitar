@@ -19,7 +19,7 @@ function App() {
         <StorageChecker />
         <Box
           sx={{
-            height: "100%",
+            minHeight: "100%",
             backgroundColor: "background.default",
           }}
         >

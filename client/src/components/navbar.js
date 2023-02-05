@@ -146,6 +146,7 @@ export default function SearchAppBar(props) {
                 <Button
                   sx={{ borderRadius: "0px 10px 10px 0px" }}
                   variant="contained"
+                  onClick={() => handleSearch(query)}
                 >
                   Find guitar
                 </Button>

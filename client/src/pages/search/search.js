@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './search.css';
 import { getSearchFeed } from "../../api_calls/search";
 import Results from './components/results';
 import withRouter from '../../components/routes'
-import { useNavigate } from 'react-router-dom';
 
 class Search extends React.Component {
     constructor(props) {
@@ -26,7 +25,6 @@ class Search extends React.Component {
 
     link = async (query) => {
         let res = await getSearchFeed(query);
-        console.log(res)
         this.setState({ search_results: res });
     };
 

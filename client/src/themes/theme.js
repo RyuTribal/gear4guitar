@@ -1,5 +1,4 @@
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
 
 // Create a theme instance.
 const theme = createTheme({
@@ -29,6 +28,7 @@ const theme = createTheme({
     },
   },
   typography: {
+    root: { color: "#d1cfcf"},
     h3: { color: "#ffb800"},
     h4: { color: "#d1cfcf"},
     h5: { color: "#d1cfcf"},
