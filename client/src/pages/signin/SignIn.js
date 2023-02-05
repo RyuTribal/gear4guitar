@@ -1,6 +1,5 @@
 import { Component } from "react";
 import SignInView from "./components/SignIn";
-import { store } from "../../redux/store";
 import { connect } from "react-redux";
 import { login } from "../../api_calls/users";
 import withRouter from "../../components/routes";

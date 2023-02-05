@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './productPage.css';
 import Product from './components/product';
 import withRouter from '../../components/routes'
-import { getProductInfo, getComments, addComments } from "../../api_calls/productInfo";
+import { getProductInfo, getComments, addComments, editComments, deleteComments } from "../../api_calls/productInfo";
 
 class productPage extends React.Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class productPage extends React.Component {
     }
 
     componentDidMount = async () => {
-        console.log(this.props.router.params.id)
         this.link(this.props.router.params.id);
         this.comment(this.props.router.params.id);
     }
@@ -36,8 +35,24 @@ class productPage extends React.Component {
     }
 
     submitButton = async (id, comment) => {
-        console.log('id: ' + id + 'comment: ' + comment)
-        let res = await addComments(id, comment);
+        if (comment === "") {
+            return;
+        }
+        await addComments(id, comment);
+        window.location.reload(false);
+    }
+
+    editComment = async (id, comment) => {
+        if (comment === "") {
+            return;
+        }
+        await editComments(id, comment);
+        window.location.reload(false);
+    }
+
+    deleteComment = async (id) => {
+        await deleteComments(id);
+        window.location.reload(false);
     }
 
     render() {
