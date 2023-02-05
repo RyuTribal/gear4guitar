@@ -8,3 +8,12 @@ export async function getSearchFeed(query) {
 
   return data;
 }
+
+export async function getBestSellers() {
+  let data = await axios({
+    method: "get",
+    url: `http://localhost:8080/api/products/best_sellers`,
+  });
+
+  return data;
+}

@@ -29,6 +29,7 @@ const theme = createTheme({
     },
   },
   typography: {
+    root: { color: "#d1cfcf"},
     h3: { color: "#ffb800"},
     h4: { color: "#d1cfcf"},
     h5: { color: "#d1cfcf"},

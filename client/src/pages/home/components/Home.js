@@ -1,7 +1,8 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Grid, Typography } from "@mui/material";
 import electric from "../images/electric.png";
 import acoustic from "../images/acoustic.png";
 import ukulele from "../images/ukulele.png";
+import {Link} from 'react-router-dom'
 
 export default function HomeView(props) {
   return (
@@ -20,6 +21,7 @@ export default function HomeView(props) {
           alignItems: "flex-start",
           justifyContent: "flex-end",
           gap: "20px",
+          minHeight: "50vh",
         }}
         item
         xs={12}
@@ -49,6 +51,7 @@ export default function HomeView(props) {
           alignItems: "flex-start",
           justifyContent: "flex-end",
           gap: "20px",
+          minHeight: "30vh"
         }}
         item
         sm={6}
@@ -99,15 +102,41 @@ export default function HomeView(props) {
           <Button variant="contained">Accessories</Button>
         </Box>
       </Grid>
-      <Grid item container xs={12}>
+      <Grid sx={{padding: "10px", height: "fit-content"}} item container xs={12} spacing={1}>
         <Grid item xs={12}>
-          <Typography variant="h4" textAlign="center">
+          <Typography sx={{fontSize: "1.5rem", color: "text.primary"}} textAlign="center">
             BEST SELLERS
           </Typography>
         </Grid>
-        {props.products.map((product) => (
-          <Grid item xs={3}></Grid>
+        <Grid sx={{height: "100%"}} item xs={12} container spacing={1}>
+        {props.products.map((product, index) => (
+          <Grid key={index} item md={3} xs={12}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  backgroundColor: "secondary.main",
+                  textDecoration: "none"
+                }}
+                component={Link}
+                to={`/productPage/${product.id}`}
+              >
+                <Box
+                  sx={{ flexGrow: 4 }}
+                  component="img"
+                  src={product.images[0]}
+                />
+
+                <Box sx={{ flexGrow: 1, flexShring: 1, flexBasis: 0, padding: "10px", display: "flex", gap: "5px", flexDirection: "column" }}>
+                  <Typography sx={{fontSize: "1.2rem", color: "text.primary"}}>{product.title.length <= 18 ? product.title: (product.title.substr(0, 24) + "...")}</Typography>
+                  <Typography sx={{fontSize: "1rem", color: "primary.main" }}>
+                    {Math.round(product.price)} SEK
+                  </Typography>
+                </Box>
+              </Box>
+          </Grid>
         ))}
+        </Grid>
       </Grid>
     </Grid>
   );
