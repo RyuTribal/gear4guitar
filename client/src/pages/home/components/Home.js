@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import electric from "../images/electric.png";
 import acoustic from "../images/acoustic.png";
 import ukulele from "../images/ukulele.png";
@@ -15,6 +6,7 @@ import { Link } from "react-router-dom";
 import CarouselNav from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import useWindowSize from "../../../redundant_functions/WindowSize";
+import CardDisplay from "../../../components/CardDisplay";
 
 const responsive = {
   desktop: {
@@ -80,7 +72,9 @@ export default function HomeView(props) {
           <Button component={Link} to="/search/127670" variant="contained">
             Electric Guitars
           </Button>
-          <Button component={Link} to="/search/127675" variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/127675" variant="contained">
+            Accessories
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -202,29 +196,9 @@ export default function HomeView(props) {
             itemClass="carousel-item-space"
           >
             {props.products.map((product, index) => (
-              <Card key={index} sx={{ maxWidth: "90%" }}>
-                <CardActionArea
-                  component={Link}
-                  to={`/productPage/${product.id}`}
-                >
-                  <CardMedia
-                    component="img"
-                    image={product.images[0]}
-                    alt={product.title}
-                    sx={{ objectFit: "contain" }}
-                  />
-                  <CardContent sx={{ backgroundColor: "secondary.main" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {product.title.length > 48
-                        ? `${product.title.substring(0, 48)}...`
-                        : product.title}
-                    </Typography>
-                    <Typography variant="body2" color="primary.main">
-                      {product.price} SEK
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <Box sx={{ maxWidth: "90%" }} key={index}>
+                <CardDisplay product={product} index={index} />
+              </Box>
             ))}
           </CarouselNav>
         </Grid>

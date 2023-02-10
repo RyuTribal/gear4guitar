@@ -79,6 +79,9 @@ function SearchAppBar(props) {
         `${props.router.location.pathname}${query_string}&query=${search_term}`
       );
     }
+    else{
+      props.router.navigate(`/search?query=${search_term}`);
+    }
   };
   const [query, setValue] = React.useState("");
   return (

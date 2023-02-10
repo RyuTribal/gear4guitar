@@ -2,28 +2,19 @@ import { Box, Typography, Button, Breadcrumbs } from "@mui/material";
 import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
-import {
-  Link as MUILink,
-  Grid,
-  ButtonBase,
-  Rating,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-} from "@mui/material";
+import { Link as MUILink, Grid, ButtonBase, Rating } from "@mui/material";
 import CarouselNav from "react-multi-carousel";
 import useWindowSize from "../../../redundant_functions/WindowSize";
 import "react-multi-carousel/lib/styles.css";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CircleIcon from "@mui/icons-material/Circle";
 import GetColorFromString from "../../../redundant_functions/colors";
+import CardDisplay from "../../../components/CardDisplay";
 
 // function convertJSON_toIslam(json) {
 //   // Inshallah1   Inshallah2   Inshallah3
 //   return json;
 // }
-
 
 const responsive = {
   desktop: {
@@ -280,27 +271,9 @@ function ProductVariations(props) {
               itemClass="carousel-item-space"
             >
               {props.variations.map((variation, index) => (
-                <Card key={index} sx={{ maxWidth: "90%" }}>
-                  <CardActionArea
-                    component={Link}
-                    to={`/productPage/${variation.id}`}
-                  >
-                    <CardMedia
-                      component="img"
-                      image={variation.images[0]}
-                      alt={variation.title}
-                      sx={{ objectFit: "contain" }}
-                    />
-                    <CardContent sx={{ backgroundColor: "background.default" }}>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {variation.title}
-                      </Typography>
-                      <Typography variant="body2" color="primary.main">
-                        {variation.price} SEK
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+                <Box key={index} sx={{ maxWidth: "90%" }}>
+                  <CardDisplay product={variation} index={index} />
+                </Box>
               ))}
             </CarouselNav>
           </Box>
@@ -312,7 +285,6 @@ function ProductVariations(props) {
 }
 
 export default function Results(props) {
-
   return (
     <Box
       sx={{

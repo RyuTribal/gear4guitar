@@ -55,7 +55,11 @@ function buildQuery(query, params, first_query) {
       }
       query_string += `)`;
     }
-    if (params.price_min && params.price_max && params.price_min < params.price_max) {
+    if (
+      params.price_min &&
+      params.price_max &&
+      params.price_min < params.price_max
+    ) {
       if (!first_statement) {
         query_string += ` AND `;
       }
@@ -102,7 +106,7 @@ exports.search = function (req, res) {
     start_query += ` ORDER BY products.price ASC`;
   }
   start_query += ` LIMIT 15 OFFSET ${req.body.offset};`;
-  
+
   db.query(start_query)
     .then((result) => res.status(200).send(result.rows))
     .catch((err) => res.status(500).send({ message: "Error: " + err }));
@@ -110,14 +114,19 @@ exports.search = function (req, res) {
 
 exports.get_categories = function (req, res) {
   let parent_id = req.params.parent_id;
-  if (parent_id === "null" || parent_id === null) {
-    parent_id = null;
+  if (parent_id === "undefined") {
+    db.query(
+      `SELECT * FROM product_categories WHERE parent_id IS NULL ORDER BY category_name;`
+    )
+      .then((result) => res.status(200).send(result.rows))
+      .catch((err) => res.status(500).send({ message: "Error: " + err }));
+  } else {
+    db.query(
+      `SELECT * FROM product_categories WHERE parent_id = ${parent_id} ORDER BY category_name;`
+    )
+      .then((result) => res.status(200).send(result.rows))
+      .catch((err) => res.status(500).send({ message: "Error: " + err }));
   }
-  db.query(
-    `SELECT * FROM product_categories WHERE parent_id = ${parent_id} ORDER BY category_name;`
-  )
-    .then((result) => res.status(200).send(result.rows))
-    .catch((err) => res.status(500).send({ message: "Error: " + err }));
 };
 
 exports.get_category_brands_colors = function (req, res) {
