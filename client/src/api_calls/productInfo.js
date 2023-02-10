@@ -27,6 +27,7 @@ export async function getProductVariations(id) {
   return data;
 }
 
+
 export async function getComments(id) {
   let data = await axios({
     method: "post",

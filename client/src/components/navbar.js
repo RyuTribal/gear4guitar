@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
 import { ButtonBase, Button, IconButton, Badge } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
@@ -17,6 +16,7 @@ import { useSelector } from "react-redux";
 import useWindowSize from "../redundant_functions/WindowSize";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
+import withRouter from "./routes";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,8 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar(props) {
-  const history = useNavigate();
+function SearchAppBar(props) {
   const size = useWindowSize();
   const [token, setToken] = React.useState(null);
   const [searchbar, setSearchbar] = React.useState(false);
@@ -63,11 +62,26 @@ export default function SearchAppBar(props) {
     setToken(token_state);
   }, [token_state]);
 
-  const handleSearch = (query) => {
-    history({
-      pathname: `/search/${query}`,
-      state: { argument: query },
-    });
+  const handleSearch = (search_term) => {
+    if (props.router.location.pathname.includes("/search")) {
+      let params = new URLSearchParams(props.router.location.search);
+      let query_string = "?";
+      for (let param of params.entries()) {
+        if (param[0] === "query") {
+          continue;
+        }
+        if (query_string[query_string.length - 1] !== "?") {
+          query_string += "&";
+        }
+        query_string += `${param[0]}=${param[1]}`;
+      }
+      props.router.navigate(
+        `${props.router.location.pathname}${query_string}&query=${search_term}`
+      );
+    }
+    else{
+      props.router.navigate(`/search?query=${search_term}`);
+    }
   };
   const [query, setValue] = React.useState("");
   return (
@@ -133,7 +147,11 @@ export default function SearchAppBar(props) {
             </Box>
             {size.width > 851 && (
               <Box
-                sx={{ flexGrow: 3, display: "flex", justifyContent: "center" }}
+                sx={{
+                  flexGrow: 3,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
               >
                 <Search>
                   <SearchIconWrapper>
@@ -221,3 +239,5 @@ export default function SearchAppBar(props) {
     </Box>
   );
 }
+
+export default withRouter(SearchAppBar);

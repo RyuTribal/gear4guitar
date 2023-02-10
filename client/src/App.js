@@ -10,12 +10,14 @@ import Box from "@mui/material/Box";
 import theme from "./themes/theme";
 import Product from "./pages/productPage/productPage";
 import StorageChecker from "./pages/StorageChecker";
+import ScrollToTop from "./pages/ScrollToTop";
 
 function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
         <Navbar />
+        <ScrollToTop />
         <StorageChecker />
         <Box
           sx={{
@@ -27,8 +29,9 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/search/:query" element={<Search />} />
+            <Route path="/search/" element={<Search />}>
+              <Route path=":category" element={<Search />} />
+            </Route>
             <Route path="/sign_in" element={<SignIn />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/productPage/:id" element={<Product />} />

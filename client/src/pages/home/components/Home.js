@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonBase,
-  Grid,
-  Typography,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import electric from "../images/electric.png";
 import acoustic from "../images/acoustic.png";
 import ukulele from "../images/ukulele.png";
@@ -16,6 +6,7 @@ import { Link } from "react-router-dom";
 import CarouselNav from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import useWindowSize from "../../../redundant_functions/WindowSize";
+import CardDisplay from "../../../components/CardDisplay";
 
 const responsive = {
   desktop: {
@@ -78,8 +69,12 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Electric Guitars</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/127670" variant="contained">
+            Electric Guitars
+          </Button>
+          <Button component={Link} to="/search/127675" variant="contained">
+            Accessories
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -118,8 +113,12 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Acoustic Guitars</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/127669" variant="contained">
+            Acoustic Guitars
+          </Button>
+          <Button component={Link} to="/search/127775" variant="contained">
+            Accessories
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -157,8 +156,12 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Ukuleles</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/153873" variant="contained">
+            Ukuleles
+          </Button>
+          <Button component={Link} to="/search/160324" variant="contained">
+            Cases
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -193,27 +196,9 @@ export default function HomeView(props) {
             itemClass="carousel-item-space"
           >
             {props.products.map((product, index) => (
-              <Card key={index} sx={{ maxWidth: "90%" }}>
-                <CardActionArea
-                  component={Link}
-                  to={`/productPage/${product.id}`}
-                >
-                  <CardMedia
-                    component="img"
-                    image={product.images[0]}
-                    alt={product.title}
-                    sx={{ objectFit: "contain" }}
-                  />
-                  <CardContent sx={{ backgroundColor: "secondary.main" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {product.title}
-                    </Typography>
-                    <Typography variant="body2" color="primary.main">
-                      {product.price} SEK
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <Box sx={{ maxWidth: "90%" }} key={index}>
+                <CardDisplay product={product} index={index} />
+              </Box>
             ))}
           </CarouselNav>
         </Grid>
