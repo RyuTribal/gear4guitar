@@ -10,6 +10,7 @@ import {
   deleteComments,
   getProductVariations,
 } from "../../api_calls/productInfo";
+import SkeletonText from "./components/skeleton";
 
 class productPage extends React.Component {
   constructor(props) {
@@ -17,13 +18,29 @@ class productPage extends React.Component {
     this.state = {
       product: null,
       comments: [],
+      loading: true,
     };
   }
 
   componentDidMount = async () => {
-    this.link(this.props.router.params.id);
-    this.comment(this.props.router.params.id);
-    this.loadVariations(this.props.router.params.id);
+    await Promise.all([
+      this.link(this.props.router.params.id),
+      this.comment(this.props.router.params.id),
+      this.loadVariations(this.props.router.params.id),
+    ]);
+    this.setState({ loading: false });
+  };
+
+  componentDidUpdate = async (prevProps) => {
+    if (this.props.router.params.id !== prevProps.router.params.id) {
+      this.setState({ loading: true });
+      await Promise.all([
+        this.link(this.props.router.params.id),
+        this.comment(this.props.router.params.id),
+        this.loadVariations(this.props.router.params.id),
+      ]);
+      this.setState({ loading: false });
+    }
   };
 
   loadVariations = async (id) => {
@@ -71,15 +88,19 @@ class productPage extends React.Component {
   };
 
   render() {
-    return (
-      <Product
-        submit={(id, comment) => this.submitButton(id, comment)}
-        buttonFunction={(id) => this.navigateProduct(id)}
-        product={this.state.product}
-        comments={this.state.comments}
-        variations={this.state.variations}
-      />
-    );
+    if (this.state.loading) {
+      return <SkeletonText />;
+    } else {
+      return (
+        <Product
+          submit={(id, comment) => this.submitButton(id, comment)}
+          buttonFunction={(id) => this.navigateProduct(id)}
+          product={this.state.product}
+          comments={this.state.comments}
+          variations={this.state.variations}
+        />
+      );
+    }
   }
 }
 

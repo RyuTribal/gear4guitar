@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ButtonBase,
   Grid,
   Typography,
   Card,
@@ -78,8 +77,10 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Electric Guitars</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/127670" variant="contained">
+            Electric Guitars
+          </Button>
+          <Button component={Link} to="/search/127675" variant="contained">Accessories</Button>
         </Box>
       </Grid>
       <Grid
@@ -118,8 +119,12 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Acoustic Guitars</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/127669" variant="contained">
+            Acoustic Guitars
+          </Button>
+          <Button component={Link} to="/search/127775" variant="contained">
+            Accessories
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -157,8 +162,12 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button variant="contained">Ukuleles</Button>
-          <Button variant="contained">Accessories</Button>
+          <Button component={Link} to="/search/153873" variant="contained">
+            Ukuleles
+          </Button>
+          <Button component={Link} to="/search/160324" variant="contained">
+            Cases
+          </Button>
         </Box>
       </Grid>
       <Grid
@@ -206,7 +215,9 @@ export default function HomeView(props) {
                   />
                   <CardContent sx={{ backgroundColor: "secondary.main" }}>
                     <Typography gutterBottom variant="h5" component="div">
-                      {product.title}
+                      {product.title.length > 48
+                        ? `${product.title.substring(0, 48)}...`
+                        : product.title}
                     </Typography>
                     <Typography variant="body2" color="primary.main">
                       {product.price} SEK

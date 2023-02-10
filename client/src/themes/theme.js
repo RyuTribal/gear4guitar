@@ -3,9 +3,9 @@ import { createTheme } from "@mui/material/styles";
 // Create a theme instance.
 const theme = createTheme({
   overrides: {
-    MuiTab: {
+    MuiButtonBase: {
       root: {
-        fontColor: "#f44336",
+        color: "white !important",
       },
     },
   },
@@ -29,10 +29,13 @@ const theme = createTheme({
     },
   },
   typography: {
-    root: { color: "#d1cfcf"},
-    h3: { color: "#ffb800"},
-    h4: { color: "#d1cfcf"},
-    h5: { color: "#d1cfcf"},
+    root: { color: "#d1cfcf" },
+    h3: { color: "#ffb800" },
+    h4: { color: "#d1cfcf" },
+    h5: { color: "#d1cfcf" },
+    subtitle1: { color: "#d1cfcf" },
+    subtitle2: { color: "#d1cfcf" },
+    subtitle: { color: "#d1cfcf" },
   },
   spacing: 10,
 });

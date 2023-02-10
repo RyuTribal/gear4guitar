@@ -3,7 +3,7 @@ import jwtReducer from "./reducers/jwt";
 import { configureStore } from "@reduxjs/toolkit";
 
 // initial states here
-const initalState = { jwt_token: null };
+const initalState = { jwt_token: null, basket: [] };
 
 const reducer = combineReducers({
   jwtReducer,

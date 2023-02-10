@@ -1,13 +1,5 @@
 import { Box, Typography, Button, Breadcrumbs } from "@mui/material";
 import React from "react";
-import { List, ListItem } from "@mui/material";
-import SkeletonText from "./skeleton";
-import { styled } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
 import {
@@ -27,180 +19,11 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CircleIcon from "@mui/icons-material/Circle";
 import GetColorFromString from "../../../redundant_functions/colors";
 
-const options = ["Edit", "Delete"];
+// function convertJSON_toIslam(json) {
+//   // Inshallah1   Inshallah2   Inshallah3
+//   return json;
+// }
 
-const ITEM_HEIGHT = 48;
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  padding: 10,
-  borderRadius: 4,
-  border: "1px solid #989898",
-}));
-
-function convertJSON_toIslam(json) {
-  // Inshallah1   Inshallah2   Inshallah3
-  return json;
-}
-
-function renderComment(
-  comments,
-  anchorEl,
-  setAnchorEl,
-  open,
-  handleClick,
-  handleClose,
-  chooseOption
-) {
-  if (!comments || comments.length === 0) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          justifyContent: "center",
-          width: "70%",
-        }}
-      >
-        <Box
-          flexBasis={0}
-          flexShrink={1}
-          flexGrow={1}
-          sx={{ display: "flex", flexDirection: "row", padding: "20px 20px" }}
-        >
-          <Box
-            flexBasis={0}
-            flexShrink={1}
-            flexGrow={1}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "0px 0px 0px 20px",
-            }}
-          >
-            <Box
-              flexBasis={0}
-              flexShrink={1}
-              flexGrow={1}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "0px 0px 0px 0px",
-              }}
-            >
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
-                <Typography variant="h5" sx={{ color: "#434649" }}>
-                  No comments
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-    );
-  } else {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          justifyContent: "center",
-          width: "70%",
-        }}
-      >
-        {comments.map((comment) => (
-          <Box
-            flexBasis={0}
-            flexShrink={1}
-            flexGrow={1}
-            sx={{ display: "flex", flexDirection: "row", padding: "20px 20px" }}
-          >
-            <Box
-              flexBasis={0}
-              flexShrink={1}
-              flexGrow={1}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "0px 0px 0px 20px",
-              }}
-            >
-              <Box
-                flexBasis={0}
-                flexShrink={1}
-                flexGrow={1}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "0px 0px 0px 0px",
-                }}
-              >
-                <Box
-                  flexBasis={0}
-                  flexShrink={1}
-                  flexGrow={1}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  <Typography>
-                    {comment.first_name} {comment.last_name}
-                  </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{ display: "flex", flexDirection: "row" }}>
-                      <Typography>{comment.comment}</Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", flexDirection: "row" }}>
-                      <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={open ? "long-menu" : undefined}
-                        aria-expanded={open ? "true" : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClick}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                      <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                          "aria-labelledby": "long-button",
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        PaperProps={{
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: "20ch",
-                          },
-                        }}
-                      >
-                        {options.map((option) => (
-                          <MenuItem
-                            key={option}
-                            selected={option === "Pyxis"}
-                            onClick={() => chooseOption(option)}
-                          >
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        ))}
-      </Box>
-    );
-  }
-}
 
 const responsive = {
   desktop: {
@@ -431,8 +254,7 @@ const responsive_variation = {
 };
 
 function ProductVariations(props) {
-  const size = useWindowSize();
-  if (props.variations) {
+  if (props.variations && props.variations.length > 0) {
     return (
       <Grid item xs={12} spacing={2} container>
         <Grid sx={{ display: "flex", justifyContent: "center" }} item xs={12}>
@@ -490,19 +312,6 @@ function ProductVariations(props) {
 }
 
 export default function Results(props) {
-  const [comment, setValue] = React.useState("");
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const chooseOption = (option) => {
-    console.log(option);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Box
@@ -510,6 +319,7 @@ export default function Results(props) {
         display: "flex",
         width: "100%",
         margin: 0,
+        paddingTop: 5,
         backgroundColor: "secondary.main",
       }}
     >
@@ -521,40 +331,20 @@ export default function Results(props) {
         }}
       >
         {props.product && (
-          <Breadcrumbs aria-label="breadcrumb">
+          <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
             <MUILink underline="hover" component={Link} color="inherit" to="/">
               <HomeIcon />
             </MUILink>
-            {props.product.indirect_category !== "Home" && (
+            {props.product.category_ids.map((category, index) => (
               <MUILink
-                component={Link}
                 underline="hover"
+                component={Link}
                 color="inherit"
-                sx={{ color: "text.main", textDecoration: "none" }}
-                to={`/search?indirect_cat=${props.product.indirect_category}`}
+                to={"/search/" + category}
               >
-                {props.product.indirect_category}
+                {props.product.category_names[index]}
               </MUILink>
-            )}
-            <MUILink
-              component={Link}
-              underline="hover"
-              sx={{ color: "text.main", textDecoration: "none" }}
-              color="inherit"
-              to={`/search?indirect_cat=${props.product.indirect_category}&category=${props.product.category}`}
-            >
-              {props.product.category}
-            </MUILink>
-
-            <MUILink
-              component={Link}
-              underline="hover"
-              sx={{ color: "text.main", textDecoration: "none" }}
-              color="inherit"
-              to={`/search?indirect_cat=${props.product.indirect_category}&category=${props.product.category}&direct_cat=${props.product.direct_category}`}
-            >
-              {props.product.direct_category}
-            </MUILink>
+            ))}
           </Breadcrumbs>
         )}
 
