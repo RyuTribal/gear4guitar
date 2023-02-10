@@ -288,3 +288,25 @@ exports.best_sellers = async function (req, res) {
     res.status(200).send(results);
   }
 };
+
+exports.addProduct = function (req, res) {
+  id = req.params.id
+  db.query(`INSERT INTO products (title, price, in_stock)
+          VALUES ('${req.body.title}', ${req.body.price}, 0)`)
+      .then(result => res.status(200).send({ message: 'Product Added' }))
+      .catch(err => console.error('Error: ', err))
+}
+
+exports.deleteProduct = function (req, res) {
+  id = req.params.id
+  db.query(`DELETE FROM products WHERE id = ${req.body.id}`)
+      .then(result => res.status(200).send({ message: 'Product deleted' }))
+      .catch(err => res.status(500).send({ error: 'Internal server error' }))
+}
+
+exports.editProduct = function (req, res) {
+  id = req.params.id
+  db.query(`UPDATE products SET title='${req.body.title}', price=${req.body.price} WHERE id='${req.body.id}'`)
+      .then(result => res.status(200).send({ message: 'Product Edited' }))
+      .catch(err => console.error('Error: ', err))
+}

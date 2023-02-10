@@ -9,6 +9,15 @@ export async function getProductInfo(id) {
   return data;
 }
 
+export async function getUser() {
+  let data = await axios({
+      method: "get",
+      url: `http://localhost:8080/api/users/get_user/`,
+  });
+
+  return data;
+}
+
 export async function getProductVariations(id) {
   let data = await axios({
     method: "post",
@@ -40,14 +49,19 @@ export async function addComments(id, comment) {
   return data;
 }
 
+export async function deleteComments(id) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/products/delete_comment_secure/${id}`,
+  });
+
+  return data;
+}
+
 export async function editComments(id, comment) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/comments/add_comment_secure/${id}`,
-    headers: {
-      "X-Auth-Token":
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjc1NTUzMTI1LCJleHAiOjE2NzU2Mzk1MjV9.LMpyS3MKB-yWAateg9vfZi8JJNLdXjaodqDQQb1T6Mo",
-    },
+    url: `http://localhost:8080/api/comments/edit_comment_secure/${id}`,
     data: {
       comment: comment,
     },
@@ -56,11 +70,41 @@ export async function editComments(id, comment) {
   return data;
 }
 
-export async function deleteComments(id) {
-  let data = await axios({
-    method: "post",
-    url: `http://localhost:8080/api/products/comment/${id}`,
+export async function addProducts(title, price) {
+    let data = await axios({
+        method: "post",
+        url: `http://localhost:8080/api/products/add_product/`,
+        data: {
+            title: title,
+            price: price,
+        }
   });
 
   return data;
+}
+
+export async function deleteProducts(id) {
+  let data = await axios({
+      method: "post",
+      url: `http://localhost:8080/api/products/delete_product/`,
+      data: {
+          id: id,
+      }
+});
+
+return data;
+}
+
+export async function editProducts(id, title, price) {
+  let data = await axios({
+      method: "post",
+      url: `http://localhost:8080/api/products/edit_product/`,
+      data: {
+          id: id,
+          title: title,
+          price: price,
+      }
+});
+
+return data;
 }

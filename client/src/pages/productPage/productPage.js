@@ -4,11 +4,14 @@ import Product from "./components/product";
 import withRouter from "../../components/routes";
 import {
   getProductInfo,
+  getProductVariations,
   getComments,
   addComments,
-  editComments,
   deleteComments,
-  getProductVariations,
+  editComments,
+  addProducts,
+  deleteProducts,
+  editProducts,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
 
@@ -62,15 +65,16 @@ class productPage extends React.Component {
     this.setState({ comments: res.data });
   };
 
-  navigateProduct(id) {
-    console.log(id);
-  }
-
-  submitButton = async (id, comment) => {
+  addComment = async (id, comment) => {
     if (comment === "") {
       return;
     }
     await addComments(id, comment);
+    window.location.reload(false);
+  };
+
+  deleteComment = async (id) => {
+    await deleteComments(id);
     window.location.reload(false);
   };
 
@@ -82,8 +86,24 @@ class productPage extends React.Component {
     window.location.reload(false);
   };
 
-  deleteComment = async (id) => {
-    await deleteComments(id);
+  addProduct = async (title, price) => {
+    if (title === "" || price === "") {
+      return;
+    }
+    await addProducts(title, price);
+    window.location.reload(false);
+  };
+
+  deleteProduct = async (id) => {
+    await deleteProducts(id);
+    window.location.reload(false);
+  };
+
+  editProduct = async (id, title, price) => {
+    if (title === "" || price === "") {
+      return;
+    }
+    await editProducts(id, title, price);
     window.location.reload(false);
   };
 
