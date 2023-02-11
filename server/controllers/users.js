@@ -113,9 +113,13 @@ exports.login = async function (req, res) {
       let id = result.rows[0].id;
       let is_admin = result.rows[0].is_admin;
       let email = result.rows[0].email;
-      const accessToken = jwt.sign({ id, is_admin, email }, process.env.JWT_TOKEN_SECRET, {
-        expiresIn: "86400s",
-      });
+      const accessToken = jwt.sign(
+        { id, is_admin, email },
+        process.env.JWT_TOKEN_SECRET,
+        {
+          expiresIn: "86400s",
+        }
+      );
       return res.status(200).send({ message: "Logged in", token: accessToken });
     }
   );
@@ -141,11 +145,17 @@ exports.is_logged_in = async function (req, res) {
   if (!req.user) {
     return res.status(401).send({ error: "Not logged in" });
   }
-  return res.status(200).send({ message: "Logged in" });
+  return res
+    .status(200)
+    .send({ message: "Logged in", is_admin: req.user_admin });
 };
 
 exports.save_user_data = async function (req, res) {
-  connection.query("UPDATE users SET is_saved = $1 WHERE id = $2",[req.body.is_saved, req.body.id])
-    .catch(err => console.error('Error: ', err))
+  connection
+    .query("UPDATE users SET is_saved = $1 WHERE id = $2", [
+      req.body.is_saved,
+      req.body.id,
+    ])
+    .catch((err) => console.error("Error: ", err));
   return res.status(200).send({ message: "Saved" });
 };
