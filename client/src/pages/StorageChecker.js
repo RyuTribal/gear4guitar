@@ -16,6 +16,7 @@ class StorageChecker extends React.Component {
       await isLoggedIn()
         .then(async (res) => {
           this.props.addToken(token);
+          this.props.userAdmin(res.data.is_admin);
           let data = await getBasket();
           if (data.status === 200) {
             this.props.setCart(data.data);
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
   return {
     token: state.jwtReducer.jwt_token,
     basket: state.basketReducer.basket,
+    isAdmin: state.basketReducer.isAdmin,
   };
 };
 
@@ -63,6 +65,7 @@ const mapDispatchToProps = (dispatch) => {
     addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
     removeToken: () => dispatch({ type: "JWT_REMOVE" }),
     setCart: (cart) => dispatch({ type: "BASKET_SET", value: cart }),
+    userAdmin: (isAdmin) => dispatch({ type: "USER_ADMIN", value: isAdmin }),
   };
 };
 

@@ -1,4 +1,4 @@
-import { JWT_ADD, JWT_REMOVE, JWT_GET } from "../actions/jwt";
+import { JWT_ADD, JWT_REMOVE, JWT_GET, USER_ADMIN } from "../actions/jwt";
 
 const jwtReducer = (state = 0, action) => {
   switch (action.type) {
@@ -8,6 +8,8 @@ const jwtReducer = (state = 0, action) => {
       return { ...state, jwt_token: null };
     case JWT_GET:
       return { ...state };
+    case USER_ADMIN:
+      return { ...state, isAdmin: action.value };
     default:
       return { ...state };
   }
