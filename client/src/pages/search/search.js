@@ -225,7 +225,7 @@ class Search extends React.Component {
           flexGrow: 1,
           paddingTop: 5,
           backgroundColor: "secondary.main",
-          height: "100%",
+          minHeight: "100vh",
           paddingLeft: "20px",
           paddingRight: "20px",
           paddingBottom: "20px",

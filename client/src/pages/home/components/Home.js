@@ -196,7 +196,7 @@ export default function HomeView(props) {
             itemClass="carousel-item-space"
           >
             {props.products.map((product, index) => (
-              <Box sx={{ maxWidth: "90%" }} key={index}>
+              <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
                 <CardDisplay product={product} index={index} />
               </Box>
             ))}

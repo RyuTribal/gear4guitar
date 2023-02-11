@@ -14,6 +14,8 @@ import {
   editProducts,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
+import { connect } from "react-redux";
+import { addBasket } from "../../api_calls/users";
 
 class productPage extends React.Component {
   constructor(props) {
@@ -107,6 +109,23 @@ class productPage extends React.Component {
     window.location.reload(false);
   };
 
+  addToBasket = async () => {
+    if (!this.props.token) {
+      let cart = [...this.props.basket];
+      cart.push(this.state.product);
+      this.props.setCart(cart);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      let res_cart = await addBasket(this.state.product.id);
+      console.log(res_cart)
+      if (res_cart.status === 200) {
+        let cart = this.props.basket;
+        cart.push(this.state.product);
+        this.props.setCart(cart);
+      }
+    }
+  };
+
   render() {
     if (this.state.loading) {
       return <SkeletonText />;
@@ -118,10 +137,28 @@ class productPage extends React.Component {
           product={this.state.product}
           comments={this.state.comments}
           variations={this.state.variations}
+          addToBasket={() => this.addToBasket()}
         />
       );
     }
   }
 }
 
-export default withRouter(productPage);
+const mapStateToProps = (state) => {
+  return {
+    token: state.jwtReducer.jwt_token,
+    basket: state.basketReducer.basket,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
+    removeToken: () => dispatch({ type: "JWT_REMOVE" }),
+    setCart: (cart) => dispatch({ type: "BASKET_SET", value: cart }),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(productPage)
+);
