@@ -136,6 +136,17 @@ function ProductMain(props) {
                 }
               />
             </Box>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Typography
+                sx={{
+                  textAlign: "end",
+                  color: "text.primary",
+                }}
+                variant="subtitle"
+              >
+                {`In stock: ${props.product.in_stock}`}
+              </Typography>
+            </Box>
           </Grid>
           <Grid container item xs={12}>
             <Grid item xs={6}>
@@ -145,7 +156,17 @@ function ProductMain(props) {
             </Grid>
 
             <Grid item xs={6}>
-              <Button variant="contained" sx={{ width: "100%" }}>
+              <Button
+                onClick={() => props.addToBasket()}
+                variant="contained"
+                sx={{
+                  width: "100%",
+                  "&:disabled": {
+                    backgroundColor: "#cccccc",
+                  },
+                }}
+                disabled={props.product.in_stock === 0}
+              >
                 Add to cart
               </Button>
             </Grid>
@@ -322,7 +343,10 @@ export default function Results(props) {
 
         <Grid sx={{ marginTop: "2rem" }} container spacing={2}>
           <Grid item container xs={12}>
-            <ProductMain product={props.product} />
+            <ProductMain
+              product={props.product}
+              addToBasket={() => props.addToBasket()}
+            />
           </Grid>
           <Grid item container xs={12}>
             <ProductSpecs product={props.product} />

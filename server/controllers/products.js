@@ -242,8 +242,12 @@ exports.get_category_path = function (req, res) {
 exports.get_variants = function (req, res) {
   id = req.params.id;
   db.query(
-    "SELECT products.* FROM products JOIN variations ON products.id = variations.variation_id WHERE variations.product_id = $1",
-    [id]
+    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
+    FROM products 
+    JOIN variations ON products.id = variations.variation_id 
+    LEFT JOIN grades ON products.id = grades.product_id
+    WHERE variations.product_id = ${id}
+    GROUP BY products.id;`
   )
     .then((result) => res.status(200).send(result.rows))
     .catch((err) => res.status(500).send({ message: "Error: " + err }));
@@ -264,9 +268,10 @@ exports.comment = function (req, res) {
 exports.best_sellers = async function (req, res) {
   let results = await db
     .query(
-      `SELECT products.id, products.title, products.price, products.description, products.images, COUNT(orders.product_id) as sales
+      `SELECT products.*, COUNT(orders.product_id) as sales, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
     FROM orders
     JOIN products ON orders.product_id = products.id
+    LEFT JOIN grades ON products.id = grades.product_id
     GROUP BY products.id
     ORDER BY sales DESC LIMIT 4`
     )
@@ -279,7 +284,11 @@ exports.best_sellers = async function (req, res) {
   } else {
     let results = await db
       .query(
-        `SELECT products.id, products.title, products.price, products.description, products.images from products LIMIT 4`
+        `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
+        FROM products
+        LEFT JOIN grades ON products.id = grades.product_id
+        GROUP BY products.id
+        LIMIT 4`
       )
       .then((result) => {
         return result.rows;
@@ -290,23 +299,27 @@ exports.best_sellers = async function (req, res) {
 };
 
 exports.addProduct = function (req, res) {
-  id = req.params.id
-  db.query(`INSERT INTO products (title, price, in_stock)
-          VALUES ('${req.body.title}', ${req.body.price}, 0)`)
-      .then(result => res.status(200).send({ message: 'Product Added' }))
-      .catch(err => console.error('Error: ', err))
-}
+  id = req.params.id;
+  db.query(
+    `INSERT INTO products (title, price, in_stock)
+          VALUES ('${req.body.title}', ${req.body.price}, 0)`
+  )
+    .then((result) => res.status(200).send({ message: "Product Added" }))
+    .catch((err) => console.error("Error: ", err));
+};
 
 exports.deleteProduct = function (req, res) {
-  id = req.params.id
+  id = req.params.id;
   db.query(`DELETE FROM products WHERE id = ${req.body.id}`)
-      .then(result => res.status(200).send({ message: 'Product deleted' }))
-      .catch(err => res.status(500).send({ error: 'Internal server error' }))
-}
+    .then((result) => res.status(200).send({ message: "Product deleted" }))
+    .catch((err) => res.status(500).send({ error: "Internal server error" }));
+};
 
 exports.editProduct = function (req, res) {
-  id = req.params.id
-  db.query(`UPDATE products SET title='${req.body.title}', price=${req.body.price} WHERE id='${req.body.id}'`)
-      .then(result => res.status(200).send({ message: 'Product Edited' }))
-      .catch(err => console.error('Error: ', err))
-}
+  id = req.params.id;
+  db.query(
+    `UPDATE products SET title='${req.body.title}', price=${req.body.price} WHERE id='${req.body.id}'`
+  )
+    .then((result) => res.status(200).send({ message: "Product Edited" }))
+    .catch((err) => console.error("Error: ", err));
+};

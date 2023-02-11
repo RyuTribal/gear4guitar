@@ -56,11 +56,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function SearchAppBar(props) {
   const size = useWindowSize();
   const [token, setToken] = React.useState(null);
+  const [basket, setBasket] = React.useState([]);
   const [searchbar, setSearchbar] = React.useState(false);
   let token_state = useSelector((state) => state.jwtReducer.jwt_token);
+  let basket_state = useSelector((state) => state.basketReducer.basket);
   React.useEffect(() => {
     setToken(token_state);
   }, [token_state]);
+  React.useEffect(() => {
+    setBasket(basket_state);
+  }, [basket_state]);
 
   const handleSearch = (search_term) => {
     if (props.router.location.pathname.includes("/search")) {
@@ -78,8 +83,7 @@ function SearchAppBar(props) {
       props.router.navigate(
         `${props.router.location.pathname}${query_string}&query=${search_term}`
       );
-    }
-    else{
+    } else {
       props.router.navigate(`/search?query=${search_term}`);
     }
   };
@@ -203,7 +207,7 @@ function SearchAppBar(props) {
                 color="inherit"
                 aria-label="cart"
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={basket ? basket.length : 0} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
