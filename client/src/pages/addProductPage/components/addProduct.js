@@ -1,9 +1,17 @@
 import { Box, Typography, Button, TextField, Select, MenuItem, Tooltip, Container, Paper } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import theme from "../../../themes/theme";
 import React, { useState } from "react";
 import "react-multi-carousel/lib/styles.css";
 
 let colors = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgrey", "lightgreen", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "rebeccapurple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen"];
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: "100%",
+    "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.text.third,
+    },
+}));
 
 function checkNone(color) {
     if (color === "None") {
@@ -42,7 +50,7 @@ function AddProductMain(props) {
 
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Tooltip title="Product title (Max 255 characters)">
-                                <TextField
+                                <StyledTextField
                                     label="Title"
                                     value={props.title}
                                     autoComplete="off"
@@ -53,7 +61,7 @@ function AddProductMain(props) {
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Tooltip title="Product price in kr (Insert value between 0 - 1000000)">
-                                <TextField
+                                <StyledTextField
                                     label="Price"
                                     type="number"
                                     inputProps={{ min: 0, max: 1000000 }}
@@ -66,7 +74,7 @@ function AddProductMain(props) {
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Tooltip title="Product description">
-                                <TextField
+                                <StyledTextField
                                     label="Description"
                                     value={props.description}
                                     autoComplete="off"
@@ -77,7 +85,7 @@ function AddProductMain(props) {
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Tooltip title="Product stock number (Insert value between 0 - 1000000)">
-                                <TextField
+                                <StyledTextField
                                     label="In Stock"
                                     type="number"
                                     inputProps={{ min: 0, max: 1000000 }}
@@ -109,7 +117,7 @@ function AddProductMain(props) {
                         {imageFields.map((field) => (
                             <Box key={field.id} sx={{ display: "flex", flexDirection: "column" }} component="form" >
                                 <Tooltip title="Insert image link">
-                                    <TextField
+                                    <StyledTextField
                                         label="Image"
                                         value={field.value}
                                         autoComplete="off"
@@ -126,7 +134,7 @@ function AddProductMain(props) {
 
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Tooltip title="Product brand (Max 100 characters)">
-                                <TextField
+                                <StyledTextField
                                     label="Brand"
                                     value={props.brand}
                                     autoComplete="off"

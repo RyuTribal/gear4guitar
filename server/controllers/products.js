@@ -299,11 +299,10 @@ exports.best_sellers = async function (req, res) {
 };
 
 exports.addProduct = function (req, res) {
-  console.log(req.body)
   id = req.params.id;
   db.query(
     `INSERT INTO products (title, price, description, in_stock, color, images, brand) 
-    VALUES ('${req.body.title}', ${req.body.price}, '${req.body.description}', ${req.body.in_stock}, '${req.body.color}', '${req.body.images}', '${req.body.brand}')`
+    VALUES ('${req.body.title}', ${req.body.price}, '${req.body.description}', ${req.body.in_stock}, '${req.body.color}', '${JSON.stringify(req.body.images)}', '${req.body.brand}')`
   )
     .then((result) => res.status(200).send({ message: "Product Added" }))
     .catch((err) => console.error("Error: ", err));
