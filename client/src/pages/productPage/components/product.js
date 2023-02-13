@@ -343,9 +343,14 @@ export default function Results(props) {
               ))}
             </Breadcrumbs>
             {props.isAdmin.value && (
-              <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
-                Delete Product
-              </Button>
+              <Box sx={{ marginLeft: "auto" }}>
+                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
+                  Delete Product
+                </Button>
+                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'yellow' }} onClick={() => props.editProduct(props.product.id)}>
+                  Edit Product
+                </Button>
+              </Box>
             )}
           </Box>
         )}

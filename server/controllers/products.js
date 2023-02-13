@@ -316,9 +316,8 @@ exports.deleteProduct = function (req, res) {
 };
 
 exports.editProduct = function (req, res) {
-  id = req.params.id;
   db.query(
-    `UPDATE products SET title='${req.body.title}', price=${req.body.price} WHERE id='${req.body.id}'`
+    `UPDATE products SET title='${req.body.title}', price=${req.body.price}, description='${req.body.description}', in_stock=${req.body.in_stock}, color='${req.body.color}', images='${JSON.stringify(req.body.images)}', brand='${req.body.brand}' WHERE id=${req.body.id}`
   )
     .then((result) => res.status(200).send({ message: "Product Edited" }))
     .catch((err) => console.error("Error: ", err));
