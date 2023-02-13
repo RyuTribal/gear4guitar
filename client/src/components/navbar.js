@@ -11,12 +11,15 @@ import logo from "./images/logo.png";
 import logo_mobile from "./images/logo_small.png";
 import theme from "../themes/theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import PersonIcon from "@mui/icons-material/Person";
 import { useSelector } from "react-redux";
 import useWindowSize from "../redundant_functions/WindowSize";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
+import { connect } from "react-redux";
 import withRouter from "./routes";
+import { isLoggedIn } from "../api_calls/users";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,19 +56,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+async function getAdminButton() {
+  let isAdmin = false;
+  await isLoggedIn()
+    .then(async (res) => {
+      // isAdmin = this.props.userAdmin(res.data.is_admin)
+      console.log(this.props.userAdmin(res.data.is_admin))
+    })
+
+  console.log("after admin" + isAdmin)
+  if (isAdmin) {
+    return true;
+  }
+}
+
 function SearchAppBar(props) {
   const size = useWindowSize();
   const [token, setToken] = React.useState(null);
   const [basket, setBasket] = React.useState([]);
+  const [admin, setAdmin] = React.useState(false);
   const [searchbar, setSearchbar] = React.useState(false);
   let token_state = useSelector((state) => state.jwtReducer.jwt_token);
   let basket_state = useSelector((state) => state.basketReducer.basket);
+  let admin_state = useSelector((state) => state.jwtReducer.isAdmin);
   React.useEffect(() => {
     setToken(token_state);
   }, [token_state]);
   React.useEffect(() => {
     setBasket(basket_state);
   }, [basket_state]);
+  React.useEffect(() => {
+    setAdmin(admin_state);
+  }, [admin_state]);
 
   const handleSearch = (search_term) => {
     if (props.router.location.pathname.includes("/search")) {
@@ -199,6 +221,20 @@ function SearchAppBar(props) {
                   onClick={() => setSearchbar(true)}
                 >
                   <SearchIcon />
+                </IconButton>
+              )}
+              {admin && (
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="addProduct"
+                  component={Link}
+                  to='/add_product'
+                >
+                  <Badge >
+                    <AddBoxIcon />
+                  </Badge>
                 </IconButton>
               )}
               <IconButton
