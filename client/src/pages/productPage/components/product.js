@@ -213,35 +213,37 @@ function ProductSpecs(props) {
             Details
           </Typography>
         </Grid>
-        <Grid item container xs={12} spacing={1}>
-          {props.product.specs.map((spec, index) => {
-            return (
-              <Grid sx={{ padding: "20px" }} md={4} xs={12}>
-                <Typography
-                  key={index}
-                  sx={{ color: "text.primary", fontWeight: "bold" }}
-                >
-                  {spec.title}
-                </Typography>
-                {spec.content.map((content, index) => {
-                  let str = Array.from(content.matchAll(bold_reg), (m) => {
-                    return (
-                      <Typography
-                        key={index}
-                        sx={{ color: "text.primary", padding: 0 }}
-                      >
-                        {`\u2022 `}
-                        <strong>{m[1]}</strong>
-                        {m[2]}
-                      </Typography>
-                    );
-                  });
-                  return str;
-                })}
-              </Grid>
-            );
-          })}
-        </Grid>
+        {props.product.specs && (
+          <Grid item container xs={12} spacing={1}>
+            {props.product.specs.map((spec, index) => {
+              return (
+                <Grid sx={{ padding: "20px" }} md={4} xs={12}>
+                  <Typography
+                    key={index}
+                    sx={{ color: "text.primary", fontWeight: "bold" }}
+                  >
+                    {spec.title}
+                  </Typography>
+                  {spec.content.map((content, index) => {
+                    let str = Array.from(content.matchAll(bold_reg), (m) => {
+                      return (
+                        <Typography
+                          key={index}
+                          sx={{ color: "text.primary", padding: 0 }}
+                        >
+                          {`\u2022 `}
+                          <strong>{m[1]}</strong>
+                          {m[2]}
+                        </Typography>
+                      );
+                    });
+                    return str;
+                  })}
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
       </Grid>
     );
   }
@@ -324,21 +326,28 @@ export default function Results(props) {
         }}
       >
         {props.product && (
-          <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
-            <MUILink underline="hover" component={Link} color="inherit" to="/">
-              <HomeIcon />
-            </MUILink>
-            {props.product.category_ids.map((category, index) => (
-              <MUILink
-                underline="hover"
-                component={Link}
-                color="inherit"
-                to={"/search/" + category}
-              >
-                {props.product.category_names[index]}
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
+              <MUILink underline="hover" component={Link} color="inherit" to="/">
+                <HomeIcon />
               </MUILink>
-            ))}
-          </Breadcrumbs>
+              {props.product.category_ids.map((category, index) => (
+                <MUILink
+                  underline="hover"
+                  component={Link}
+                  color="inherit"
+                  to={"/search/" + category}
+                >
+                  {props.product.category_names[index]}
+                </MUILink>
+              ))}
+            </Breadcrumbs>
+            {props.isAdmin.value && (
+              <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
+                Delete Product
+              </Button>
+            )}
+          </Box>
         )}
 
         <Grid sx={{ marginTop: "2rem" }} container spacing={2}>

@@ -9,13 +9,13 @@ import {
   addComments,
   deleteComments,
   editComments,
-  addProducts,
   deleteProducts,
   editProducts,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
 import { connect } from "react-redux";
 import { addBasket } from "../../api_calls/users";
+import { isLoggedIn } from "../../api_calls/users";
 
 class productPage extends React.Component {
   constructor(props) {
@@ -24,16 +24,22 @@ class productPage extends React.Component {
       product: null,
       comments: [],
       loading: true,
+      isAdmin: false,
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = async (res) => {
     await Promise.all([
       this.link(this.props.router.params.id),
       this.comment(this.props.router.params.id),
       this.loadVariations(this.props.router.params.id),
     ]);
     this.setState({ loading: false });
+    await isLoggedIn()
+        .then(async (res) => {
+          this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
+        })
+    // console.log(this.state.isAdmin.value)
   };
 
   componentDidUpdate = async (prevProps) => {
@@ -88,17 +94,8 @@ class productPage extends React.Component {
     window.location.reload(false);
   };
 
-  addProduct = async (title, price) => {
-    if (title === "" || price === "") {
-      return;
-    }
-    await addProducts(title, price);
-    window.location.reload(false);
-  };
-
   deleteProduct = async (id) => {
     await deleteProducts(id);
-    window.location.reload(false);
   };
 
   editProduct = async (id, title, price) => {
@@ -136,8 +133,10 @@ class productPage extends React.Component {
           buttonFunction={(id) => this.navigateProduct(id)}
           product={this.state.product}
           comments={this.state.comments}
+          isAdmin={this.state.isAdmin}
           variations={this.state.variations}
           addToBasket={() => this.addToBasket()}
+          deleteProduct={(id) => this.deleteProduct(id)}
         />
       );
     }
@@ -156,6 +155,7 @@ const mapDispatchToProps = (dispatch) => {
     addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
     removeToken: () => dispatch({ type: "JWT_REMOVE" }),
     setCart: (cart) => dispatch({ type: "BASKET_SET", value: cart }),
+    userAdmin: (is_admin) => dispatch({ type: "IS_ADMIN", value: is_admin }),
   };
 };
 

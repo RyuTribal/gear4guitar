@@ -70,13 +70,19 @@ export async function editComments(id, comment) {
   return data;
 }
 
-export async function addProducts(title, price) {
+export async function addProducts(title, price, description, in_stock, color, images, brand) {
+    console.log(title, price, description, in_stock, color, images, brand)
     let data = await axios({
         method: "post",
         url: `http://localhost:8080/api/products/add_product/`,
         data: {
             title: title,
             price: price,
+            description: description,
+            in_stock: in_stock,
+            color: color,
+            images: images,
+            brand: brand,
         }
   });
 
