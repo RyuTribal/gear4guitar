@@ -8,9 +8,7 @@ import {
   getComments,
   addComments,
   deleteComments,
-  editComments,
   deleteProducts,
-  editProducts,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
 import { connect } from "react-redux";
@@ -86,23 +84,12 @@ class productPage extends React.Component {
     window.location.reload(false);
   };
 
-  editComment = async (id, comment) => {
-    if (comment === "") {
-      return;
-    }
-    await editComments(id, comment);
-    window.location.reload(false);
-  };
-
   deleteProduct = async (id) => {
     await deleteProducts(id);
   };
 
-  editProduct = async (id, title, price) => {
-    if (title === "" || price === "") {
-      return;
-    }
-    await editProducts(id, title, price);
+  editProduct = async (id) => {
+    this.props.router.navigate("/edit_product/" + id);
     window.location.reload(false);
   };
 
@@ -137,6 +124,7 @@ class productPage extends React.Component {
           variations={this.state.variations}
           addToBasket={() => this.addToBasket()}
           deleteProduct={(id) => this.deleteProduct(id)}
+          editProduct={(id) => this.editProduct(id)}
         />
       );
     }
