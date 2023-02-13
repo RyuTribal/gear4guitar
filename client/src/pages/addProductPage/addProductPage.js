@@ -25,18 +25,20 @@ class addProductPage extends React.Component {
     }
 
     componentDidMount = async (res) => {
-        await isLoggedIn()
-            .then(async (res) => {
-                this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
-            })
-        if (this.state.isAdmin.value === false) {
+        if (this.props.userAdmin === false) {
             this.props.router.navigate("/")
+        } else {
+            this.setState({ isAdmin: true })
         }
     };
 
     componentDidUpdate = async (prevProps) => {
-        if (this.state.isAdmin.value === false) {
-            this.props.router.navigate("/")
+        if (this.props.userAdmin !== prevProps.userAdmin) {
+            if (this.props.userAdmin === false) {
+                this.props.router.navigate("/")
+            } else {
+                this.setState({ isAdmin: true })
+            }
         }
     };
 
@@ -77,7 +79,7 @@ class addProductPage extends React.Component {
     render() {
         return (
             <Box>
-                {this.state.isAdmin.value && (
+                {this.state.isAdmin && (
                     <AddProduct
                         onSubmit={this.handleSubmit}
                         title={this.state.title}
@@ -106,6 +108,7 @@ const mapStateToProps = (state) => {
     return {
         token: state.jwtReducer.jwt_token,
         basket: state.basketReducer.basket,
+        userAdmin: state.jwtReducer.isAdmin,
     };
 };
 
@@ -113,7 +116,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
         removeToken: () => dispatch({ type: "JWT_REMOVE" }),
-        userAdmin: (is_admin) => dispatch({ type: "IS_ADMIN", value: is_admin }),
+        admin: (is_admin) => dispatch({ type: "IS_ADMIN", value: is_admin }),
     };
 };
 

@@ -35,6 +35,7 @@ class editProductPage extends React.Component {
         } else {
             await Promise.all([
                 await this.getProducts(this.props.router.params.id),
+                await this.loadInitValues()
             ]);
             this.state.id = this.props.router.params.id
             console.log(this.state.product)
@@ -46,6 +47,16 @@ class editProductPage extends React.Component {
             this.props.router.navigate("/")
         }
     };
+
+    loadInitValues = () => {
+        this.state.title = this.state.product.title
+        this.state.price = this.state.product.price
+        this.state.description = this.state.product.description
+        this.state.in_stock = this.state.product.in_stock
+        this.state.color = this.state.product.color
+        this.state.images = this.state.product.images
+        this.state.brand = this.state.product.brand
+    }
 
     getProducts = async (id) => {
         let res = await getProductInfo(id);
