@@ -9,6 +9,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import theme from "./themes/theme";
 import Product from "./pages/productPage/productPage";
+import AddProduct from "./pages/addProductPage/addProductPage";
+import EditProduct from "./pages/editProductPage/editProductPage";
 import StorageChecker from "./pages/StorageChecker";
 import ScrollToTop from "./pages/ScrollToTop";
 import Checkout from "./pages/checkout/checkout";
@@ -41,6 +43,8 @@ function App() {
             <Route path="/productPage/:id" element={<Product />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/add_product" element={<AddProduct />} />
+            <Route path="/edit_product/:id" element={<EditProduct />} />
           </Routes>
         </Box>
       </ThemeProvider>

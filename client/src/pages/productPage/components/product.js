@@ -334,21 +334,33 @@ export default function Results(props) {
         }}
       >
         {props.product && (
-          <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
-            <MUILink underline="hover" component={Link} color="inherit" to="/">
-              <HomeIcon />
-            </MUILink>
-            {props.product.category_ids.map((category, index) => (
-              <MUILink
-                underline="hover"
-                component={Link}
-                color="inherit"
-                to={"/search/" + category}
-              >
-                {props.product.category_names[index]}
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
+              <MUILink underline="hover" component={Link} color="inherit" to="/">
+                <HomeIcon />
               </MUILink>
-            ))}
-          </Breadcrumbs>
+              {props.product.category_ids.map((category, index) => (
+                <MUILink
+                  underline="hover"
+                  component={Link}
+                  color="inherit"
+                  to={"/search/" + category}
+                >
+                  {props.product.category_names[index]}
+                </MUILink>
+              ))}
+            </Breadcrumbs>
+            {props.isAdmin.value && (
+              <Box sx={{ marginLeft: "auto" }}>
+                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
+                  Delete Product
+                </Button>
+                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'yellow' }} onClick={() => props.editProduct(props.product.id)}>
+                  Edit Product
+                </Button>
+              </Box>
+            )}
+          </Box>
         )}
 
         <Grid sx={{ marginTop: "2rem" }} container spacing={2}>
