@@ -76,6 +76,7 @@ function ProductMain(props) {
               {props.product.images.map((image, index) => (
                 <ButtonBase
                   onClick={() => setSelected(index)}
+                  key={index}
                   sx={{
                     border:
                       index === selected
@@ -203,16 +204,22 @@ function ProductMain(props) {
   }
 }
 
+function Comments(props){
+  return null;
+}
+
 function ProductSpecs(props) {
   const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
   if (props.product) {
     return (
       <Grid item xs={12} spacing={2} container sx={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography sx={{ color: "text.third" }} variant="h5">
-            Details
-          </Typography>
-        </Grid>
+        {props.product.specs && (
+          <Grid item xs={12}>
+            <Typography sx={{ color: "text.third" }} variant="h5">
+              Details
+            </Typography>
+          </Grid>
+        )}
         {props.product.specs && (
           <Grid item container xs={12} spacing={1}>
             {props.product.specs.map((spec, index) => {
@@ -316,6 +323,7 @@ export default function Results(props) {
         margin: 0,
         paddingTop: 5,
         backgroundColor: "secondary.main",
+        minHeight: "100vh",
       }}
     >
       <Box
@@ -368,26 +376,10 @@ export default function Results(props) {
           <Grid item xs={12}>
             <ProductVariations variations={props.variations} />
           </Grid>
-          <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            <Comments />
+          </Grid>
         </Grid>
-
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            width: "100%",
-          }}
-        >
-          {renderComment(
-            props.comments.data,
-            anchorEl,
-            setAnchorEl,
-            open,
-            handleClick,
-            handleClose,
-            chooseOption
-          )}
-        </Box> */}
       </Box>
     </Box>
   );

@@ -19,6 +19,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
 import { connect } from "react-redux";
 import withRouter from "./routes";
+import Cart from "./cart";
 import { isLoggedIn } from "../api_calls/users";
 
 const Search = styled("div")(({ theme }) => ({
@@ -76,6 +77,8 @@ function SearchAppBar(props) {
   const [basket, setBasket] = React.useState([]);
   const [admin, setAdmin] = React.useState(false);
   const [searchbar, setSearchbar] = React.useState(false);
+  const [openCart, setOpenCart] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   let token_state = useSelector((state) => state.jwtReducer.jwt_token);
   let basket_state = useSelector((state) => state.basketReducer.basket);
   let admin_state = useSelector((state) => state.jwtReducer.isAdmin);
@@ -109,6 +112,14 @@ function SearchAppBar(props) {
       props.router.navigate(`/search?query=${search_term}`);
     }
   };
+  const handleOpenClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenCart(true);
+  };
+
+  const handleCartClick = () => {
+    setOpenCart(false);
+  };
   const [query, setValue] = React.useState("");
   return (
     <Box sx={{ width: "100%" }}>
@@ -129,7 +140,7 @@ function SearchAppBar(props) {
               size="large"
               edge="start"
               color="inherit"
-              aria-label="cart"
+              aria-label="back"
               onClick={() => setSearchbar(false)}
             >
               <ChevronLeftIcon color="inherit" />
@@ -242,17 +253,30 @@ function SearchAppBar(props) {
                 edge="start"
                 color="inherit"
                 aria-label="cart"
+                id="cart-button"
+                aria-controls={openCart ? "cart-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={openCart ? "true" : undefined}
+                onClick={handleOpenClick}
               >
                 <Badge badgeContent={basket ? basket.length : 0} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
+              <Cart
+                open={openCart}
+                anchorEl={anchorEl}
+                setOpen={(isOpen) => handleCartClick(isOpen)}
+                user={token}
+              />
               {token ? (
                 <IconButton
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="account"
+                  component={Link}
+                  to="/account"
                 >
                   <PersonIcon />
                 </IconButton>
