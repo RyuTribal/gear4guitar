@@ -171,11 +171,15 @@ exports.save_user_data = async function (req, res) {
 
 exports.get_orders = async function (req, res) {
   connection.query(
-    "SELECT * FROM orders WHERE user_id = $1",
+    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
+    FROM products
+    LEFT JOIN grades ON products.id = grades.product_id
+    WHERE products.id IN (SELECT product_id FROM orders WHERE user_id = $1)
+    GROUP BY products.id`,
     [req.user],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: err.stack });
       }
       return res.status(200).send(result.rows);
     }

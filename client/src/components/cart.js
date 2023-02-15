@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { addBasket } from "../api_calls/users";
+import { addBasket, removeBasket } from "../api_calls/users";
 import useWindowSize from "../redundant_functions/WindowSize";
 import { ClickAwayListener } from "@mui/base";
 import MobileDrawer from "./mobileDrawer";
@@ -111,6 +111,7 @@ function Cart(props) {
   );
   const [total, setTotal] = useState(0);
   const [open, setOpen] = useState(props.open);
+  const [isUser, setIsUser] = useState(false);
   const size = useWindowSize();
 
   useEffect(() => {
@@ -132,13 +133,20 @@ function Cart(props) {
     setOpen(props.open);
   }, [props.open]);
 
-  const addItem = (item) => {
+  useEffect(() => {
+    if (props.user) {
+      setIsUser(true);
+    } else {
+      setIsUser(false);
+    }
+  }, [props.user]);
+
+  const addItem = async (item) => {
     if (
       !item.quantity ||
       item.in_stock !== 0 ||
       item.quantity + 1 <= item.in_stock
     ) {
-      console.log("here");
       // Otherwise redux complains about mutability
       let basket = JSON.parse(JSON.stringify(props.basket));
       let index = basket.findIndex((i) => i.id === item.id);
@@ -151,24 +159,35 @@ function Cart(props) {
           basket[index].quantity = 1;
         }
       }
+      if (isUser) {
+        await addBasket(item.id, 1);
+      }
       props.setCart(basket);
       localStorage.setItem("cart", JSON.stringify(basket));
     }
   };
 
-  const removeItem = (item) => {
+  const removeItem = async (item) => {
     // Otherwise redux complains about mutability
     let basket = JSON.parse(JSON.stringify(props.basket));
     let index = basket.findIndex((i) => i.id === item.id);
     if (index !== -1) {
-      if (basket[index].quantity === 1) {
+      if (basket[index].quantity <= 1 || !basket[index].quantity) {
         basket.splice(index, 1);
       } else {
         basket[index].quantity -= 1;
       }
     }
     props.setCart(basket);
-    localStorage.setItem("cart", JSON.stringify(basket));
+    let basket_resp = null;
+    if (isUser && item.quantity !== 1 && item.quantity) {
+      basket_resp = await addBasket(item.id, -1);
+    } else if (isUser && (item.quantity === 1 || !item.quantity)) {
+      basket_resp = await removeBasket(item.id);
+    }
+    if (basket_resp === null) {
+      localStorage.setItem("cart", JSON.stringify(basket));
+    }
   };
 
   if (size.width > 851) {

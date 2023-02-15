@@ -76,6 +76,7 @@ function ProductMain(props) {
               {props.product.images.map((image, index) => (
                 <ButtonBase
                   onClick={() => setSelected(index)}
+                  key={index}
                   sx={{
                     border:
                       index === selected
@@ -314,6 +315,7 @@ export default function Results(props) {
         margin: 0,
         paddingTop: 5,
         backgroundColor: "secondary.main",
+        minHeight: "100vh",
       }}
     >
       <Box

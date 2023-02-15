@@ -110,31 +110,37 @@ class productPage extends React.Component {
   };
 
   addToBasket = async () => {
-    if (!this.props.token) {
-      let cart = [...this.props.basket];
-      let found = false;
-      for (let i = 0; i < cart.length; i++) {
-        if (cart[i].id === this.state.product.id) {
-          found = true;
-          if (cart[i].quantity) {
-            cart[i].quantity++;
-            break;
-          } else {
-            cart[i].quantity = 2;
-            break;
-          }
+    // Otherwise redux complains about mutability
+    let cart = JSON.parse(JSON.stringify(this.props.basket));
+    let found = false;
+    for (let i = 0; i < cart.length; i++) {
+      if (cart[i].id === this.state.product.id) {
+        found = true;
+        if (cart[i].quantity) {
+          cart[i].quantity++;
+          break;
+        } else {
+          cart[i].quantity = 2;
+          break;
         }
       }
+    }
+    if (!this.props.token) {
+      localStorage.setItem("cart", JSON.stringify(cart));
       if (!found) {
         cart.push(this.state.product);
       }
       this.props.setCart(cart);
-      localStorage.setItem("cart", JSON.stringify(cart));
     } else {
-      let res_cart = await addBasket(this.state.product.id);
+      let res_cart = await addBasket(this.state.product.id, 1).catch(
+        (err) => {
+          return err;
+        }
+      );
       if (res_cart.status === 200) {
-        let cart = this.props.basket;
-        cart.push(this.state.product);
+        if (!found) {
+          cart.push(this.state.product);
+        }
         this.props.setCart(cart);
       }
     }

@@ -39,6 +39,7 @@ export default function RenderCart(props) {
         <Box
           sx={{
             maxHeight: size.width > 851 ? "920px" : "none",
+            minHeight: size.width > 851 ? "920px" : "none",
             overflowY: "auto",
             display: "flex",
             flexDirection: "column",

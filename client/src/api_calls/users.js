@@ -55,10 +55,30 @@ export async function getBasket() {
   return data;
 }
 
-export async function addBasket(id) {
+export async function addBasket(id, quantity) {
   let data = await axios({
     method: "post",
     url: `http://localhost:8080/api/basket/add/${id}`,
+    data: {
+      quantity: quantity,
+    },
+  });
+
+  return data;
+}
+
+export async function removeBasket(id) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/basket/delete/${id}`,
+  });
+  return data;
+}
+
+export async function getAddress() {
+  let data = await axios({
+    method: "get",
+    url: `http://localhost:8080/api/basket/address`,
   });
 
   return data;

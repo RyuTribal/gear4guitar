@@ -231,6 +231,7 @@ function SearchAppBar(props) {
                 open={openCart}
                 anchorEl={anchorEl}
                 setOpen={(isOpen) => handleCartClick(isOpen)}
+                user={token}
               />
               {token ? (
                 <IconButton

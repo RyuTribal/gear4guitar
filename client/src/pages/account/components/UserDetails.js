@@ -1,4 +1,12 @@
-import { Grid, Box, TextField, Button, Typography } from "@mui/material";
+import {
+  Grid,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Tooltip,
+} from "@mui/material";
+import GavelIcon from "@mui/icons-material/Gavel";
 
 export default function UserDetails(props) {
   return (
@@ -13,10 +21,15 @@ export default function UserDetails(props) {
         sx={{ mt: 3 }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{display: "flex", flexDirection: "row", gap: "10px"}}>
             <Typography variant="h6" gutterBottom>
               {`${props.user.first_name} ${props.user.last_name}'s Details`}
             </Typography>
+            {props.user.is_admin && (
+              <Tooltip title="Admin">
+                <GavelIcon sx={{color: "primary.main"}} />
+              </Tooltip>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField

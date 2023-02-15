@@ -5,7 +5,15 @@ import RenderCart from "./components/RenderCart";
 import RenderAddress from "./components/RenderAddress";
 import Header from "./components/Header";
 import withRouter from "../../components/routes";
-import { getUser, completeOrder } from "../../api_calls/users";
+import { getUser, completeOrder, getAddress } from "../../api_calls/users";
+
+function capitalizeFirstLetter(string) {
+  if (string) {
+    return string[0].toUpperCase() + string.slice(1);
+  } else {
+    return "";
+  }
+}
 
 class Checkout extends Component {
   constructor(props) {
@@ -19,12 +27,31 @@ class Checkout extends Component {
         city: "",
         zip: "",
         country: "",
-        order_complete: false,
       },
+      order_complete: false,
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    if (this.props.token) {
+      const promise = await Promise.all([getAddress(), getUser()]);
+      if (promise[0].status === 200 && promise[1].status === 200) {
+        this.setState({
+          address: {
+            user_id: promise[1].data.id,
+            first_name: capitalizeFirstLetter(promise[1].data.first_name),
+            last_name: capitalizeFirstLetter(promise[1].data.last_name),
+            email: promise[1].data.email,
+            street: capitalizeFirstLetter(promise[0].data.street_name),
+            number: promise[0].data.house_number,
+            city: capitalizeFirstLetter(promise[0].data.city),
+            zip: promise[0].data.postal_code,
+            country: capitalizeFirstLetter(promise[0].data.country),
+
+          },
+        });
+      }
+    }
     if (this.props.basket) {
       let total = 0;
       this.props.basket.forEach((item) => {
@@ -33,9 +60,9 @@ class Checkout extends Component {
       });
       this.setState({ cart: this.props.basket, total: total });
     }
-  }
+  };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate = async (prevProps) => {
     if (prevProps.basket !== this.props.basket) {
       let total = 0;
       this.props.basket.forEach((item) => {
@@ -44,7 +71,24 @@ class Checkout extends Component {
       });
       this.setState({ cart: this.props.basket, total: total });
     }
-  }
+    if (prevProps.token !== this.props.token) {
+      if (this.props.token) {
+        let user_response = await getUser().catch((err) => {
+          return err;
+        });
+        if (user_response.status === 200) {
+          this.setState({
+            address: {
+              user_id: user_response.data.id,
+              first_name: user_response.data.first_name,
+              last_name: user_response.data.last_name,
+              email: user_response.data.email,
+            },
+          });
+        }
+      }
+    }
+  };
 
   setAddress = (address) => {
     this.setState({ address: address });
