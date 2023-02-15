@@ -19,15 +19,17 @@ const theme = createTheme({
     "&:-internal-autofill-selected": {
       backgroundColor: "none",
     },
+    MuiInputBase: {
+      root: {
+        borderColor: "#d1cfcf",
+      },
+    },
   },
   components: {
-    MuiInput: {
-      MuiInputBase: {
-        input: {
-          "&:-internal-autofill-selected": {
-            transitionDelay: "9999s",
-            transitionProperty: "background-color, color",
-          },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: "#262725",
         },
       },
     },

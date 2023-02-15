@@ -61,15 +61,25 @@ exports.register = async function (req, res) {
 
 exports.edit_creds = async function (req, res) {
   let query = "UPDATE users SET ";
-  for (let key of Object.keys(req.body)) {
+  for (let key of Object.keys(req.body.user)) {
     if (key === "password") {
-      const encryptedPassword = await bcrypt.hash(
-        req.body.password,
-        saltRounds
-      );
-      query += `hashed_password = ${encryptedPassword}, `;
+      if (req.body.user.password) {
+        if (req.body.user.password.length < 8) {
+          return res
+            .status(400)
+            .send({ error: "Password must be at least 8 characters" });
+        }
+        const encryptedPassword = await bcrypt.hash(
+          req.body.user.password,
+          saltRounds
+        );
+        query += `hashed_password = '${encryptedPassword}', `;
+      }
     } else {
-      query += `${key} = '${req.body[key]}', `;
+      if (typeof req.body.user[key] === "string") {
+        req.body.user[key] = "'" + req.body.user[key].toLowerCase() + "'";
+      }
+      query += `${key} = ${req.body.user[key]}, `;
     }
   }
   query = query.slice(0, -2);
@@ -103,7 +113,6 @@ exports.login = async function (req, res) {
         req.body.password,
         result.rows[0].hashed_password
       );
-      console.log(comparison);
       if (err) {
         return res.status(500).send({ error: "Internal server error" });
       }
@@ -158,4 +167,17 @@ exports.save_user_data = async function (req, res) {
     ])
     .catch((err) => console.error("Error: ", err));
   return res.status(200).send({ message: "Saved" });
+};
+
+exports.get_orders = async function (req, res) {
+  connection.query(
+    "SELECT * FROM orders WHERE user_id = $1",
+    [req.user],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      return res.status(200).send(result.rows);
+    }
+  );
 };

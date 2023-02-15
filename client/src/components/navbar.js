@@ -238,6 +238,8 @@ function SearchAppBar(props) {
                   edge="start"
                   color="inherit"
                   aria-label="account"
+                  component={Link}
+                  to="/account"
                 >
                   <PersonIcon />
                 </IconButton>

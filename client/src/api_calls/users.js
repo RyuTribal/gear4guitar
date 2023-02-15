@@ -77,3 +77,24 @@ export async function completeOrder(user, address, cart) {
 
   return data;
 }
+
+export async function getOrders() {
+  let data = await axios({
+    method: "get",
+    url: `http://localhost:8080/api/users/get_orders`,
+  });
+
+  return data;
+}
+
+export async function updateUser(user) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/users/edit_creds`,
+    data: {
+      user: user,
+    },
+  });
+
+  return data;
+}

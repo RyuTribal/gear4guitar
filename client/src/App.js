@@ -13,6 +13,7 @@ import StorageChecker from "./pages/StorageChecker";
 import ScrollToTop from "./pages/ScrollToTop";
 import Checkout from "./pages/checkout/checkout";
 import { CssBaseline } from "@mui/material";
+import Account from "./pages/account/account";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/register" element={<Registration />} />
             <Route path="/productPage/:id" element={<Product />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/account" element={<Account />} />
           </Routes>
         </Box>
       </ThemeProvider>
