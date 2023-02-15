@@ -204,45 +204,53 @@ function ProductMain(props) {
   }
 }
 
+function Comments(props){
+  return null;
+}
+
 function ProductSpecs(props) {
   const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
   if (props.product) {
     return (
       <Grid item xs={12} spacing={2} container sx={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography sx={{ color: "text.third" }} variant="h5">
-            Details
-          </Typography>
-        </Grid>
-        <Grid item container xs={12} spacing={1}>
-          {props.product.specs && props.product.specs.map((spec, index) => {
-            return (
-              <Grid sx={{ padding: "20px" }} md={4} xs={12}>
-                <Typography
-                  key={index}
-                  sx={{ color: "text.primary", fontWeight: "bold" }}
-                >
-                  {spec.title}
-                </Typography>
-                {spec.content.map((content, index) => {
-                  let str = Array.from(content.matchAll(bold_reg), (m) => {
-                    return (
-                      <Typography
-                        key={index}
-                        sx={{ color: "text.primary", padding: 0 }}
-                      >
-                        {`\u2022 `}
-                        <strong>{m[1]}</strong>
-                        {m[2]}
-                      </Typography>
-                    );
-                  });
-                  return str;
-                })}
-              </Grid>
-            );
-          })}
-        </Grid>
+        {props.product.specs && (
+          <Grid item xs={12}>
+            <Typography sx={{ color: "text.third" }} variant="h5">
+              Details
+            </Typography>
+          </Grid>
+        )}
+        {props.product.specs && (
+          <Grid item container xs={12} spacing={1}>
+            {props.product.specs.map((spec, index) => {
+              return (
+                <Grid sx={{ padding: "20px" }} md={4} xs={12}>
+                  <Typography
+                    key={index}
+                    sx={{ color: "text.primary", fontWeight: "bold" }}
+                  >
+                    {spec.title}
+                  </Typography>
+                  {spec.content.map((content, index) => {
+                    let str = Array.from(content.matchAll(bold_reg), (m) => {
+                      return (
+                        <Typography
+                          key={index}
+                          sx={{ color: "text.primary", padding: 0 }}
+                        >
+                          {`\u2022 `}
+                          <strong>{m[1]}</strong>
+                          {m[2]}
+                        </Typography>
+                      );
+                    });
+                    return str;
+                  })}
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
       </Grid>
     );
   }
@@ -356,26 +364,10 @@ export default function Results(props) {
           <Grid item xs={12}>
             <ProductVariations variations={props.variations} />
           </Grid>
-          <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            <Comments />
+          </Grid>
         </Grid>
-
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            width: "100%",
-          }}
-        >
-          {renderComment(
-            props.comments.data,
-            anchorEl,
-            setAnchorEl,
-            open,
-            handleClick,
-            handleClose,
-            chooseOption
-          )}
-        </Box> */}
       </Box>
     </Box>
   );
