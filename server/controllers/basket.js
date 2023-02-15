@@ -30,16 +30,48 @@ exports.deletefrombasket = function (req, res) {
 };
 
 exports.completeorder = async function (req, res) {
-  await db
-    .query(
-      "INSERT INTO orders (user_id, product_id, quantity) SELECT user_id, product_id, quantity FROM basket WHERE user_id = $1 ",
-      [req.body.customer]
-    )
-    .catch((err) => res.status(500).send("Error: ", err));
-  await db
-    .query("DELETE FROM basket WHERE user_id = $1", [req.body.customer])
-    .catch((err) => res.status(500).send("Error: ", err));
-  res.status(200).send("order completed");
+  // Two scenarios, user logged in or not
+  await db.query('BEGIN');
+  for (let i = 0; i < req.body.cart.length; i++) {
+    let query = `INSERT INTO orders(product_id, first_name, last_name, email, 
+      street_name, house_number, 
+      user_id, price_at_payment, 
+      country, city, postal_code, quantity) 
+      VALUES(${req.body.cart[i].id}, '${req.body.user.first_name}', '${req.body.user.last_name}', '${req.body.user.email}', '${req.body.address.street}', '${req.body.address.number}', ${req.body.user.id}, ${req.body.cart[i].price}, '${req.body.address.country}', '${req.body.address.city}', ${req.body.address.zip}, ${req.body.cart[i].quantity})`;
+    let order_res = await db.query(query).catch((err) => {
+      return err;
+    });
+    if (order_res.severity === "ERROR") {
+      await db.query("ROLLBACK");
+      return res.status(500).json({ error: order_res.stack });
+    }
+    let delete_res = await db
+      .query(
+        `UPDATE products SET in_stock = in_stock - ${req.body.cart[i].quantity} 
+      WHERE id = ${req.body.cart[i].id}`
+      )
+      .catch((err) => {
+        return err;
+      });
+    if (delete_res.severity === "ERROR") {
+      await db.query("ROLLBACK");
+      return res.status(500).json({ error: delete_res.stack });
+    }
+  }
+  if (req.body.user.id) {
+    // User is logged in
+    let basket_del_res = await db
+      .query(`DELETE FROM basket WHERE user_id = ${req.body.user.id}`)
+      .catch((err) => {
+        return err;
+      });
+    if (basket_del_res.severity === "ERROR") {
+      await db.query("ROLLBACK");
+      return res.status(500).json({ error: basket_del_res.stack });
+    }
+  }
+  await db.query('COMMIT');
+  return res.status(200).send("Order completed");
 };
 
 exports.getbasket = function (req, res) {

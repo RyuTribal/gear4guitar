@@ -13,6 +13,7 @@ class Home extends React.Component {
 
   componentDidMount = async () => {
     let res = await getBestSellers();
+    console.log(res)
     if (res.status === 200) {
       this.setState({ products: res.data });
     }

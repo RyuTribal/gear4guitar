@@ -37,6 +37,15 @@ export async function isLoggedIn() {
   return data;
 }
 
+export async function getUser() {
+  let data = await axios({
+    method: "get",
+    url: `http://localhost:8080/api/users/get_user`,
+  });
+
+  return data;
+}
+
 export async function getBasket() {
   let data = await axios({
     method: "get",
@@ -50,6 +59,20 @@ export async function addBasket(id) {
   let data = await axios({
     method: "post",
     url: `http://localhost:8080/api/basket/add/${id}`,
+  });
+
+  return data;
+}
+
+export async function completeOrder(user, address, cart) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/basket/completeorder`,
+    data: {
+      user: user,
+      address: address,
+      cart: cart,
+    },
   });
 
   return data;

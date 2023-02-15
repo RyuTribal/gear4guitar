@@ -11,11 +11,14 @@ import theme from "./themes/theme";
 import Product from "./pages/productPage/productPage";
 import StorageChecker from "./pages/StorageChecker";
 import ScrollToTop from "./pages/ScrollToTop";
+import Checkout from "./pages/checkout/checkout";
+import { CssBaseline } from "@mui/material";
 
 function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Navbar />
         <ScrollToTop />
         <StorageChecker />
@@ -35,6 +38,7 @@ function App() {
             <Route path="/sign_in" element={<SignIn />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/productPage/:id" element={<Product />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </Box>
       </ThemeProvider>

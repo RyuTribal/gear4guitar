@@ -214,7 +214,7 @@ function ProductSpecs(props) {
           </Typography>
         </Grid>
         <Grid item container xs={12} spacing={1}>
-          {props.product.specs.map((spec, index) => {
+          {props.product.specs && props.product.specs.map((spec, index) => {
             return (
               <Grid sx={{ padding: "20px" }} md={4} xs={12}>
                 <Typography

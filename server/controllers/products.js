@@ -268,7 +268,7 @@ exports.comment = function (req, res) {
 exports.best_sellers = async function (req, res) {
   let results = await db
     .query(
-      `SELECT products.*, COUNT(orders.product_id) as sales, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
+      `SELECT products.*, SUM(orders.quantity) as sales, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
     FROM orders
     JOIN products ON orders.product_id = products.id
     LEFT JOIN grades ON products.id = grades.product_id
@@ -278,9 +278,12 @@ exports.best_sellers = async function (req, res) {
     .then((result) => {
       return result.rows;
     })
-    .catch((err) => res.status(500).send({ message: "Error: " + err }));
+    .catch((err) => {
+      return err;
+    });
+
   if (results.length > 0) {
-    results.status(200).send(res);
+    res.status(200).send(results);
   } else {
     let results = await db
       .query(

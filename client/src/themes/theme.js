@@ -8,6 +8,29 @@ const theme = createTheme({
         color: "white !important",
       },
     },
+    MuiOutlinedInput: {
+      "&:-webkit-autofill": {
+        WebkitBoxShadow: "none",
+      },
+      "&:-internal-autofill-selected": {
+        backgroundColor: "none",
+      },
+    },
+    "&:-internal-autofill-selected": {
+      backgroundColor: "none",
+    },
+  },
+  components: {
+    MuiInput: {
+      MuiInputBase: {
+        input: {
+          "&:-internal-autofill-selected": {
+            transitionDelay: "9999s",
+            transitionProperty: "background-color, color",
+          },
+        },
+      },
+    },
   },
   palette: {
     primary: {
@@ -23,9 +46,14 @@ const theme = createTheme({
     },
     background: {
       default: "#262725",
+      paper: "#101110",
     },
+    divider: "#d1cfcf",
     error: {
       main: "#f44336",
+    },
+    action: {
+      active: "#ffb800",
     },
   },
   typography: {
@@ -33,9 +61,10 @@ const theme = createTheme({
     h3: { color: "#ffb800" },
     h4: { color: "#d1cfcf" },
     h5: { color: "#d1cfcf" },
+    h6: { color: "#d1cfcf" },
     subtitle1: { color: "#d1cfcf" },
     subtitle2: { color: "#d1cfcf" },
-    subtitle: { color: "#d1cfcf" },
+    subtitle: { color: "#d1cfcf", opacity: "0.7" },
   },
   spacing: 10,
 });
