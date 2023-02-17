@@ -7,7 +7,20 @@ import withRouter from "../../components/routes";
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: "",
+      password: "",
+      errors: {
+        email: {
+          error: false,
+          message: "",
+        },
+        password: {
+          error: false,
+          message: "",
+        },
+      },
+    };
   }
 
   componentDidMount = async () => {
@@ -17,16 +30,57 @@ class SignIn extends Component {
   };
 
   handleLogin = async (user) => {
-    let resp = await login(user.email, user.password);
+    let resp = await login(user.email, user.password).catch((err) => {
+      return err.response;
+    });
     if (resp.status === 200) {
       this.props.addToken(resp.data.token);
       localStorage.setItem("token", resp.data.token);
       this.props.router.navigate("/");
+    } else if (resp.status === 400) {
+      this.setState({
+        errors: {
+          email: {
+            error: true,
+            message: "Invalid email or password",
+          },
+          password: {
+            error: true,
+            message: "Invalid email or password",
+          },
+        },
+      });
     }
   };
 
   render() {
-    return <SignInView login={(user) => this.handleLogin(user)} />;
+    return (
+      <SignInView
+        email={this.state.email}
+        password={this.state.password}
+        setEmail={(value) =>
+          this.setState({
+            email: value,
+            errors: {
+              email: { error: false, message: "" },
+              password: { error: false, message: "" },
+            },
+          })
+        }
+        setPassword={(value) =>
+          this.setState({
+            password: value,
+            errors: {
+              email: { error: false, message: "" },
+              password: { error: false, message: "" },
+            },
+          })
+        }
+        login={(user) => this.handleLogin(user)}
+        errors={this.state.errors}
+        passwordError={this.state.errors.password}
+      />
+    );
   }
 }
 

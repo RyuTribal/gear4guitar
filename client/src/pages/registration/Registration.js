@@ -22,7 +22,9 @@ class Regitration extends Component {
       user.password,
       user.firstName,
       user.lastName
-    );
+    ).catch((err) => {
+      return err.response;
+    });
     if (resp.status === 200) {
       let resp_log = await login(user.email, user.password);
       if (resp_log.status === 200) {
@@ -30,6 +32,14 @@ class Regitration extends Component {
         localStorage.setItem("token", resp_log.data.token);
         this.props.router.navigate("/");
       }
+    } else if (resp.status === 400) {
+      let snackbar = {
+        open: true,
+        message: "Missing credentials",
+        severity: "error",
+        duration: 3000,
+      };
+      this.props.showSnackBar(snackbar);
     }
   };
 
