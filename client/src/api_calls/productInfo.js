@@ -119,3 +119,28 @@ export async function editProducts(id, title, price, description, in_stock, colo
 
 return data;
 }
+
+export async function addRatings(rating, user_id, id) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/products/add_rating/${id}`,
+    data: {
+      rating: rating,
+      user_id: user_id,
+    },
+  });
+
+  return data;
+}
+
+export async function getGrades(user_id, id) {
+  let data = await axios({
+    method: "post",
+    url: `http://localhost:8080/api/products/get_grades/${id}`,
+    data: {
+      user_id: user_id,
+    },
+  });
+
+  return data;
+}

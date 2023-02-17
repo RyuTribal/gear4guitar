@@ -9,7 +9,10 @@ import {
   addComments,
   deleteComments,
   deleteProducts,
+  addRatings,
+  getGrades,
 } from "../../api_calls/productInfo";
+import { getUser } from "../../api_calls/users";
 import SkeletonText from "./components/skeleton";
 import { connect } from "react-redux";
 import { addBasket } from "../../api_calls/users";
@@ -23,6 +26,9 @@ class productPage extends React.Component {
       comments: [],
       loading: true,
       isAdmin: false,
+      userInfo: null,
+      grade: 0,
+      hasCommented: false,
     };
   }
 
@@ -31,13 +37,13 @@ class productPage extends React.Component {
       this.link(this.props.router.params.id),
       this.comment(this.props.router.params.id),
       this.loadVariations(this.props.router.params.id),
+      this.getUserInfo(this.props.router.params.id),
     ]);
     this.setState({ loading: false });
     await isLoggedIn()
-        .then(async (res) => {
-          this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
-        })
-    // console.log(this.state.isAdmin.value)
+      .then(async (res) => {
+        this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
+      })
   };
 
   componentDidUpdate = async (prevProps) => {
@@ -47,8 +53,29 @@ class productPage extends React.Component {
         this.link(this.props.router.params.id),
         this.comment(this.props.router.params.id),
         this.loadVariations(this.props.router.params.id),
+        this.getUserInfo(this.props.router.params.id),
       ]);
       this.setState({ loading: false });
+    }
+  };
+
+  getUserInfo = async (id) => {
+    let res = await getUser();
+    if (res.status === 200) {
+      this.setState({ userInfo: res.data });
+      if (res !== null) {
+        let res2 = await getGrades(res.data.id, id);
+        if (res2.status === 200) {
+          if (res2.data.length === 0) {
+          this.state.hasCommented = false;
+          } else {
+            this.state.grade = res2.data[0].grade;
+            this.state.hasCommented = true;
+          }
+        }
+      }
+    } else {
+      this.state.userInfo = null;
     }
   };
 
@@ -91,6 +118,11 @@ class productPage extends React.Component {
   editProduct = async (id) => {
     this.props.router.navigate("/edit_product/" + id);
     window.location.reload(false);
+  };
+
+  addRating = async (rating, user_id, product_id) => {
+    console.log(rating, user_id, product_id)
+    await addRatings(rating, user_id, product_id);
   };
 
   addToBasket = async () => {
@@ -145,6 +177,10 @@ class productPage extends React.Component {
           addToBasket={() => this.addToBasket()}
           deleteProduct={(id) => this.deleteProduct(id)}
           editProduct={(id) => this.editProduct(id)}
+          addRating={(rating, user_id, product_id) => this.addRating(rating, user_id, product_id)}
+          userInfo={this.state.userInfo}
+          hasCommented={this.state.hasCommented}
+          grade={this.state.grade}
         />
       );
     }

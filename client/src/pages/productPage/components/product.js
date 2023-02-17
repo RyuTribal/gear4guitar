@@ -37,6 +37,20 @@ const responsive = {
 function ProductMain(props) {
   const size = useWindowSize();
   const [selected, setSelected] = React.useState(0);
+
+  const [value, setValue] = React.useState(0);
+  const [isRated, setIsRated] = React.useState(false);
+
+  const handleRatingChange = (event, newValue) => {
+    console.log(props.hasCommented)
+
+    setValue(newValue);
+
+    props.addRating(newValue, props.userInfo.id, props.product.id);
+
+    setIsRated(true);
+  };
+
   if (props.product) {
     return (
       <Grid container spacing={3} sx={{ padding: "0px 20px" }}>
@@ -137,6 +151,23 @@ function ProductMain(props) {
                 }
               />
             </Box>
+            {props.userInfo.id !== null && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Rating
+                  name="product-rating"
+                  value={props.grade}
+                  size="large"
+                  onChange={handleRatingChange}
+                  emptyIcon={
+                    <StarBorderIcon
+                      style={{ color: "#ffb800" }}
+                      fontSize="inherit"
+                    />
+                  }
+                  readOnly={props.hasCommented || isRated}
+                />
+              </Box>
+            )}
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Typography
                 sx={{
@@ -204,7 +235,7 @@ function ProductMain(props) {
   }
 }
 
-function Comments(props){
+function Comments(props) {
   return null;
 }
 
@@ -368,6 +399,10 @@ export default function Results(props) {
             <ProductMain
               product={props.product}
               addToBasket={() => props.addToBasket()}
+              addRating={(rating, user_id, product_id) => props.addRating(rating, user_id, product_id)}
+              userInfo={props.userInfo}
+              hasCommented={props.hasCommented}
+              grade={props.grade}
             />
           </Grid>
           <Grid item container xs={12}>
