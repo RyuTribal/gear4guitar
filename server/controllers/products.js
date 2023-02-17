@@ -209,9 +209,11 @@ exports.product = function (req, res) {
       FROM cte
       ORDER BY id
       ) subq
-      ) as category_ids
+      ) as category_ids,
+      COUNT(comments.id) AS total_comments
       FROM products
       LEFT JOIN grades ON products.id = grades.product_id
+      LEFT JOIN comments ON products.id = comments.product_id
       WHERE products.id = ${id}
       GROUP BY products.id;`
   )
@@ -255,11 +257,12 @@ exports.get_variants = function (req, res) {
 
 exports.comment = function (req, res) {
   id = req.params.id;
+  offset = req.body.offset;
   db.query(
     `SELECT comments.*, users.first_name, users.last_name
             FROM comments
             JOIN users ON comments.user_id = users.id
-            WHERE comments.product_id = '${id}'`
+            WHERE comments.product_id = '${id}' ORDER BY comments.id DESC LIMIT 10 OFFSET ${offset};`
   )
     .then((result) => res.send(result.rows))
     .catch((err) => console.error("Error: ", err));
@@ -305,7 +308,11 @@ exports.addProduct = function (req, res) {
   id = req.params.id;
   db.query(
     `INSERT INTO products (title, price, description, in_stock, color, images, brand) 
-    VALUES ('${req.body.title}', ${req.body.price}, '${req.body.description}', ${req.body.in_stock}, '${req.body.color}', '${JSON.stringify(req.body.images)}', '${req.body.brand}')`
+    VALUES ('${req.body.title}', ${req.body.price}, '${
+      req.body.description
+    }', ${req.body.in_stock}, '${req.body.color}', '${JSON.stringify(
+      req.body.images
+    )}', '${req.body.brand}')`
   )
     .then((result) => res.status(200).send({ message: "Product Added" }))
     .catch((err) => console.error("Error: ", err));
@@ -320,7 +327,13 @@ exports.deleteProduct = function (req, res) {
 
 exports.editProduct = function (req, res) {
   db.query(
-    `UPDATE products SET title='${req.body.title}', price=${req.body.price}, description='${req.body.description}', in_stock=${req.body.in_stock}, color='${req.body.color}', images='${JSON.stringify(req.body.images)}', brand='${req.body.brand}' WHERE id=${req.body.id}`
+    `UPDATE products SET title='${req.body.title}', price=${
+      req.body.price
+    }, description='${req.body.description}', in_stock=${
+      req.body.in_stock
+    }, color='${req.body.color}', images='${JSON.stringify(
+      req.body.images
+    )}', brand='${req.body.brand}' WHERE id=${req.body.id}`
   )
     .then((result) => res.status(200).send({ message: "Product Edited" }))
     .catch((err) => console.error("Error: ", err));

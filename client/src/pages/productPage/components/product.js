@@ -10,6 +10,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CircleIcon from "@mui/icons-material/Circle";
 import GetColorFromString from "../../../redundant_functions/colors";
 import CardDisplay from "../../../components/CardDisplay";
+import Comments from "./comments";
 
 // function convertJSON_toIslam(json) {
 //   // Inshallah1   Inshallah2   Inshallah3
@@ -39,7 +40,7 @@ function ProductMain(props) {
   const [selected, setSelected] = React.useState(0);
   if (props.product) {
     return (
-      <Grid container spacing={3} sx={{ padding: "0px 20px" }}>
+      <Grid container spacing={3}>
         <Grid item container xs={12} md={7} spacing={1}>
           <Grid item xs={12}>
             <Typography sx={{ color: "text.third" }} variant="h4">
@@ -204,10 +205,6 @@ function ProductMain(props) {
   }
 }
 
-function Comments(props){
-  return null;
-}
-
 function ProductSpecs(props) {
   const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
   if (props.product) {
@@ -331,12 +328,18 @@ export default function Results(props) {
           display: "flex",
           width: "100%",
           flexDirection: "column",
+          padding: "0px 20px 20px 20px",
         }}
       >
         {props.product && (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
-              <MUILink underline="hover" component={Link} color="inherit" to="/">
+              <MUILink
+                underline="hover"
+                component={Link}
+                color="inherit"
+                to="/"
+              >
                 <HomeIcon />
               </MUILink>
               {props.product.category_ids.map((category, index) => (
@@ -352,10 +355,22 @@ export default function Results(props) {
             </Breadcrumbs>
             {props.isAdmin.value && (
               <Box sx={{ marginLeft: "auto" }}>
-                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
+                <Button
+                  sx={{ marginLeft: "auto", marginRight: "10px", color: "red" }}
+                  onClick={() => props.deleteProduct(props.product.id)}
+                  component={Link}
+                  to="/"
+                >
                   Delete Product
                 </Button>
-                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'yellow' }} onClick={() => props.editProduct(props.product.id)}>
+                <Button
+                  sx={{
+                    marginLeft: "auto",
+                    marginRight: "10px",
+                    color: "yellow",
+                  }}
+                  onClick={() => props.editProduct(props.product.id)}
+                >
                   Edit Product
                 </Button>
               </Box>
@@ -377,7 +392,16 @@ export default function Results(props) {
             <ProductVariations variations={props.variations} />
           </Grid>
           <Grid item xs={12}>
-            <Comments />
+            <Comments
+              page={props.page}
+              isAdmin={props.isAdmin}
+              user_id={props.user_id}
+              deleteComment={(comment_id) => props.deleteComment(comment_id)}
+              changePage={(page) => props.changePage(page)}
+              addComment={(comment) => props.addComment(comment)}
+              comments={props.comments && props.comments}
+              total_comments={props.product && props.product.total_comments}
+            />
           </Grid>
         </Grid>
       </Box>

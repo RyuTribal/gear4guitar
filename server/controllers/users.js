@@ -156,7 +156,7 @@ exports.is_logged_in = async function (req, res) {
   }
   return res
     .status(200)
-    .send({ message: "Logged in", is_admin: req.user_admin });
+    .send({ message: "Logged in", is_admin: req.user_admin, id: req.user });
 };
 
 exports.save_user_data = async function (req, res) {

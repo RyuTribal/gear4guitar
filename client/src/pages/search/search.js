@@ -10,7 +10,7 @@ import {
 import withRouter from "../../components/routes";
 import { Grid, Pagination, Box, PaginationItem } from "@mui/material";
 import Header from "./components/Header";
-import Results from "./components/results";
+import Results from "./components/Results";
 import { Link } from "react-router-dom";
 import FilterDrawer from "./components/FilterDrawer";
 
