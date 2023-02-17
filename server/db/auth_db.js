@@ -1,6 +1,5 @@
 const pg = require('pg');
 
-console.log(process.env.POSTGRES_HOST)
 let auth_connection = new pg.Pool({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,

@@ -41,7 +41,7 @@ function ProductMain(props) {
   if (props.product) {
     return (
       <Grid container spacing={3}>
-        <Grid item container xs={12} md={7} spacing={1}>
+        <Grid container item xs={12} md={7} spacing={1}>
           <Grid item xs={12}>
             <Typography sx={{ color: "text.third" }} variant="h4">
               {props.product.title}
