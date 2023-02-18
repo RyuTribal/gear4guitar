@@ -7,6 +7,7 @@ import withRouter from "../../components/routes";
 import { connect } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { getProductInfo, editProduct } from "../../api_calls/productInfo";
+import Categories from "../addProductPage/components/Categories";
 
 class EditProductPage extends React.Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class EditProductPage extends React.Component {
       specs: [],
       loading: true,
       button_loading: false,
+      categories: [],
     };
   }
 
@@ -54,6 +56,7 @@ class EditProductPage extends React.Component {
     let res = await getProductInfo(id).catch((err) => {
       return err.response;
     });
+    console.log(res)
     if (res.status === 200) {
       this.setState({
         title: res.data.title ? res.data.title : "",
@@ -64,6 +67,7 @@ class EditProductPage extends React.Component {
         images: res.data.images ? res.data.images : [],
         brand: res.data.brand ? res.data.brand : "",
         specs: res.data.specs ? res.data.specs : [],
+        categories: res.data.category_names ? res.data.category_names : [],
       });
     }
   };
@@ -81,11 +85,13 @@ class EditProductPage extends React.Component {
       color,
       images,
       specs,
+      categories: this.state.categories,
     };
 
     let res = await editProduct(product).catch((err) => {
       return err.response;
     });
+    console.log(res);
     if (res.status === 200) {
       this.props.showSnackBar({
         message: "Product edited successfully",
@@ -140,6 +146,12 @@ class EditProductPage extends React.Component {
           setDescription={(description) => this.setState({ description })}
           setInStock={(in_stock) => this.setState({ in_stock })}
           setColor={(color) => this.setState({ color })}
+        />
+        <Categories
+          categories={this.state.categories}
+          setCategories={(categories) => {
+            this.setState({ categories });
+          }}
         />
         <ImageAdder
           images={this.state.images}

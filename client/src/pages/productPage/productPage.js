@@ -72,11 +72,11 @@ class productPage extends React.Component {
 
   link = async (id) => {
     let res = await getProductInfo(id);
+    console.log(res)
     if (res.status === 200 && res.data) {
       this.setState({ product: res.data });
-    }
-    else{
-      this.props.router.navigate('/')
+    } else {
+      this.props.router.navigate("/");
     }
   };
 
@@ -92,7 +92,7 @@ class productPage extends React.Component {
     let delete_res = await deleteProducts(id).catch((err) => {
       return err.response;
     });
-    console.log(delete_res)
+    console.log(delete_res);
     if (delete_res.status === 200) {
       this.props.showSnackBar({
         message: "Product deleted",

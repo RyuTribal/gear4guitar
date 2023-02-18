@@ -204,7 +204,9 @@ export default function ProductBasic(props) {
             fullWidth
           >
             {colors.map((color, index) => (
-              <MenuItem key={index} value={color}>{color}</MenuItem>
+              <MenuItem key={index} value={color}>
+                {color}
+              </MenuItem>
             ))}
           </Select>
         </Tooltip>

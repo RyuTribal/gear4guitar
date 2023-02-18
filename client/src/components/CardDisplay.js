@@ -86,7 +86,7 @@ export default function CardDisplay(props) {
                     {product ? (
                       <Rating
                         name="product-rating"
-                        value={parseFloat(product.rating)}
+                        value={parseFloat(product.average_grade)}
                         readOnly
                         precision={0.2}
                         size="medium"

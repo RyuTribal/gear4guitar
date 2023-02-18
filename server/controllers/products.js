@@ -188,13 +188,13 @@ exports.product = function (req, res) {
     `WITH RECURSIVE cte AS (
       SELECT id, category_name, parent_id
       FROM product_categories
-      WHERE id = (SELECT category_id FROM categories WHERE product_id = ${id} LIMIT 1)
+      WHERE id = (SELECT MAX(category_id) FROM categories WHERE product_id = ${id} LIMIT 1)
       UNION ALL
       SELECT pc.id, pc.category_name, pc.parent_id
       FROM cte
       JOIN product_categories pc ON cte.parent_id = pc.id
       )
-      SELECT products.*, AVG(grades.grade) AS average_grade, COUNT(grades.grade) AS total_ratings, ARRAY(
+      SELECT products.*, AVG(grades.grade) AS average_grade, COUNT(DISTINCT grades.grade) AS total_ratings, ARRAY(
       SELECT category_name
       FROM (
       SELECT category_name, id
@@ -210,14 +210,16 @@ exports.product = function (req, res) {
       ORDER BY id
       ) subq
       ) as category_ids,
-      COUNT(comments.id) AS total_comments
+      COUNT(DISTINCT comments.id) AS total_comments
       FROM products
       LEFT JOIN grades ON products.id = grades.product_id
       LEFT JOIN comments ON products.id = comments.product_id
       WHERE products.id = ${id}
       GROUP BY products.id;`
   )
-    .then((result) => res.status(200).send(result.rows[0]))
+    .then((result) => {
+      res.status(200).send(result.rows[0]);
+    })
     .catch((err) => res.status(500).send({ message: "Error: " + err }));
 };
 
@@ -304,21 +306,141 @@ exports.best_sellers = async function (req, res) {
   }
 };
 
-exports.addProduct = function (req, res) {
-  db.query(
-    `INSERT INTO products (title, price, description, in_stock, color, images, brand, specs) 
+exports.addProduct = async function (req, res) {
+  if (
+    req.body.product.images.length === 0 ||
+    req.body.product.images[0] === "" ||
+    req.body.product.images[0] === " "
+  ) {
+    res.status(404).send({ message: "No images provided" });
+    return;
+  } else if (
+    !req.body.product.brand ||
+    !req.body.product.title ||
+    !req.body.product.price ||
+    !req.body.product.in_stock ||
+    !req.body.product.color
+  ) {
+    res.status(404).send({ message: "Missing required fields" });
+    return;
+  }
+  let categories = req.body.product.categories;
+  await db.query("BEGIN");
+  let products_res = await db
+    .query(
+      `INSERT INTO products (title, price, description, in_stock, color, images, brand, specs) 
     VALUES ('${req.body.product.title}', ${req.body.product.price}, '${
-      req.body.product.description
-    }', ${req.body.product.in_stock}, '${
-      req.body.product.color
-    }', '${JSON.stringify(req.body.product.images)}', '${
-      req.body.product.brand
-    }', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
-  )
-    .then((result) =>
-      res.status(200).json({ message: "Product Added", id: result.rows[0].id })
+        req.body.product.description
+      }', ${req.body.product.in_stock}, '${
+        req.body.product.color
+      }', '${JSON.stringify(req.body.product.images)}', '${
+        req.body.product.brand
+      }', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
     )
-    .catch((err) => res.status(500).json({ message: "Error: " + err }));
+    .then((result) => {
+      return result.rows[0].id;
+    })
+    .catch((err) => {
+      return err;
+    });
+  if (products_res instanceof Error) {
+    await db.query("ROLLBACK");
+    return res.status(500).json({ error: res });
+  } else {
+    let prev_cat_id = null;
+    for (let i = 0; i < categories.length; i++) {
+      let product_categories_res = null;
+      if (i !== 0) {
+        product_categories_res = await db
+          .query(
+            `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id = ${prev_cat_id};`
+          )
+          .then((result) => {
+            return result.rows[0].id;
+          })
+          .catch((err) => {
+            return err;
+          });
+        if (
+          product_categories_res instanceof Error ||
+          typeof product_categories_res !== "number"
+        ) {
+          product_categories_res = await db
+            .query(
+              `INSERT INTO product_categories (category_name, parent_id) VALUES ('${categories[i]}', ${prev_cat_id}) RETURNING id;`
+            )
+            .then((result) => {
+              return result.rows[0].id;
+            })
+            .catch((err) => {
+              return err;
+            });
+        }
+      } else {
+        product_categories_res = await db
+          .query(
+            `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id IS NULL;`
+          )
+          .then((result) => {
+            return result.rows[0].id;
+          })
+          .catch((err) => {
+            return err;
+          });
+        if (typeof product_categories_res !== "number") {
+          product_categories_res = await db
+            .query(
+              `Insert INTO product_categories (category_name) VALUES ('${categories[i]}') RETURNING id;`
+            )
+            .then((result) => {
+              return result.rows[0].id;
+            })
+            .catch((err) => {
+              return err;
+            });
+        }
+      }
+      if (typeof product_categories_res !== "number") {
+        product_categories_res = await db
+          .query(
+            `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id = ${prev_cat_id};`
+          )
+          .then((result) => {
+            return result.rows[0].id;
+          })
+          .catch((err) => {
+            return err;
+          });
+        if (
+          product_categories_res instanceof Error ||
+          typeof product_categories_res !== "number"
+        ) {
+          db.query("ROLLBACK");
+          return res.status(500).json({ error: product_categories_res });
+        }
+      } else {
+        prev_cat_id = product_categories_res;
+        let product_categories_id = product_categories_res;
+        let categories_res = await db
+          .query(
+            `INSERT INTO categories (product_id, category_id) VALUES (${products_res}, ${product_categories_id})`
+          )
+          .then((result) => {
+            return result;
+          })
+          .catch((err) => {
+            return err;
+          });
+
+        if (categories_res instanceof Error) {
+          await db.query("ROLLBACK");
+          return res.status(500).json({ error: product_categories_res });
+        }
+      }
+    }
+  }
+  await db.query("COMMIT");
+  res.status(200).json({ id: products_res });
 };
 
 exports.deleteProduct = function (req, res) {
@@ -328,21 +450,153 @@ exports.deleteProduct = function (req, res) {
     .catch((err) => res.status(500).json({ error: err }));
 };
 
-exports.editProduct = function (req, res) {
-  db.query(
-    `UPDATE products SET title='${req.body.product.title}', price=${
-      req.body.product.price
-    }, description='${req.body.product.description}', in_stock=${
-      req.body.product.in_stock
-    }, color='${req.body.product.color}', images='${JSON.stringify(
-      req.body.product.images
-    )}', brand='${req.body.product.brand}', specs='${JSON.stringify(
-      req.body.product.specs
-    )}' WHERE id=${req.body.product.id}`
-  )
-    .then((result) => res.status(200).json({ message: "Product Edited" }))
+exports.editProduct = async function (req, res) {
+  if (
+    req.body.product.images.length === 0 ||
+    req.body.product.images[0] === "" ||
+    req.body.product.images[0] === " "
+  ) {
+    res.status(404).send({ message: "No images provided" });
+    return;
+  } else if (
+    !req.body.product.brand ||
+    !req.body.product.title ||
+    !req.body.product.price ||
+    !req.body.product.in_stock ||
+    !req.body.product.color
+  ) {
+    res.status(404).send({ message: "Missing required fields" });
+    return;
+  }
+  let categories = req.body.product.categories;
+  await db.query("BEGIN");
+  let del_res = await db
+    .query(`DELETE FROM categories WHERE product_id = ${req.body.product.id}`)
+    .then((result) => {
+      return result;
+    })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      return err;
     });
+  if (del_res instanceof Error) {
+    await db.query("ROLLBACK");
+    return res.status(500).json({ error: del_res });
+  }
+
+  let prev_cat_id = null;
+  for (let i = 0; i < categories.length; i++) {
+    let product_categories_res = null;
+    if (i !== 0) {
+      product_categories_res = await db
+        .query(
+          `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id = ${prev_cat_id};`
+        )
+        .then((result) => {
+          return result.rows[0].id;
+        })
+        .catch((err) => {
+          return err;
+        });
+      if (
+        product_categories_res instanceof Error ||
+        typeof product_categories_res !== "number"
+      ) {
+        product_categories_res = await db
+          .query(
+            `INSERT INTO product_categories (category_name, parent_id) VALUES ('${categories[i]}', ${prev_cat_id}) RETURNING id;`
+          )
+          .then((result) => {
+            return result.rows[0].id;
+          })
+          .catch((err) => {
+            return err;
+          });
+      }
+    } else {
+      product_categories_res = await db
+        .query(
+          `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id IS NULL;`
+        )
+        .then((result) => {
+          return result.rows[0].id;
+        })
+        .catch((err) => {
+          return err;
+        });
+      if (typeof product_categories_res !== "number") {
+        product_categories_res = await db
+          .query(
+            `Insert INTO product_categories (category_name) VALUES ('${categories[i]}') RETURNING id;`
+          )
+          .then((result) => {
+            return result.rows[0].id;
+          })
+          .catch((err) => {
+            return err;
+          });
+      }
+    }
+    if (typeof product_categories_res !== "number") {
+      product_categories_res = await db
+        .query(
+          `SELECT id FROM product_categories WHERE category_name = '${categories[i]}' AND parent_id = ${prev_cat_id};`
+        )
+        .then((result) => {
+          return result.rows[0].id;
+        })
+        .catch((err) => {
+          return err;
+        });
+      if (
+        product_categories_res instanceof Error ||
+        typeof product_categories_res !== "number"
+      ) {
+        db.query("ROLLBACK");
+        return res.status(500).json({ error: product_categories_res });
+      }
+    } else {
+      prev_cat_id = product_categories_res;
+      let product_categories_id = product_categories_res;
+      let categories_res = await db
+        .query(
+          `INSERT INTO categories (product_id, category_id) VALUES (${req.body.product.id}, ${product_categories_id})`
+        )
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          return err;
+        });
+
+      if (categories_res instanceof Error) {
+        await db.query("ROLLBACK");
+        return res.status(500).json({ error: product_categories_res });
+      }
+    }
+  }
+
+  let update_res = await db
+    .query(
+      `UPDATE products SET title='${req.body.product.title}', price=${
+        req.body.product.price
+      }, description='${req.body.product.description}', in_stock=${
+        req.body.product.in_stock
+      }, color='${req.body.product.color}', images='${JSON.stringify(
+        req.body.product.images
+      )}', brand='${req.body.product.brand}', specs='${JSON.stringify(
+        req.body.product.specs
+      )}' WHERE id=${req.body.product.id}`
+    )
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err;
+    });
+  if (update_res instanceof Error) {
+    await db.query("ROLLBACK");
+    return res.status(500).json({ error: update_res });
+  }
+  await db.query("COMMIT");
+  res.status(200).json({ message: "Product updated" });
 };

@@ -7,6 +7,7 @@ import { addProducts } from "../../api_calls/productInfo";
 import ProductBasic from "./components/ProductBasic";
 import ImageAdder from "./components/ImageAdder";
 import Specs from "./components/Specs";
+import Categories from "./components/Categories";
 
 class AddProductPage extends React.Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class AddProductPage extends React.Component {
       isAdmin: false,
       specs: [{ title: "", content: [""] }],
       loading: false,
+      categories: [],
     };
   }
 
@@ -56,6 +58,7 @@ class AddProductPage extends React.Component {
       color,
       images,
       specs,
+      categories: this.state.categories,
     };
     const response = await addProducts(product).catch((err) => {
       return err.response;
@@ -69,6 +72,7 @@ class AddProductPage extends React.Component {
       });
       this.props.router.navigate("/productPage/" + response.data.id);
     } else {
+      console.log(response);
       this.props.showSnackBar({
         snackbar: true,
         message: "Something went wrong",
@@ -107,6 +111,11 @@ class AddProductPage extends React.Component {
             setDescription={(description) => this.setState({ description })}
             setInStock={(in_stock) => this.setState({ in_stock })}
             setColor={(color) => this.setState({ color })}
+            categories={this.state.categories}
+          />
+          <Categories
+            categories={this.state.categories}
+            setCategories={(categories) => this.setState({ categories })}
           />
           <ImageAdder
             images={this.state.images}
