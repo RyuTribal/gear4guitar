@@ -1,6 +1,6 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -31,55 +31,60 @@ function Copyright(props) {
 }
 
 export default function SignUp(props) {
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-    const [firstNameError, setFirstNameError] = React.useState(false);
-    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState("");
-    const [lastNameError, setLastNameError] = React.useState(false);
-    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [emailError, setEmailError] = React.useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+  const [firstNameError, setFirstNameError] = React.useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState("");
+  const [lastNameError, setLastNameError] = React.useState(false);
+  const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState("");
 
-    const clearState = () => {
-        setPasswordError(false);
-        setPasswordErrorMessage("");
-        setEmailError(false);
-        setEmailErrorMessage("");
-        setFirstNameError(false);
-        setFirstNameErrorMessage("");
-        setLastNameError(false);
-        setLastNameErrorMessage("");
-    }
+  const clearState = () => {
+    setPasswordError(false);
+    setPasswordErrorMessage("");
+    setEmailError(false);
+    setEmailErrorMessage("");
+    setFirstNameError(false);
+    setFirstNameErrorMessage("");
+    setLastNameError(false);
+    setLastNameErrorMessage("");
+  };
 
-    const hasError = () => {
-        return passwordError || emailError || firstNameError || lastNameError;
-    }
+  const hasError = () => {
+    return passwordError || emailError || firstNameError || lastNameError;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     clearState();
-    if(data.get("password").length < 8){
-        setPasswordError(true);
-        setPasswordErrorMessage("Password must be at least 8 characters long");
+    if (data.get("password").length < 8) {
+      setPasswordError(true);
+      setPasswordErrorMessage("Password must be at least 8 characters long");
     }
-    let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if(!validRegex.test(data.get("email"))){
-        setEmailError(true);
-        setEmailErrorMessage("Please enter a valid email address");
+    let validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!validRegex.test(data.get("email"))) {
+      setEmailError(true);
+      setEmailErrorMessage("Please enter a valid email address");
     }
-    if(data.get("firstName").length < 1){
-        setFirstNameError(true);
-        setFirstNameErrorMessage("Please enter a first name");
+    if (data.get("firstName").length < 1) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage("Please enter a first name");
     }
-    if(data.get("lastName").length < 1){
-        setLastNameError(true);
-        setLastNameErrorMessage("Please enter a last name");
+    if (data.get("lastName").length < 1) {
+      setLastNameError(true);
+      setLastNameErrorMessage("Please enter a last name");
     }
-    if(!hasError()){
-        props.register({email: data.get("email"), password: data.get("password"), firstName: data.get("firstName"), lastName: data.get("lastName")})
+    if (!hasError()) {
+      props.register({
+        email: data.get("email"),
+        password: data.get("password"),
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+      });
     }
-
   };
 
   return (
@@ -92,7 +97,7 @@ export default function SignUp(props) {
           flexDirection: "column",
           alignItems: "center",
           background: theme.palette.secondary.main,
-          padding: "20px"
+          padding: "20px",
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
@@ -154,14 +159,15 @@ export default function SignUp(props) {
               />
             </Grid>
           </Grid>
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            loading={props.loading}
           >
-            Sign Up
-          </Button>
+            <span>Sign Up</span>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="/sign_in" variant="body2">

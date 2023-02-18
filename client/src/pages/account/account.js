@@ -28,6 +28,7 @@ class Account extends Component {
       },
       prev_orders: [],
       has_orders: false,
+      loading: false,
     };
   }
 
@@ -93,7 +94,22 @@ class Account extends Component {
       >
         <UserDetails
           user={this.state.user}
-          updateUser={() => updateUser(this.state.user)}
+          loading={this.state.loading}
+          updateUser={() => {
+            this.setState({ loading: true });
+            updateUser(this.state.user);
+            let snackbar = {
+              open: true,
+              message: "User details updated",
+              severity: "success",
+              duration: 3000,
+            };
+            this.props.showSnackBar(snackbar);
+            this.setState({
+              user: { ...this.state.user, password: null },
+              loading: false,
+            });
+          }}
           updateState={(user) => this.setState({ user: user })}
         />
         <Orders

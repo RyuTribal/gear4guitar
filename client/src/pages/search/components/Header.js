@@ -92,13 +92,19 @@ export default function Header(props) {
               }
             }}
           >
+            <Tab
+              label="All"
+              value={0}
+              component={Link}
+              to="/search"
+            />
             {props.trail.map((item, index) => (
               <Tab
                 key={index}
                 label={item.category_name}
                 component={Link}
                 to={`/search/${item.id}`}
-                value={index}
+                value={index + 1}
                 sx={{
                   "&: hover": {
                     textDecoration: "underline",

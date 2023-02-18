@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Divider, Grid, Alert } from "@mui/material";
+import { Button, Divider, Grid } from "@mui/material";
 import RenderCart from "./components/RenderCart";
 import RenderAddress from "./components/RenderAddress";
 import Header from "./components/Header";
@@ -28,7 +28,6 @@ class Checkout extends Component {
         zip: "",
         country: "",
       },
-      order_complete: false,
     };
   }
 
@@ -47,7 +46,6 @@ class Checkout extends Component {
             city: capitalizeFirstLetter(promise[0].data.city),
             zip: promise[0].data.postal_code,
             country: capitalizeFirstLetter(promise[0].data.country),
-
           },
         });
       }
@@ -128,7 +126,13 @@ class Checkout extends Component {
 
     let order_res = await completeOrder(user, address, products);
     if (order_res.status === 200) {
-      this.setState({ order_complete: true });
+      let snackbar = {
+        open: true,
+        message: "Order completed successfully",
+        severity: "success",
+        duration: 3000,
+      };
+      this.props.showSnackBar(snackbar);
       this.props.resetCart();
       localStorage.removeItem("cart");
       this.props.router.navigate("/");
@@ -167,9 +171,6 @@ class Checkout extends Component {
             Confirm and pay
           </Button>
         </Grid>
-        {this.state.order_complete && (
-          <Alert severity="success">You order has been completed</Alert>
-        )}
       </Grid>
     );
   }

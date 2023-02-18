@@ -59,6 +59,7 @@ const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: "Rubik, sans-serif",
     root: { color: "#d1cfcf" },
     h3: { color: "#ffb800" },
     h4: { color: "#d1cfcf" },

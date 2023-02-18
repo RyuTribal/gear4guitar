@@ -1,6 +1,6 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -36,6 +36,7 @@ export default function SignIn(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    props.setPassword("");
     props.login({ email: data.get("email"), password: data.get("password") });
   };
 
@@ -68,6 +69,10 @@ export default function SignIn(props) {
             name="email"
             autoComplete="email"
             autoFocus
+            error={props.errors.email.error}
+            helperText={props.errors.email.message}
+            value={props.email}
+            onChange={(e) => props.setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -77,20 +82,25 @@ export default function SignIn(props) {
             label="Password"
             type="password"
             id="password"
+            error={props.errors.password.error}
+            helperText={props.errors.password.message}
             autoComplete="current-password"
+            value={props.password}
+            onChange={(e) => props.setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            loading={props.loading}
           >
-            Sign In
-          </Button>
+            <span>Sign In</span>
+          </LoadingButton>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

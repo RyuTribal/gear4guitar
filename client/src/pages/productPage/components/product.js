@@ -10,6 +10,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CircleIcon from "@mui/icons-material/Circle";
 import GetColorFromString from "../../../redundant_functions/colors";
 import CardDisplay from "../../../components/CardDisplay";
+import Comments from "./comments";
 
 // function convertJSON_toIslam(json) {
 //   // Inshallah1   Inshallah2   Inshallah3
@@ -39,8 +40,8 @@ function ProductMain(props) {
   const [selected, setSelected] = React.useState(0);
   if (props.product) {
     return (
-      <Grid container spacing={3} sx={{ padding: "0px 20px" }}>
-        <Grid item container xs={12} md={7} spacing={1}>
+      <Grid container spacing={3}>
+        <Grid container item xs={12} md={7} spacing={1}>
           <Grid item xs={12}>
             <Typography sx={{ color: "text.third" }} variant="h4">
               {props.product.title}
@@ -102,7 +103,7 @@ function ProductMain(props) {
             </CarouselNav>
           </Grid>
         </Grid>
-        <Grid item container xs={12} sm={5} spacing={2}>
+        <Grid container item xs={12} sm={5} spacing={2}>
           <Grid
             item
             sx={{
@@ -204,12 +205,7 @@ function ProductMain(props) {
   }
 }
 
-function Comments(props){
-  return null;
-}
-
 function ProductSpecs(props) {
-  const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
   if (props.product) {
     return (
       <Grid item xs={12} spacing={2} container sx={{ padding: "20px" }}>
@@ -221,10 +217,10 @@ function ProductSpecs(props) {
           </Grid>
         )}
         {props.product.specs && (
-          <Grid item container xs={12} spacing={1}>
+          <Grid container item xs={12} spacing={1}>
             {props.product.specs.map((spec, index) => {
               return (
-                <Grid sx={{ padding: "20px" }} md={4} xs={12}>
+                <Grid key={index} sx={{ padding: "20px" }} item md={4} xs={12}>
                   <Typography
                     key={index}
                     sx={{ color: "text.primary", fontWeight: "bold" }}
@@ -232,19 +228,17 @@ function ProductSpecs(props) {
                     {spec.title}
                   </Typography>
                   {spec.content.map((content, index) => {
-                    let str = Array.from(content.matchAll(bold_reg), (m) => {
-                      return (
-                        <Typography
-                          key={index}
-                          sx={{ color: "text.primary", padding: 0 }}
-                        >
-                          {`\u2022 `}
-                          <strong>{m[1]}</strong>
-                          {m[2]}
-                        </Typography>
-                      );
-                    });
-                    return str;
+                    const str = content.split(":");
+                    return (
+                      <Typography
+                        key={index}
+                        sx={{ color: "text.primary", padding: 0 }}
+                      >
+                        {`\u2022 `}
+                        <strong>{`${str[0]}:`}</strong>
+                        {str[1]}
+                      </Typography>
+                    );
                   })}
                 </Grid>
               );
@@ -331,12 +325,18 @@ export default function Results(props) {
           display: "flex",
           width: "100%",
           flexDirection: "column",
+          padding: "0px 20px 20px 20px",
         }}
       >
         {props.product && (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs sx={{ marginLeft: "20px" }} aria-label="breadcrumb">
-              <MUILink underline="hover" component={Link} color="inherit" to="/">
+              <MUILink
+                underline="hover"
+                component={Link}
+                color="inherit"
+                to="/"
+              >
                 <HomeIcon />
               </MUILink>
               {props.product.category_ids.map((category, index) => (
@@ -352,10 +352,21 @@ export default function Results(props) {
             </Breadcrumbs>
             {props.isAdmin.value && (
               <Box sx={{ marginLeft: "auto" }}>
-                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'red' }} onClick={() => props.deleteProduct(props.product.id)} component={Link} to="/">
+                <Button
+                  sx={{ marginLeft: "auto", marginRight: "10px", color: "red" }}
+                  onClick={() => props.deleteProduct(props.product.id)}
+                >
                   Delete Product
                 </Button>
-                <Button sx={{ marginLeft: "auto", marginRight: "10px", color: 'yellow' }} onClick={() => props.editProduct(props.product.id)}>
+                <Button
+                  sx={{
+                    marginLeft: "auto",
+                    marginRight: "10px",
+                    color: "yellow",
+                  }}
+                  component={Link}
+                  to={"/edit_product/" + props.product.id}
+                >
                   Edit Product
                 </Button>
               </Box>
@@ -364,20 +375,48 @@ export default function Results(props) {
         )}
 
         <Grid sx={{ marginTop: "2rem" }} container spacing={2}>
-          <Grid item container xs={12}>
+          <Grid container item xs={12}>
             <ProductMain
               product={props.product}
               addToBasket={() => props.addToBasket()}
             />
           </Grid>
-          <Grid item container xs={12}>
+          <Grid container item xs={12}>
             <ProductSpecs product={props.product} />
           </Grid>
           <Grid item xs={12}>
             <ProductVariations variations={props.variations} />
           </Grid>
           <Grid item xs={12}>
-            <Comments />
+            <Rating
+              name="user-rating"
+              value={props.grade ? props.grade : 0.0}
+              readOnly={props.grade && props.user_id ? true : false}
+              onChange={(event, newValue) => {
+                event.preventDefault();
+                props.addRating(newValue);
+              }}
+              precision={0.2}
+              size="large"
+              emptyIcon={
+                <StarBorderIcon
+                  style={{ color: "#ffb800" }}
+                  fontSize="inherit"
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Comments
+              page={props.page}
+              isAdmin={props.isAdmin}
+              user_id={props.user_id}
+              deleteComment={(comment_id) => props.deleteComment(comment_id)}
+              changePage={(page) => props.changePage(page)}
+              addComment={(comment) => props.addComment(comment)}
+              comments={props.comments && props.comments}
+              total_comments={props.product && props.product.total_comments}
+            />
           </Grid>
         </Grid>
       </Box>

@@ -2,11 +2,11 @@ import {
   Grid,
   Box,
   TextField,
-  Button,
   Typography,
   Tooltip,
 } from "@mui/material";
 import GavelIcon from "@mui/icons-material/Gavel";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export default function UserDetails(props) {
   return (
@@ -21,13 +21,17 @@ export default function UserDetails(props) {
         sx={{ mt: 3 }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sx={{display: "flex", flexDirection: "row", gap: "10px"}}>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
+          >
             <Typography variant="h6" gutterBottom>
               {`${props.user.first_name} ${props.user.last_name}'s Details`}
             </Typography>
             {props.user.is_admin && (
               <Tooltip title="Admin">
-                <GavelIcon sx={{color: "primary.main"}} />
+                <GavelIcon sx={{ color: "primary.main" }} />
               </Tooltip>
             )}
           </Grid>
@@ -43,6 +47,12 @@ export default function UserDetails(props) {
                   ...props.user,
                   first_name: e.target.value,
                 });
+              }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  props.updateUser();
+                }
               }}
               value={props.user.first_name ? props.user.first_name : ""}
             />
@@ -60,6 +70,12 @@ export default function UserDetails(props) {
                   last_name: e.target.value,
                 });
               }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  props.updateUser();
+                }
+              }}
               value={props.user.last_name ? props.user.last_name : ""}
             />
           </Grid>
@@ -75,6 +91,12 @@ export default function UserDetails(props) {
                   ...props.user,
                   email: e.target.value,
                 });
+              }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  props.updateUser();
+                }
               }}
               value={props.user.email ? props.user.email : ""}
             />
@@ -93,13 +115,24 @@ export default function UserDetails(props) {
                   password: e.target.value,
                 });
               }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  props.updateUser();
+                }
+              }}
               value={props.user.password ? props.user.password : ""}
             />
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          loading={props.loading}
+          type="submit"
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Grid>
   );

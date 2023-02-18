@@ -9,11 +9,12 @@ import {
   addComments,
   deleteComments,
   deleteProducts,
+  addRatings,
+  getGrades,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
 import { connect } from "react-redux";
-import { addBasket } from "../../api_calls/users";
-import { isLoggedIn } from "../../api_calls/users";
+import { addBasket, isLoggedIn } from "../../api_calls/users";
 
 class productPage extends React.Component {
   constructor(props) {
@@ -23,32 +24,76 @@ class productPage extends React.Component {
       comments: [],
       loading: true,
       isAdmin: false,
+      comment_offset: 10,
+      page: 1,
+      user_id: null,
+      grade: null,
     };
   }
 
   componentDidMount = async (res) => {
     await Promise.all([
       this.link(this.props.router.params.id),
-      this.comment(this.props.router.params.id),
+      this.getComments(this.props.router.params.id),
       this.loadVariations(this.props.router.params.id),
     ]);
-    this.setState({ loading: false });
     await isLoggedIn()
-        .then(async (res) => {
-          this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
-        })
-    // console.log(this.state.isAdmin.value)
+      .then(async (res) => {
+        this.props.userAdmin(res.data.is_admin);
+        let grades_res = await getGrades(this.props.router.params.id).catch(
+          (err) => {
+            return err.response;
+          }
+        );
+        let grade = null;
+        if (grades_res.status === 200 && grades_res.data[0]) {
+          grade = grades_res.data[0].grade;
+        }
+        this.setState({
+          loading: false,
+          isAdmin: res.data.is_admin,
+          user_id: res.data.id,
+          grade: grade,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          loading: false,
+        });
+      });
   };
 
   componentDidUpdate = async (prevProps) => {
     if (this.props.router.params.id !== prevProps.router.params.id) {
-      this.setState({ loading: true });
       await Promise.all([
         this.link(this.props.router.params.id),
-        this.comment(this.props.router.params.id),
+        this.getComments(this.props.router.params.id),
         this.loadVariations(this.props.router.params.id),
       ]);
-      this.setState({ loading: false });
+      await isLoggedIn()
+        .then(async (res) => {
+          this.props.userAdmin(res.data.is_admin);
+          let grades_res = await getGrades(this.props.router.params.id).catch(
+            (err) => {
+              return err.response;
+            }
+          );
+          let grade = null;
+          if (grades_res.status === 200 && grades_res.data[0]) {
+            grade = grades_res.data[0].grade;
+          }
+          this.setState({
+            loading: false,
+            isAdmin: res.data.is_admin,
+            user_id: res.data.id,
+            grade: grade,
+          });
+        })
+        .catch((err) => {
+          this.setState({
+            loading: false,
+          });
+        });
     }
   };
 
@@ -61,36 +106,39 @@ class productPage extends React.Component {
 
   link = async (id) => {
     let res = await getProductInfo(id);
-    if (res.status === 200) {
+    if (res.status === 200 && res.data) {
       this.setState({ product: res.data });
+    } else {
+      this.props.router.navigate("/");
     }
   };
 
-  comment = async (id) => {
-    let res = await getComments(id);
+  getComments = async (id) => {
+    let res = await getComments(
+      id,
+      this.state.comment_offset * (this.state.page - 1)
+    );
     this.setState({ comments: res.data });
   };
 
-  addComment = async (id, comment) => {
-    if (comment === "") {
-      return;
-    }
-    await addComments(id, comment);
-    window.location.reload(false);
-  };
-
-  deleteComment = async (id) => {
-    await deleteComments(id);
-    window.location.reload(false);
-  };
-
   deleteProduct = async (id) => {
-    await deleteProducts(id);
-  };
-
-  editProduct = async (id) => {
-    this.props.router.navigate("/edit_product/" + id);
-    window.location.reload(false);
+    let delete_res = await deleteProducts(id).catch((err) => {
+      return err.response;
+    });
+    if (delete_res.status === 200) {
+      this.props.showSnackBar({
+        message: "Product deleted",
+        severity: "success",
+        duration: 3000,
+      });
+      this.props.router.navigate("/");
+    } else {
+      this.props.showSnackBar({
+        message: "Product could not be deleted",
+        severity: "error",
+        duration: 3000,
+      });
+    }
   };
 
   addToBasket = async () => {
@@ -116,17 +164,91 @@ class productPage extends React.Component {
       }
       this.props.setCart(cart);
     } else {
-      let res_cart = await addBasket(this.state.product.id, 1).catch(
-        (err) => {
-          return err;
-        }
-      );
+      let res_cart = await addBasket(this.state.product.id, 1).catch((err) => {
+        return err;
+      });
       if (res_cart.status === 200) {
         if (!found) {
           cart.push(this.state.product);
         }
         this.props.setCart(cart);
       }
+    }
+  };
+
+  changePage = async (page) => {
+    this.setState({ page: page }, () => {
+      this.getComments(this.props.router.params.id);
+    });
+  };
+
+  addComment = async (comment) => {
+    let res = await addComments(this.props.router.params.id, comment).catch(
+      (err) => {
+        return err;
+      }
+    );
+    if (res.status === 200) {
+      this.setState({
+        product: {
+          ...this.state.product,
+          total_comments: parseInt(this.state.product.total_comments) + 1,
+        },
+      });
+      this.getComments(this.props.router.params.id);
+    } else if (res.response.status === 401) {
+      this.props.router.navigate("/sign_in");
+    }
+  };
+
+  deleteComment = async (id) => {
+    let res = await deleteComments(id).catch((err) => {
+      return err;
+    });
+    if (res.status === 200) {
+      this.setState({
+        product: {
+          ...this.state.product,
+          total_comments: parseInt(this.state.product.total_comments) - 1,
+        },
+      });
+      this.getComments(this.props.router.params.id);
+    }
+  };
+
+  addRating = async (rating) => {
+    let rating_res = await addRatings(
+      rating,
+      this.props.router.params.id
+    ).catch((err) => {
+      return err.response;
+    });
+    if (rating_res.status === 200) {
+      this.props.showSnackBar({
+        message: "Rating added",
+        severity: "success",
+        duration: 3000,
+      });
+      let average_grade = this.state.product.average_grade
+        ? this.state.product.average_grade
+        : 0;
+      let new_rating =
+        (parseInt(this.state.product.total_ratings) * average_grade + rating) /
+        (this.state.product.total_ratings + 1);
+      this.setState({
+        product: {
+          ...this.state.product,
+          total_ratings: parseInt(this.state.product.total_ratings) + 1,
+          average_grade: new_rating,
+        },
+        grade: rating,
+      });
+    } else {
+      this.props.showSnackBar({
+        message: "Rating could not be added",
+        severity: "error",
+        duration: 3000,
+      });
     }
   };
 
@@ -141,10 +263,17 @@ class productPage extends React.Component {
           product={this.state.product}
           comments={this.state.comments}
           isAdmin={this.state.isAdmin}
+          user_id={this.state.user_id}
           variations={this.state.variations}
           addToBasket={() => this.addToBasket()}
           deleteProduct={(id) => this.deleteProduct(id)}
           editProduct={(id) => this.editProduct(id)}
+          addComment={(comment) => this.addComment(comment)}
+          deleteComment={(id) => this.deleteComment(id)}
+          changePage={(page) => this.changePage(page)}
+          page={this.state.page}
+          addRating={(rating) => this.addRating(rating)}
+          grade={this.state.grade}
         />
       );
     }
@@ -155,6 +284,7 @@ const mapStateToProps = (state) => {
   return {
     token: state.jwtReducer.jwt_token,
     basket: state.basketReducer.basket,
+    isAdmin: state.jwtReducer.isAdmin,
   };
 };
 

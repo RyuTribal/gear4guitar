@@ -45,11 +45,17 @@ export default function Orders(props) {
         removeArrowOnDeviceType={["tablet", "mobile"]}
         itemClass="carousel-item-space"
       >
-        {props.orders.map((order, index) => (
-          <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
-            <CardDisplay product={order} index={index} />
-          </Box>
-        ))}
+        {props.orders && props.orders.length > 0
+          ? props.orders.map((order, index) => (
+              <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
+                <CardDisplay product={order} index={index} />
+              </Box>
+            ))
+          : [...Array(3)].map((_, index) => (
+              <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
+                <CardDisplay product={null} index={index} />
+              </Box>
+            ))}
       </CarouselNav>
     </Grid>
   );

@@ -14,4 +14,6 @@ router.get("/best_sellers", controller.best_sellers);
 router.post("/add_product", jwtauth.jwtauth, controller.addProduct);
 router.post("/delete_product", jwtauth.jwtauth, controller.deleteProduct);
 router.post("/edit_product", jwtauth.jwtauth, controller.editProduct);
+router.post("/add_rating/:id", jwtauth.jwtauth, controller.addRating);
+router.post("/get_grades/:id", jwtauth.jwtauth, controller.getGrades);
 module.exports = router;

@@ -7,7 +7,21 @@ import withRouter from "../../components/routes";
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: "",
+      password: "",
+      errors: {
+        email: {
+          error: false,
+          message: "",
+        },
+        password: {
+          error: false,
+          message: "",
+        },
+      },
+      loading: false,
+    };
   }
 
   componentDidMount = async () => {
@@ -17,16 +31,61 @@ class SignIn extends Component {
   };
 
   handleLogin = async (user) => {
-    let resp = await login(user.email, user.password);
+    this.setState({ loading: true });
+    let resp = await login(user.email, user.password).catch((err) => {
+      return err.response;
+    });
     if (resp.status === 200) {
       this.props.addToken(resp.data.token);
+      this.props.setAdmin(resp.data.is_admin);
       localStorage.setItem("token", resp.data.token);
       this.props.router.navigate("/");
+    } else if (resp.status === 400) {
+      this.setState({
+        errors: {
+          email: {
+            error: true,
+            message: "Invalid email or password",
+          },
+          password: {
+            error: true,
+            message: "Invalid email or password",
+          },
+        },
+      });
     }
+    this.setState({ loading: false });
   };
 
   render() {
-    return <SignInView login={(user) => this.handleLogin(user)} />;
+    return (
+      <SignInView
+        email={this.state.email}
+        password={this.state.password}
+        loading={this.state.loading}
+        setEmail={(value) =>
+          this.setState({
+            email: value,
+            errors: {
+              email: { error: false, message: "" },
+              password: { error: false, message: "" },
+            },
+          })
+        }
+        setPassword={(value) =>
+          this.setState({
+            password: value,
+            errors: {
+              email: { error: false, message: "" },
+              password: { error: false, message: "" },
+            },
+          })
+        }
+        login={(user) => this.handleLogin(user)}
+        errors={this.state.errors}
+        passwordError={this.state.errors.password}
+      />
+    );
   }
 }
 
@@ -40,6 +99,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
     removeToken: () => dispatch({ type: "JWT_REMOVE" }),
+    setAdmin: (is_admin) => dispatch({ type: "USER_ADMIN", value: is_admin }),
   };
 };
 
