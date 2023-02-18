@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const DOMAIN = process.env.REACT_APP_PORT;
+
+
 export async function getProductInfo(id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/product/${id}`,
+    url: `${DOMAIN}/api/products/product/${id}`,
   });
 
   return data;
@@ -12,7 +15,7 @@ export async function getProductInfo(id) {
 export async function getUser() {
   let data = await axios({
       method: "get",
-      url: `http://localhost:8080/api/users/get_user/`,
+      url: `${DOMAIN}/api/users/get_user/`,
   });
 
   return data;
@@ -21,7 +24,7 @@ export async function getUser() {
 export async function getProductVariations(id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/get_variants/${id}`,
+    url: `${DOMAIN}/api/products/get_variants/${id}`,
   });
 
   return data;
@@ -31,7 +34,7 @@ export async function getProductVariations(id) {
 export async function getComments(id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/comment/${id}`,
+    url: `${DOMAIN}/api/products/comment/${id}`,
   });
 
   return data;
@@ -40,7 +43,7 @@ export async function getComments(id) {
 export async function addComments(id, comment) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/comments/add_comment_secure/${id}`,
+    url: `${DOMAIN}/api/comments/add_comment_secure/${id}`,
     data: {
       comment: comment,
     },
@@ -52,7 +55,7 @@ export async function addComments(id, comment) {
 export async function deleteComments(id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/delete_comment_secure/${id}`,
+    url: `${DOMAIN}/api/products/delete_comment_secure/${id}`,
   });
 
   return data;
@@ -61,7 +64,7 @@ export async function deleteComments(id) {
 export async function editComments(id, comment) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/comments/edit_comment_secure/${id}`,
+    url: `${DOMAIN}/api/comments/edit_comment_secure/${id}`,
     data: {
       comment: comment,
     },
@@ -74,7 +77,7 @@ export async function addProducts(title, price, description, in_stock, color, im
     console.log(title, price, description, in_stock, color, images, brand)
     let data = await axios({
         method: "post",
-        url: `http://localhost:8080/api/products/add_product/`,
+        url: `${DOMAIN}/api/products/add_product/`,
         data: {
             title: title,
             price: price,
@@ -92,7 +95,7 @@ export async function addProducts(title, price, description, in_stock, color, im
 export async function deleteProducts(id) {
   let data = await axios({
       method: "post",
-      url: `http://localhost:8080/api/products/delete_product/`,
+      url: `${DOMAIN}/api/products/delete_product/`,
       data: {
           id: id,
       }
@@ -104,7 +107,7 @@ return data;
 export async function editProducts(id, title, price, description, in_stock, color, images, brand) {
   let data = await axios({
       method: "post",
-      url: `http://localhost:8080/api/products/edit_product/`,
+      url: `${DOMAIN}/api/products/edit_product/`,
       data: {
           id: id,
           title: title,
@@ -123,7 +126,7 @@ return data;
 export async function addRatings(rating, user_id, id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/add_rating/${id}`,
+    url: `${DOMAIN}/api/products/add_rating/${id}`,
     data: {
       rating: rating,
       user_id: user_id,
@@ -136,7 +139,7 @@ export async function addRatings(rating, user_id, id) {
 export async function getGrades(user_id, id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/products/get_grades/${id}`,
+    url: `${DOMAIN}/api/products/get_grades/${id}`,
     data: {
       user_id: user_id,
     },

@@ -42,7 +42,7 @@ class productPage extends React.Component {
     this.setState({ loading: false });
     await isLoggedIn()
       .then(async (res) => {
-        this.state.isAdmin = this.props.userAdmin(res.data.is_admin)
+        this.state.isAdmin = this.props.userAdmin(res.data.is_admin);
       })
   };
 
@@ -56,25 +56,33 @@ class productPage extends React.Component {
         this.getUserInfo(this.props.router.params.id),
       ]);
       this.setState({ loading: false });
+      await isLoggedIn()
+        .then(async (res) => {
+          this.state.isAdmin = this.props.userAdmin(res.data.is_admin);
+        })
     }
   };
 
   getUserInfo = async (id) => {
-    let res = await getUser();
-    if (res.status === 200) {
-      this.setState({ userInfo: res.data });
-      if (res !== null) {
-        let res2 = await getGrades(res.data.id, id);
-        if (res2.status === 200) {
-          if (res2.data.length === 0) {
-          this.state.hasCommented = false;
-          } else {
-            this.state.grade = res2.data[0].grade;
-            this.state.hasCommented = true;
+    try {
+      let res = await getUser();
+      if (res.status === 200) {
+        this.setState({ userInfo: res.data });
+        if (res !== null) {
+          let res2 = await getGrades(res.data.id, id);
+          if (res2.status === 200) {
+            if (res2.data.length === 0) {
+              this.state.hasCommented = false;
+            } else {
+              this.state.grade = res2.data[0].grade;
+              this.state.hasCommented = true;
+            }
           }
         }
+      } else {
+        this.state.userInfo = null;
       }
-    } else {
+    } catch (err) {
       this.state.userInfo = null;
     }
   };

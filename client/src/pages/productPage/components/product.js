@@ -46,7 +46,9 @@ function ProductMain(props) {
 
     setValue(newValue);
 
-    props.addRating(newValue, props.userInfo.id, props.product.id);
+    if (props.userInfo !== null) {
+      props.addRating(newValue, props.userInfo.id, props.product.id);
+    }
 
     setIsRated(true);
   };
@@ -151,7 +153,7 @@ function ProductMain(props) {
                 }
               />
             </Box>
-            {props.userInfo.id !== null && (
+            {props.userInfo !== null && (
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Rating
                   name="product-rating"
