@@ -388,6 +388,25 @@ export default function Results(props) {
             <ProductVariations variations={props.variations} />
           </Grid>
           <Grid item xs={12}>
+            <Rating
+              name="user-rating"
+              value={props.grade ? props.grade : 0.0}
+              readOnly={props.grade && props.user_id ? true : false}
+              onChange={(event, newValue) => {
+                event.preventDefault();
+                props.addRating(newValue);
+              }}
+              precision={0.2}
+              size="large"
+              emptyIcon={
+                <StarBorderIcon
+                  style={{ color: "#ffb800" }}
+                  fontSize="inherit"
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Comments
               page={props.page}
               isAdmin={props.isAdmin}

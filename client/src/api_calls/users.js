@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const DOMAIN = process.env.REACT_APP_DOMAIN;
+
 export async function login(email, password) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/users/login`,
+    url: `${DOMAIN}/api/users/login`,
     data: {
       email: email,
       password: password,
@@ -16,7 +18,7 @@ export async function login(email, password) {
 export async function register(email, password, first_name, last_name) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/users/register`,
+    url: `${DOMAIN}/api/users/register`,
     data: {
       email: email,
       password: password,
@@ -31,7 +33,7 @@ export async function register(email, password, first_name, last_name) {
 export async function isLoggedIn() {
   let data = await axios({
     method: "get",
-    url: `http://localhost:8080/api/users/is_logged_in`,
+    url: `${DOMAIN}/api/users/is_logged_in`,
   });
 
   return data;
@@ -40,7 +42,7 @@ export async function isLoggedIn() {
 export async function getUser() {
   let data = await axios({
     method: "get",
-    url: `http://localhost:8080/api/users/get_user`,
+    url: `${DOMAIN}/api/users/get_user`,
   });
 
   return data;
@@ -49,7 +51,7 @@ export async function getUser() {
 export async function getBasket() {
   let data = await axios({
     method: "get",
-    url: `http://localhost:8080/api/basket/get`,
+    url: `${DOMAIN}/api/basket/get`,
   });
 
   return data;
@@ -58,7 +60,7 @@ export async function getBasket() {
 export async function addBasket(id, quantity) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/basket/add/${id}`,
+    url: `${DOMAIN}/api/basket/add/${id}`,
     data: {
       quantity: quantity,
     },
@@ -70,7 +72,7 @@ export async function addBasket(id, quantity) {
 export async function removeBasket(id) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/basket/delete/${id}`,
+    url: `${DOMAIN}/api/basket/delete/${id}`,
   });
   return data;
 }
@@ -78,7 +80,7 @@ export async function removeBasket(id) {
 export async function getAddress() {
   let data = await axios({
     method: "get",
-    url: `http://localhost:8080/api/basket/address`,
+    url: `${DOMAIN}/api/basket/address`,
   });
 
   return data;
@@ -87,7 +89,7 @@ export async function getAddress() {
 export async function completeOrder(user, address, cart) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/basket/completeorder`,
+    url: `${DOMAIN}/api/basket/completeorder`,
     data: {
       user: user,
       address: address,
@@ -101,7 +103,7 @@ export async function completeOrder(user, address, cart) {
 export async function getOrders() {
   let data = await axios({
     method: "get",
-    url: `http://localhost:8080/api/users/get_orders`,
+    url: `${DOMAIN}/api/users/get_orders`,
   });
 
   return data;
@@ -110,7 +112,7 @@ export async function getOrders() {
 export async function updateUser(user) {
   let data = await axios({
     method: "post",
-    url: `http://localhost:8080/api/users/edit_creds`,
+    url: `${DOMAIN}/api/users/edit_creds`,
     data: {
       user: user,
     },

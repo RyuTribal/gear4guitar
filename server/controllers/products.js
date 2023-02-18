@@ -600,3 +600,23 @@ exports.editProduct = async function (req, res) {
   await db.query("COMMIT");
   res.status(200).json({ message: "Product updated" });
 };
+
+exports.addRating = function (req, res) {
+  id = req.params.id;
+  db.query(
+    `INSERT INTO grades (grade, user_id, product_id) 
+    VALUES (${req.body.rating}, ${req.user}, ${id})`
+  )
+    .then((result) => res.status(200).send({ message: "Rating Added" }))
+    .catch((err) => console.error("Error: ", err));
+};
+
+exports.getGrades = async function (req, res) {
+  id = req.params.id;
+  db.query(
+    `SELECT * FROM grades WHERE product_id = ${id} AND user_id = ${req.user}`
+  )
+
+    .then((result) => res.status(200).send(result.rows))
+    .catch((err) => console.error("Error: ", err));
+};

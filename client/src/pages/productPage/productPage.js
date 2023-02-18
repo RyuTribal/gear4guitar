@@ -9,11 +9,12 @@ import {
   addComments,
   deleteComments,
   deleteProducts,
+  addRatings,
+  getGrades,
 } from "../../api_calls/productInfo";
 import SkeletonText from "./components/skeleton";
 import { connect } from "react-redux";
-import { addBasket } from "../../api_calls/users";
-import { isLoggedIn } from "../../api_calls/users";
+import { addBasket, isLoggedIn } from "../../api_calls/users";
 
 class productPage extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class productPage extends React.Component {
       comment_offset: 10,
       page: 1,
       user_id: null,
+      grade: null,
     };
   }
 
@@ -37,11 +39,21 @@ class productPage extends React.Component {
     ]);
     await isLoggedIn()
       .then(async (res) => {
-        let is_admin = this.props.userAdmin(res.data.is_admin);
+        this.props.userAdmin(res.data.is_admin);
+        let grades_res = await getGrades(this.props.router.params.id).catch(
+          (err) => {
+            return err.response;
+          }
+        );
+        let grade = null;
+        if (grades_res.status === 200 && grades_res.data[0]) {
+          grade = grades_res.data[0].grade;
+        }
         this.setState({
           loading: false,
-          isAdmin: is_admin,
+          isAdmin: res.data.is_admin,
           user_id: res.data.id,
+          grade: grade,
         });
       })
       .catch((err) => {
@@ -53,13 +65,35 @@ class productPage extends React.Component {
 
   componentDidUpdate = async (prevProps) => {
     if (this.props.router.params.id !== prevProps.router.params.id) {
-      this.setState({ loading: true });
       await Promise.all([
         this.link(this.props.router.params.id),
         this.getComments(this.props.router.params.id),
         this.loadVariations(this.props.router.params.id),
       ]);
-      this.setState({ loading: false });
+      await isLoggedIn()
+        .then(async (res) => {
+          this.props.userAdmin(res.data.is_admin);
+          let grades_res = await getGrades(this.props.router.params.id).catch(
+            (err) => {
+              return err.response;
+            }
+          );
+          let grade = null;
+          if (grades_res.status === 200 && grades_res.data[0]) {
+            grade = grades_res.data[0].grade;
+          }
+          this.setState({
+            loading: false,
+            isAdmin: res.data.is_admin,
+            user_id: res.data.id,
+            grade: grade,
+          });
+        })
+        .catch((err) => {
+          this.setState({
+            loading: false,
+          });
+        });
     }
   };
 
@@ -72,7 +106,6 @@ class productPage extends React.Component {
 
   link = async (id) => {
     let res = await getProductInfo(id);
-    console.log(res)
     if (res.status === 200 && res.data) {
       this.setState({ product: res.data });
     } else {
@@ -92,7 +125,6 @@ class productPage extends React.Component {
     let delete_res = await deleteProducts(id).catch((err) => {
       return err.response;
     });
-    console.log(delete_res);
     if (delete_res.status === 200) {
       this.props.showSnackBar({
         message: "Product deleted",
@@ -184,6 +216,42 @@ class productPage extends React.Component {
     }
   };
 
+  addRating = async (rating) => {
+    let rating_res = await addRatings(
+      rating,
+      this.props.router.params.id
+    ).catch((err) => {
+      return err.response;
+    });
+    if (rating_res.status === 200) {
+      this.props.showSnackBar({
+        message: "Rating added",
+        severity: "success",
+        duration: 3000,
+      });
+      let average_grade = this.state.product.average_grade
+        ? this.state.product.average_grade
+        : 0;
+      let new_rating =
+        (parseInt(this.state.product.total_ratings) * average_grade + rating) /
+        (this.state.product.total_ratings + 1);
+      this.setState({
+        product: {
+          ...this.state.product,
+          total_ratings: parseInt(this.state.product.total_ratings) + 1,
+          average_grade: new_rating,
+        },
+        grade: rating,
+      });
+    } else {
+      this.props.showSnackBar({
+        message: "Rating could not be added",
+        severity: "error",
+        duration: 3000,
+      });
+    }
+  };
+
   render() {
     if (this.state.loading) {
       return <SkeletonText />;
@@ -204,6 +272,8 @@ class productPage extends React.Component {
           deleteComment={(id) => this.deleteComment(id)}
           changePage={(page) => this.changePage(page)}
           page={this.state.page}
+          addRating={(rating) => this.addRating(rating)}
+          grade={this.state.grade}
         />
       );
     }
