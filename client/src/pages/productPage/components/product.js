@@ -103,7 +103,7 @@ function ProductMain(props) {
             </CarouselNav>
           </Grid>
         </Grid>
-        <Grid item container xs={12} sm={5} spacing={2}>
+        <Grid container item xs={12} sm={5} spacing={2}>
           <Grid
             item
             sx={{
@@ -206,7 +206,6 @@ function ProductMain(props) {
 }
 
 function ProductSpecs(props) {
-  const bold_reg = /(\w+)(:.*?)(?=\s+\w+:|$)/g;
   if (props.product) {
     return (
       <Grid item xs={12} spacing={2} container sx={{ padding: "20px" }}>
@@ -218,10 +217,10 @@ function ProductSpecs(props) {
           </Grid>
         )}
         {props.product.specs && (
-          <Grid item container xs={12} spacing={1}>
+          <Grid container item xs={12} spacing={1}>
             {props.product.specs.map((spec, index) => {
               return (
-                <Grid sx={{ padding: "20px" }} md={4} xs={12}>
+                <Grid key={index} sx={{ padding: "20px" }} item md={4} xs={12}>
                   <Typography
                     key={index}
                     sx={{ color: "text.primary", fontWeight: "bold" }}
@@ -229,19 +228,17 @@ function ProductSpecs(props) {
                     {spec.title}
                   </Typography>
                   {spec.content.map((content, index) => {
-                    let str = Array.from(content.matchAll(bold_reg), (m) => {
-                      return (
-                        <Typography
-                          key={index}
-                          sx={{ color: "text.primary", padding: 0 }}
-                        >
-                          {`\u2022 `}
-                          <strong>{m[1]}</strong>
-                          {m[2]}
-                        </Typography>
-                      );
-                    });
-                    return str;
+                    const str = content.split(":");
+                    return (
+                      <Typography
+                        key={index}
+                        sx={{ color: "text.primary", padding: 0 }}
+                      >
+                        {`\u2022 `}
+                        <strong>{`${str[0]}:`}</strong>
+                        {str[1]}
+                      </Typography>
+                    );
                   })}
                 </Grid>
               );
@@ -358,8 +355,6 @@ export default function Results(props) {
                 <Button
                   sx={{ marginLeft: "auto", marginRight: "10px", color: "red" }}
                   onClick={() => props.deleteProduct(props.product.id)}
-                  component={Link}
-                  to="/"
                 >
                   Delete Product
                 </Button>
@@ -369,7 +364,8 @@ export default function Results(props) {
                     marginRight: "10px",
                     color: "yellow",
                   }}
-                  onClick={() => props.editProduct(props.product.id)}
+                  component={Link}
+                  to={"/edit_product/" + props.product.id}
                 >
                   Edit Product
                 </Button>
@@ -379,13 +375,13 @@ export default function Results(props) {
         )}
 
         <Grid sx={{ marginTop: "2rem" }} container spacing={2}>
-          <Grid item container xs={12}>
+          <Grid container item xs={12}>
             <ProductMain
               product={props.product}
               addToBasket={() => props.addToBasket()}
             />
           </Grid>
-          <Grid item container xs={12}>
+          <Grid container item xs={12}>
             <ProductSpecs product={props.product} />
           </Grid>
           <Grid item xs={12}>

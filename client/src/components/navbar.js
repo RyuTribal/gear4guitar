@@ -5,19 +5,24 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { ButtonBase, Button, IconButton, Badge } from "@mui/material";
+import {
+  ButtonBase,
+  Button,
+  IconButton,
+  Badge,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
 import logo_mobile from "./images/logo_small.png";
 import theme from "../themes/theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import PersonIcon from "@mui/icons-material/Person";
 import { useSelector } from "react-redux";
 import useWindowSize from "../redundant_functions/WindowSize";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
-import { connect } from "react-redux";
+import AddIcon from '@mui/icons-material/Add';
 import withRouter from "./routes";
 import Cart from "./cart";
 import { isLoggedIn } from "../api_calls/users";
@@ -59,13 +64,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 async function getAdminButton() {
   let isAdmin = false;
-  await isLoggedIn()
-    .then(async (res) => {
-      // isAdmin = this.props.userAdmin(res.data.is_admin)
-      console.log(this.props.userAdmin(res.data.is_admin))
-    })
+  await isLoggedIn().then(async (res) => {
+    // isAdmin = this.props.userAdmin(res.data.is_admin)
+    console.log(this.props.userAdmin(res.data.is_admin));
+  });
 
-  console.log("after admin" + isAdmin)
+  console.log("after admin" + isAdmin);
   if (isAdmin) {
     return true;
   }
@@ -234,16 +238,16 @@ function SearchAppBar(props) {
                   <SearchIcon />
                 </IconButton>
               )}
-              {admin && (
+              {admin && size.width > 851 && (
                 <IconButton
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="addProduct"
                   component={Link}
-                  to='/add_product'
+                  to="/add_product"
                 >
-                  <Badge >
+                  <Badge>
                     <AddBoxIcon />
                   </Badge>
                 </IconButton>
@@ -300,6 +304,24 @@ function SearchAppBar(props) {
           </Toolbar>
         )}
       </AppBar>
+      {size.width <= 851 && admin && (
+        <Button
+          sx={{
+            borderRadius: "50%",
+            position: "fixed",
+            zIndex: 300,
+            bottom: 20,
+            right: 20,
+            width: "3rem",
+            height: "4rem",
+          }}
+          component={Link}
+          to="/add_product"
+          variant="contained"
+        >
+          <AddIcon color="secondary.main" />
+        </Button>
+      )}
     </Box>
   );
 }

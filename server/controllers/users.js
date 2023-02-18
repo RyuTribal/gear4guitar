@@ -129,7 +129,9 @@ exports.login = async function (req, res) {
           expiresIn: "86400s",
         }
       );
-      return res.status(200).send({ message: "Logged in", token: accessToken });
+      return res
+        .status(200)
+        .send({ message: "Logged in", token: accessToken, is_admin: is_admin });
     }
   );
 };

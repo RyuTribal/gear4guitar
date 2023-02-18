@@ -9,8 +9,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import theme from "./themes/theme";
 import Product from "./pages/productPage/productPage";
-import AddProduct from "./pages/addProductPage/addProductPage";
-import EditProduct from "./pages/editProductPage/editProductPage";
+import AddProduct from "./pages/addProductPage/AddProductPage";
+import EditProduct from "./pages/editProductPage/EditProductPage";
 import StorageChecker from "./pages/StorageChecker";
 import ScrollToTop from "./pages/ScrollToTop";
 import Checkout from "./pages/checkout/checkout";
@@ -89,7 +89,21 @@ function App() {
                 />
               }
             />
-            <Route path="/productPage/:id" element={<Product />} />
+            <Route
+              path="/productPage/:id"
+              element={
+                <Product
+                  showSnackBar={(snackbar) => {
+                    showSnackBar(
+                      true,
+                      snackbar.message,
+                      snackbar.severity,
+                      snackbar.duration
+                    );
+                  }}
+                />
+              }
+            />
             <Route
               path="/checkout"
               element={
@@ -120,8 +134,36 @@ function App() {
                 />
               }
             />
-            <Route path="/add_product" element={<AddProduct />} />
-            <Route path="/edit_product/:id" element={<EditProduct />} />
+            <Route
+              path="/add_product"
+              element={
+                <AddProduct
+                  showSnackBar={(snackbar) => {
+                    showSnackBar(
+                      true,
+                      snackbar.message,
+                      snackbar.severity,
+                      snackbar.duration
+                    );
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/edit_product/:id"
+              element={
+                <EditProduct
+                  showSnackBar={(snackbar) => {
+                    showSnackBar(
+                      true,
+                      snackbar.message,
+                      snackbar.severity,
+                      snackbar.duration
+                    );
+                  }}
+                />
+              }
+            />
           </Routes>
         </Box>
       </ThemeProvider>

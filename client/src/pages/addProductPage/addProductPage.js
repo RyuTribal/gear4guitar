@@ -1,125 +1,143 @@
-import React, { useState } from 'react';
-import { Box } from "@mui/material";
-import AddProduct from "./components/addProduct";
+import React, { useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import AddProduct from "./components/ProductBasic";
 import withRouter from "../../components/routes";
 import { connect } from "react-redux";
 import { addProducts } from "../../api_calls/productInfo";
-import { isLoggedIn } from "../../api_calls/users";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import ProductBasic from "./components/ProductBasic";
+import ImageAdder from "./components/ImageAdder";
+import Specs from "./components/Specs";
 
-class addProductPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: "",
-            price: 0,
-            description: "",
-            in_stock: 0,
-            color: null,
-            images: [],
-            brand: "",
-            showAlert: false,
-            isAdmin: false,
-        };
-    }
-
-    componentDidMount = async (res) => {
-        if (this.props.userAdmin === false) {
-            this.props.router.navigate("/")
-        } else {
-            this.setState({ isAdmin: true })
-        }
+class AddProductPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      price: 0,
+      description: "",
+      in_stock: 0,
+      color: "white",
+      images: [""],
+      brand: "",
+      showAlert: false,
+      isAdmin: false,
+      specs: [{ title: "", content: [""] }],
     };
+  }
 
-    componentDidUpdate = async (prevProps) => {
-        if (this.props.userAdmin !== prevProps.userAdmin) {
-            if (this.props.userAdmin === false) {
-                this.props.router.navigate("/")
-            } else {
-                this.setState({ isAdmin: true })
-            }
-        }
-    };
-
-    link = async (title, price, description, in_stock, color, images, brand) => {
-        await addProducts(title, price, description, in_stock, color, images, brand);
-    };
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(`Title: ${this.state.title}, Price: ${this.state.price}, Description: ${this.state.description}, In Stock: ${this.state.in_stock}, Color: ${this.state.color}, Images: ${this.state.images}, Brand: ${this.state.brand}`);
-
-        this.link(this.state.title, this.state.price, this.state.description, this.state.in_stock, this.state.color, this.state.images, this.state.brand);
-
-        // https://www.meme-arsenal.com/memes/83b538a30ec69ff45629c85c7cfa746f.jpg
-        // https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fphotos%2Fimages%2Fnewsfeed%2F002%2F297%2F368%2F17f.jpg
-
-        this.setState({
-            title: "",
-            price: 0,
-            description: "",
-            in_stock: 0,
-            color: null,
-            images: [],
-            brand: "",
-        });
-
-        this.setState({
-            showAlert: true,
-        });
-
-        setTimeout(() => {
-            this.setState({
-                showAlert: false,
-            });
-        }, 3000);
+  componentDidMount = async () => {
+    if (this.props.userAdmin === false) {
+      this.props.router.navigate("/");
+    } else {
+      this.setState({ isAdmin: true });
     }
+  };
 
-    render() {
-        return (
-            <Box>
-                {this.state.isAdmin && (
-                    <AddProduct
-                        onSubmit={this.handleSubmit}
-                        title={this.state.title}
-                        setTitle={(title) => this.setState({ title })}
-                        price={this.state.price}
-                        setPrice={(price) => this.setState({ price })}
-                        showAlert={this.state.showAlert}
-                        description={this.state.description}
-                        setDescription={(description) => this.setState({ description })}
-                        in_stock={this.state.in_stock}
-                        setInStock={(in_stock) => this.setState({ in_stock })}
-                        color={this.state.color}
-                        setColor={(color) => this.setState({ color })}
-                        images={this.state.images}
-                        setImages={(images) => this.setState({ images })}
-                        brand={this.state.brand}
-                        setBrand={(brand) => this.setState({ brand })}
-                    />
-                )}
-            </Box>
-        );
+  componentDidUpdate = async (prevProps) => {
+    if (this.props.userAdmin !== prevProps.userAdmin) {
+      if (this.props.userAdmin === false) {
+        this.props.router.navigate("/");
+      } else {
+        this.setState({ isAdmin: true });
+      }
     }
+  };
+
+  handleSubmit = async () => {
+    const { title, price, description, in_stock, color, images, specs } =
+      this.state;
+    const product = {
+      title,
+      price,
+      description,
+      in_stock,
+      color,
+      images,
+      specs,
+    };
+    const response = await addProducts(product).catch((err) => {
+      return err.response;
+    });
+    if (response.status === 200) {
+      this.props.showSnackBar({
+        snackbar: true,
+        message: "Product added successfully",
+        severity: "success",
+        duration: 3000,
+      });
+      this.props.router.navigate("/productPage/" + response.data.id);
+    } else {
+      this.props.showSnackBar({
+        snackbar: true,
+        message: "Something went wrong",
+        severity: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  render() {
+    if (this.state.isAdmin) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "background.paper",
+            alignItems: "center",
+            padding: "50px 10px",
+            minHeight: "100vh",
+            gap: "20px",
+          }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
+            Add Product
+          </Typography>
+          <ProductBasic
+            title={this.state.title}
+            price={this.state.price}
+            description={this.state.description}
+            in_stock={this.state.in_stock}
+            color={this.state.color}
+            setTitle={(title) => this.setState({ title })}
+            setPrice={(price) => this.setState({ price })}
+            setDescription={(description) => this.setState({ description })}
+            setInStock={(in_stock) => this.setState({ in_stock })}
+            setColor={(color) => this.setState({ color })}
+          />
+          <ImageAdder
+            images={this.state.images}
+            setImages={(images) => this.setState({ images })}
+          />
+          <Specs
+            specs={this.state.specs}
+            setSpecs={(specs) => this.setState({ specs })}
+          />
+          <Button variant="contained" onClick={this.handleSubmit}>
+            Submit
+          </Button>
+        </Box>
+      );
+    }
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        token: state.jwtReducer.jwt_token,
-        basket: state.basketReducer.basket,
-        userAdmin: state.jwtReducer.isAdmin,
-    };
+  return {
+    token: state.jwtReducer.jwt_token,
+    basket: state.basketReducer.basket,
+    userAdmin: state.jwtReducer.isAdmin,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
-        removeToken: () => dispatch({ type: "JWT_REMOVE" }),
-        admin: (is_admin) => dispatch({ type: "IS_ADMIN", value: is_admin }),
-    };
+  return {
+    addToken: (token) => dispatch({ type: "JWT_ADD", value: token }),
+    removeToken: () => dispatch({ type: "JWT_REMOVE" }),
+    admin: (is_admin) => dispatch({ type: "IS_ADMIN", value: is_admin }),
+  };
 };
 
 export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(addProductPage)
+  connect(mapStateToProps, mapDispatchToProps)(AddProductPage)
 );

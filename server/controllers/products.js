@@ -305,36 +305,44 @@ exports.best_sellers = async function (req, res) {
 };
 
 exports.addProduct = function (req, res) {
-  id = req.params.id;
   db.query(
-    `INSERT INTO products (title, price, description, in_stock, color, images, brand) 
-    VALUES ('${req.body.title}', ${req.body.price}, '${
-      req.body.description
-    }', ${req.body.in_stock}, '${req.body.color}', '${JSON.stringify(
-      req.body.images
-    )}', '${req.body.brand}')`
+    `INSERT INTO products (title, price, description, in_stock, color, images, brand, specs) 
+    VALUES ('${req.body.product.title}', ${req.body.product.price}, '${
+      req.body.product.description
+    }', ${req.body.product.in_stock}, '${
+      req.body.product.color
+    }', '${JSON.stringify(req.body.product.images)}', '${
+      req.body.product.brand
+    }', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
   )
-    .then((result) => res.status(200).send({ message: "Product Added" }))
-    .catch((err) => console.error("Error: ", err));
+    .then((result) =>
+      res.status(200).json({ message: "Product Added", id: result.rows[0].id })
+    )
+    .catch((err) => res.status(500).json({ message: "Error: " + err }));
 };
 
 exports.deleteProduct = function (req, res) {
   id = req.params.id;
   db.query(`DELETE FROM products WHERE id = ${req.body.id}`)
-    .then((result) => res.status(200).send({ message: "Product deleted" }))
-    .catch((err) => res.status(500).send({ error: "Internal server error" }));
+    .then((result) => res.status(200).json({ message: "Product deleted" }))
+    .catch((err) => res.status(500).json({ error: err }));
 };
 
 exports.editProduct = function (req, res) {
   db.query(
-    `UPDATE products SET title='${req.body.title}', price=${
-      req.body.price
-    }, description='${req.body.description}', in_stock=${
-      req.body.in_stock
-    }, color='${req.body.color}', images='${JSON.stringify(
-      req.body.images
-    )}', brand='${req.body.brand}' WHERE id=${req.body.id}`
+    `UPDATE products SET title='${req.body.product.title}', price=${
+      req.body.product.price
+    }, description='${req.body.product.description}', in_stock=${
+      req.body.product.in_stock
+    }, color='${req.body.product.color}', images='${JSON.stringify(
+      req.body.product.images
+    )}', brand='${req.body.product.brand}', specs='${JSON.stringify(
+      req.body.product.specs
+    )}' WHERE id=${req.body.product.id}`
   )
-    .then((result) => res.status(200).send({ message: "Product Edited" }))
-    .catch((err) => console.error("Error: ", err));
+    .then((result) => res.status(200).json({ message: "Product Edited" }))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
 };

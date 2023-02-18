@@ -49,7 +49,6 @@ class productPage extends React.Component {
           loading: false,
         });
       });
-    // console.log(this.state.isAdmin.value)
   };
 
   componentDidUpdate = async (prevProps) => {
@@ -73,8 +72,11 @@ class productPage extends React.Component {
 
   link = async (id) => {
     let res = await getProductInfo(id);
-    if (res.status === 200) {
+    if (res.status === 200 && res.data) {
       this.setState({ product: res.data });
+    }
+    else{
+      this.props.router.navigate('/')
     }
   };
 
@@ -83,12 +85,27 @@ class productPage extends React.Component {
       id,
       this.state.comment_offset * (this.state.page - 1)
     );
-    console.log(res.data);
     this.setState({ comments: res.data });
   };
 
   deleteProduct = async (id) => {
-    await deleteProducts(id);
+    let delete_res = await deleteProducts(id).catch((err) => {
+      return err.response;
+    });
+    if (delete_res.status === 200) {
+      this.props.showSnackBar({
+        message: "Product deleted",
+        severity: "success",
+        duration: 3000,
+      });
+      this.props.router.navigate("/");
+    } else {
+      this.props.showSnackBar({
+        message: "Product could not be deleted",
+        severity: "error",
+        duration: 3000,
+      });
+    }
   };
 
   addToBasket = async () => {
