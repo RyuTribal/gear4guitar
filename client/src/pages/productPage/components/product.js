@@ -49,13 +49,15 @@ function ProductMain(props) {
           </Grid>
           <Grid sx={{ height: "auto" }} item xs={12}>
             <Box
-              component="img"
               sx={{
-                maxWidth: "100%",
-                objectFit: "cover",
+                backgroundImage: `url(${props.product.images[selected]})`,
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundColor: "background.default",
+                minHeight: "400px",
+                minWidth: "100%",
               }}
-              src={props.product.images[selected]}
-              alt={props.product.title}
             />
           </Grid>
           <Grid item xs={12}>
@@ -387,7 +389,10 @@ export default function Results(props) {
           <Grid item xs={12}>
             <ProductVariations variations={props.variations} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid sx={{display: "flex", flexDirection: "column", gap: "20px"}} item xs={12}>
+            <Typography variant="h5">
+              Rate the product!
+            </Typography>
             <Rating
               name="user-rating"
               value={props.grade ? props.grade : 0.0}

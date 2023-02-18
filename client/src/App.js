@@ -16,6 +16,7 @@ import ScrollToTop from "./pages/ScrollToTop";
 import Checkout from "./pages/checkout/checkout";
 import { CssBaseline, Snackbar, Alert } from "@mui/material";
 import Account from "./pages/account/account";
+import NotFound from "./pages/not_found/NotFound";
 
 function App() {
   const [snackbar, setSnackbar] = React.useState(false);
@@ -164,6 +165,7 @@ function App() {
                 />
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>
       </ThemeProvider>
