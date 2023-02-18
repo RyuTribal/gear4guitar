@@ -173,11 +173,13 @@ exports.save_user_data = async function (req, res) {
 
 exports.get_orders = async function (req, res) {
   connection.query(
-    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
-    FROM products
-    LEFT JOIN grades ON products.id = grades.product_id
-    WHERE products.id IN (SELECT product_id FROM orders WHERE user_id = $1)
-    GROUP BY products.id`,
+    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings, 
+    COALESCE(orders.price_at_payment, products.price) AS price
+  FROM products
+  LEFT JOIN grades ON products.id = grades.product_id
+  LEFT JOIN orders ON products.id = orders.product_id AND orders.user_id = $1
+  WHERE products.id IN (SELECT product_id FROM orders WHERE user_id = $1)
+  GROUP BY products.id, orders.price_at_payment, products.price`,
     [req.user],
     (err, result) => {
       if (err) {

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import AddProduct from "./components/ProductBasic";
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import withRouter from "../../components/routes";
 import { connect } from "react-redux";
 import { addProducts } from "../../api_calls/productInfo";
@@ -22,6 +22,7 @@ class AddProductPage extends React.Component {
       showAlert: false,
       isAdmin: false,
       specs: [{ title: "", content: [""] }],
+      loading: false,
     };
   }
 
@@ -44,6 +45,7 @@ class AddProductPage extends React.Component {
   };
 
   handleSubmit = async () => {
+    this.setState({ loading: true });
     const { title, price, description, in_stock, color, images, specs } =
       this.state;
     const product = {
@@ -74,6 +76,7 @@ class AddProductPage extends React.Component {
         duration: 3000,
       });
     }
+    this.setState({ loading: false });
   };
 
   render() {
@@ -113,9 +116,13 @@ class AddProductPage extends React.Component {
             specs={this.state.specs}
             setSpecs={(specs) => this.setState({ specs })}
           />
-          <Button variant="contained" onClick={this.handleSubmit}>
-            Submit
-          </Button>
+          <LoadingButton
+            loading={this.state.loading}
+            variant="contained"
+            onClick={this.handleSubmit}
+          >
+            <span>Submit</span>
+          </LoadingButton>
         </Box>
       );
     }

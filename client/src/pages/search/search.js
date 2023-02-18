@@ -26,7 +26,7 @@ class Search extends React.Component {
     super(props);
 
     this.state = {
-      search_results: [],
+      search_results: null,
       total_results: 0,
       categories: [],
       price_max: null,
@@ -186,7 +186,7 @@ class Search extends React.Component {
     if (this.state.checked_colors && this.state.checked_colors.length > 0) {
       url += `colors=${this.state.checked_colors}&`;
     }
-    if (this.state.search_string && this.state.search_string !== "") {
+    if (this.state.search_string && this.state.search_string !== "" && this.state.search_string !== " ") {
       url += `query=${this.state.search_string}&`;
     }
     url = url.slice(0, -1);

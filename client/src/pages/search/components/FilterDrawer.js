@@ -139,8 +139,9 @@ function FilterRender(props) {
             }}
           >
             {props.brands &&
-              props.brands.map((brand) => (
+              props.brands.map((brand, index) => (
                 <FormControlLabel
+                  key={index}
                   control={
                     <Checkbox
                       key={brand}
@@ -190,8 +191,9 @@ function FilterRender(props) {
             }}
           >
             {props.colors &&
-              props.colors.map((color) => (
+              props.colors.map((color, key) => (
                 <FormControlLabel
+                  key={key}
                   control={
                     <Checkbox
                       key={color}

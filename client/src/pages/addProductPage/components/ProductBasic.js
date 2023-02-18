@@ -5,14 +5,10 @@ import {
   MenuItem,
   Tooltip,
   InputLabel,
-  FormGroup,
   FormControl,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import theme from "../../../themes/theme";
-import React, { useState } from "react";
+import React from "react";
 import "react-multi-carousel/lib/styles.css";
-import Specs from "./Specs";
 
 let colors = [
   "aliceblue",

@@ -13,10 +13,12 @@ class Regitration extends Component {
       password2: "",
       name: "",
       errors: {},
+      loading: false,
     };
   }
 
   handleRegistration = async (user) => {
+    this.setState({ loading: true });
     let resp = await register(
       user.email,
       user.password,
@@ -41,11 +43,15 @@ class Regitration extends Component {
       };
       this.props.showSnackBar(snackbar);
     }
+    this.setState({ loading: false });
   };
 
   render() {
     return (
-      <RegistrationView register={(user) => this.handleRegistration(user)} />
+      <RegistrationView
+        loading={this.state.loading}
+        register={(user) => this.handleRegistration(user)}
+      />
     );
   }
 }

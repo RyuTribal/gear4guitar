@@ -1,10 +1,11 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import ProductBasic from "../addProductPage/components/ProductBasic";
 import ImageAdder from "../addProductPage/components/ImageAdder";
 import Specs from "../addProductPage/components/Specs";
 import withRouter from "../../components/routes";
 import { connect } from "react-redux";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { getProductInfo, editProduct } from "../../api_calls/productInfo";
 
 class EditProductPage extends React.Component {
@@ -21,6 +22,8 @@ class EditProductPage extends React.Component {
       brand: "",
       isAdmin: false,
       specs: [],
+      loading: true,
+      button_loading: false,
     };
   }
 
@@ -29,7 +32,11 @@ class EditProductPage extends React.Component {
       this.props.router.navigate("/");
     } else {
       await this.getProducts(this.props.router.params.id);
-      this.setState({ id: this.props.router.params.id, isAdmin: true });
+      this.setState({
+        id: this.props.router.params.id,
+        isAdmin: true,
+        loading: false,
+      });
     }
   };
 
@@ -49,19 +56,20 @@ class EditProductPage extends React.Component {
     });
     if (res.status === 200) {
       this.setState({
-        title: res.data.title,
-        price: res.data.price,
-        description: res.data.description,
-        in_stock: res.data.in_stock,
-        color: res.data.color,
-        images: res.data.images,
-        brand: res.data.brand,
-        specs: res.data.specs,
+        title: res.data.title ? res.data.title : "",
+        price: res.data.price ? res.data.price : 0,
+        description: res.data.description ? res.data.description : "",
+        in_stock: res.data.in_stock ? res.data.in_stock : 0,
+        color: res.data.color ? res.data.color : "white",
+        images: res.data.images ? res.data.images : [],
+        brand: res.data.brand ? res.data.brand : "",
+        specs: res.data.specs ? res.data.specs : [],
       });
     }
   };
 
   handleSubmit = async () => {
+    this.setState({ button_loading: true });
     const { title, price, description, in_stock, color, images, specs } =
       this.state;
     const product = {
@@ -86,9 +94,26 @@ class EditProductPage extends React.Component {
       });
       this.props.router.navigate("/productPage/" + this.state.id);
     }
+    this.setState({ button_loading: false });
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "background.paper",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
     return (
       <Box
         sx={{
@@ -124,9 +149,13 @@ class EditProductPage extends React.Component {
           specs={this.state.specs}
           setSpecs={(specs) => this.setState({ specs })}
         />
-        <Button variant="contained" onClick={this.handleSubmit}>
-          Submit
-        </Button>
+        <LoadingButton
+          loading={this.state.button_loading}
+          variant="contained"
+          onClick={this.handleSubmit}
+        >
+          <span>Submit</span>
+        </LoadingButton>
       </Box>
     );
   }

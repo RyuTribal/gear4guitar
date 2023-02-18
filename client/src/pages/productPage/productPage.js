@@ -92,6 +92,7 @@ class productPage extends React.Component {
     let delete_res = await deleteProducts(id).catch((err) => {
       return err.response;
     });
+    console.log(delete_res)
     if (delete_res.status === 200) {
       this.props.showSnackBar({
         message: "Product deleted",

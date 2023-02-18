@@ -195,11 +195,17 @@ export default function HomeView(props) {
             removeArrowOnDeviceType={["tablet", "mobile"]}
             itemClass="carousel-item-space"
           >
-            {props.products.map((product, index) => (
-              <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
-                <CardDisplay product={product} index={index} />
-              </Box>
-            ))}
+            {props.products
+              ? props.products.map((product, index) => (
+                  <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
+                    <CardDisplay product={product} index={index} />
+                  </Box>
+                ))
+              : [...Array(4)].map((_, index) => (
+                  <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
+                    <CardDisplay product={null} index={index} />
+                  </Box>
+                ))}
           </CarouselNav>
         </Grid>
       </Grid>

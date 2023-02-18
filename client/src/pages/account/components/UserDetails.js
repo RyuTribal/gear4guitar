@@ -2,11 +2,11 @@ import {
   Grid,
   Box,
   TextField,
-  Button,
   Typography,
   Tooltip,
 } from "@mui/material";
 import GavelIcon from "@mui/icons-material/Gavel";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export default function UserDetails(props) {
   return (
@@ -125,9 +125,14 @@ export default function UserDetails(props) {
             />
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Save
-        </Button>
+        <LoadingButton
+          loading={props.loading}
+          type="submit"
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          <span>Save</span>
+        </LoadingButton>
       </Box>
     </Grid>
   );

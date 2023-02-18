@@ -5,12 +5,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  ButtonBase,
-  Button,
-  IconButton,
-  Badge,
-} from "@mui/material";
+import { ButtonBase, Button, IconButton, Badge } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
 import logo_mobile from "./images/logo_small.png";
@@ -22,10 +17,9 @@ import { useSelector } from "react-redux";
 import useWindowSize from "../redundant_functions/WindowSize";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import withRouter from "./routes";
 import Cart from "./cart";
-import { isLoggedIn } from "../api_calls/users";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,19 +56,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-async function getAdminButton() {
-  let isAdmin = false;
-  await isLoggedIn().then(async (res) => {
-    // isAdmin = this.props.userAdmin(res.data.is_admin)
-    console.log(this.props.userAdmin(res.data.is_admin));
-  });
-
-  console.log("after admin" + isAdmin);
-  if (isAdmin) {
-    return true;
-  }
-}
-
 function SearchAppBar(props) {
   const size = useWindowSize();
   const [token, setToken] = React.useState(null);
@@ -109,10 +90,18 @@ function SearchAppBar(props) {
         }
         query_string += `${param[0]}=${param[1]}`;
       }
-      props.router.navigate(
-        `${props.router.location.pathname}${query_string}&query=${search_term}`
-      );
+      if (search_term === "" || !search_term) {
+        props.navigate(`${props.router.location.pathname}${query_string}`);
+      } else {
+        props.router.navigate(
+          `${props.router.location.pathname}${query_string}&query=${search_term}`
+        );
+      }
     } else {
+      if (search_term === "" || !search_term) {
+        props.router.navigate(`/search`);
+        return;
+      }
       props.router.navigate(`/search?query=${search_term}`);
     }
   };

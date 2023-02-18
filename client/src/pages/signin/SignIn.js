@@ -20,6 +20,7 @@ class SignIn extends Component {
           message: "",
         },
       },
+      loading: false,
     };
   }
 
@@ -30,6 +31,7 @@ class SignIn extends Component {
   };
 
   handleLogin = async (user) => {
+    this.setState({ loading: true });
     let resp = await login(user.email, user.password).catch((err) => {
       return err.response;
     });
@@ -52,6 +54,7 @@ class SignIn extends Component {
         },
       });
     }
+    this.setState({ loading: false });
   };
 
   render() {
@@ -59,6 +62,7 @@ class SignIn extends Component {
       <SignInView
         email={this.state.email}
         password={this.state.password}
+        loading={this.state.loading}
         setEmail={(value) =>
           this.setState({
             email: value,
