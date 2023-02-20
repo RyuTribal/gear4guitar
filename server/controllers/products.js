@@ -315,7 +315,6 @@ exports.addProduct = async function (req, res) {
     res.status(404).send({ message: "No images provided" });
     return;
   } else if (
-    !req.body.product.brand ||
     !req.body.product.title ||
     !req.body.product.price ||
     !req.body.product.in_stock ||
@@ -328,14 +327,12 @@ exports.addProduct = async function (req, res) {
   await db.query("BEGIN");
   let products_res = await db
     .query(
-      `INSERT INTO products (title, price, description, in_stock, color, images, brand, specs) 
+      `INSERT INTO products (title, price, description, in_stock, color, images, specs) 
     VALUES ('${req.body.product.title}', ${req.body.product.price}, '${
         req.body.product.description
       }', ${req.body.product.in_stock}, '${
         req.body.product.color
-      }', '${JSON.stringify(req.body.product.images)}', '${
-        req.body.product.brand
-      }', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
+      }', '${JSON.stringify(req.body.product.images)}', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
     )
     .then((result) => {
       return result.rows[0].id;
@@ -459,7 +456,6 @@ exports.editProduct = async function (req, res) {
     res.status(404).send({ message: "No images provided" });
     return;
   } else if (
-    !req.body.product.brand ||
     !req.body.product.title ||
     !req.body.product.price ||
     !req.body.product.in_stock ||
@@ -583,7 +579,7 @@ exports.editProduct = async function (req, res) {
         req.body.product.in_stock
       }, color='${req.body.product.color}', images='${JSON.stringify(
         req.body.product.images
-      )}', brand='${req.body.product.brand}', specs='${JSON.stringify(
+      )}', specs='${JSON.stringify(
         req.body.product.specs
       )}' WHERE id=${req.body.product.id}`
     )

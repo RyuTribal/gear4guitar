@@ -84,7 +84,7 @@ export default function RenderCart(props) {
                   sx={{ color: "text.primary", fontWeight: "bold" }}
                   variant="h7"
                 >
-                  {item.price} SEK
+                  {item.price.toFixed(2)} SEK
                 </Typography>
               </Grid>
             </Grid>

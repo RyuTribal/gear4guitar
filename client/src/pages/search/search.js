@@ -114,7 +114,7 @@ class Search extends React.Component {
     let res_brands = await getCategoryBrandsColors(
       this.props.router.params.category
     );
-    if (res_brands.status === 200) {
+    if (res_brands.status === 200 && res_brands.data.length > 0) {
       this.setState({
         brands: res_brands.data[0].distinct_brands,
         colors: res_brands.data[0].distinct_colors,

@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9ff0b400.css",
+    "main.js": "/static/js/main.1c52e8d3.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
+    "static/media/ukulele.png": "/static/media/ukulele.324036976235a39404b0.png",
+    "static/media/electric.png": "/static/media/electric.32b66408c5970d466988.png",
+    "static/media/acoustic.png": "/static/media/acoustic.15c1a0842fc411598c80.png",
+    "static/media/404.png": "/static/media/404.3f993771559179f33f6f.png",
+    "static/media/logo.png": "/static/media/logo.ff01ce364ff161e1fbfe.png",
+    "static/media/revicons.eot": "/static/media/revicons.a77de540a38981833f9e.eot",
+    "static/media/revicons.ttf": "/static/media/revicons.57fd05d4ae650374c8de.ttf",
+    "static/media/revicons.woff": "/static/media/revicons.e8746a624ed098489406.woff",
+    "index.html": "/index.html",
+    "main.9ff0b400.css.map": "/static/css/main.9ff0b400.css.map",
+    "main.1c52e8d3.js.map": "/static/js/main.1c52e8d3.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9ff0b400.css",
+    "static/js/main.1c52e8d3.js"
+  ]
+}

@@ -352,7 +352,7 @@ export default function Results(props) {
                 </MUILink>
               ))}
             </Breadcrumbs>
-            {props.isAdmin.value && (
+            {props.isAdmin && (
               <Box sx={{ marginLeft: "auto" }}>
                 <Button
                   sx={{ marginLeft: "auto", marginRight: "10px", color: "red" }}

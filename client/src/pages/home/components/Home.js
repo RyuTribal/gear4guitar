@@ -69,10 +69,10 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button component={Link} to="/search/127670" variant="contained">
+          <Button component={Link} to="/search/2" variant="contained">
             Electric Guitars
           </Button>
-          <Button component={Link} to="/search/127675" variant="contained">
+          <Button component={Link} to="/search/7" variant="contained">
             Accessories
           </Button>
         </Box>
@@ -113,10 +113,10 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button component={Link} to="/search/127669" variant="contained">
+          <Button component={Link} to="/search/1" variant="contained">
             Acoustic Guitars
           </Button>
-          <Button component={Link} to="/search/127775" variant="contained">
+          <Button component={Link} to="/search/16740" variant="contained">
             Accessories
           </Button>
         </Box>
@@ -156,10 +156,10 @@ export default function HomeView(props) {
           marginBottom={size.width > 851 ? 5 : 1}
           sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
         >
-          <Button component={Link} to="/search/153873" variant="contained">
+          <Button component={Link} to="/search/15486" variant="contained">
             Ukuleles
           </Button>
-          <Button component={Link} to="/search/160324" variant="contained">
+          <Button component={Link} to="/search/38301" variant="contained">
             Cases
           </Button>
         </Box>

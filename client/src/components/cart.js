@@ -54,7 +54,7 @@ function RenderCart(props) {
               xs={6}
             >
               <Typography variant="subtitle">{item.title}</Typography>
-              <Typography variant="subtitle">{item.price} SEK</Typography>
+              <Typography variant="subtitle">{item.price.toFixed(2)} SEK</Typography>
             </Grid>
             <Grid
               item
