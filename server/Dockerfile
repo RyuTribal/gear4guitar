@@ -13,17 +13,17 @@ RUN npm install
 
 COPY . /usr/src/app
 
-EXPOSE 3000
+EXPOSE 8080
 
 # add port to environment variable
-ENV PORT 3000
+ENV PORT 8080
 
 # add environment variable for database connection
-ENV POSTGRES_HOST=<your host>
-ENV POSTGRES_PORT=<your port>
-ENV POSTGRES_USER=<your user>
-ENV POSTGRES_PASSWORD=<your password>
-ENV JWT_TOKEN_SECRET=<your jwt secret>
+ENV POSTGRES_HOST=157.245.68.252
+ENV POSTGRES_PORT=5432
+ENV POSTGRES_USER=root
+ENV POSTGRES_PASSWORD="5'7sigma"
+ENV JWT_TOKEN_SECRET="fivefootsevensigma!"
 
 # start app
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start" ]

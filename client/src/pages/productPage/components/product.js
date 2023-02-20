@@ -155,7 +155,7 @@ function ProductMain(props) {
           <Grid container item xs={12}>
             <Grid item xs={6}>
               <Typography sx={{ color: "text.third" }} variant="h5">
-                {props.product.price} SEK
+                {props.product.price.toFixed(2)} SEK
               </Typography>
             </Grid>
 

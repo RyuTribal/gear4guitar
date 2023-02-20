@@ -65,7 +65,7 @@ export default function CardDisplay(props) {
             <Grid item xs={12}>
               {product ? (
                 <CardContent>
-                  <Typography variant="h6">{product.price} SEK</Typography>
+                  <Typography variant="h6">{product.price.toFixed(2)} SEK</Typography>
                   <Typography gutterBottom variant="title" component="div">
                     {product.title
                       ? product.title
