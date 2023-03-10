@@ -1,0 +1,452 @@
+[
+  {
+    "id": 14944,
+    "parent_id": 1,
+    "category_name": "Acoustic Pedals"
+  },
+  {
+    "id": 14945,
+    "parent_id": 2,
+    "category_name": "Guitar Pedals"
+  },
+  {
+    "id": 14946,
+    "parent_id": 2,
+    "category_name": "Guitar Accessories"
+  },
+  {
+    "id": 14947,
+    "parent_id": 2,
+    "category_name": "Guitar Amp Types"
+  },
+  {
+    "id": 14948,
+    "parent_id": 5,
+    "category_name": "Bass Accessories"
+  },
+  {
+    "id": 14949,
+    "parent_id": 1,
+    "category_name": "Acoustic Types"
+  },
+  {
+    "id": 14950,
+    "parent_id": 7,
+    "category_name": "Pickups"
+  },
+  {
+    "id": 14951,
+    "parent_id": 2,
+    "category_name": "Extended Range Guitars"
+  },
+  {
+    "id": 14954,
+    "parent_id": 11,
+    "category_name": "Ibanez"
+  },
+  {
+    "id": 14956,
+    "parent_id": 2,
+    "category_name": "Guitar Types"
+  },
+  {
+    "id": 14958,
+    "parent_id": 15,
+    "category_name": "Electric Guitar Bags"
+  },
+  {
+    "id": 14959,
+    "parent_id": 16,
+    "category_name": "Electric Guitars"
+  },
+  {
+    "id": 14971,
+    "parent_id": 7,
+    "category_name": "Cables"
+  },
+  {
+    "id": 14981,
+    "parent_id": 7,
+    "category_name": "Bags & Cases"
+  },
+  {
+    "id": 14990,
+    "parent_id": 11,
+    "category_name": "Jackson"
+  },
+  {
+    "id": 15004,
+    "parent_id": 11,
+    "category_name": "Gear4music"
+  },
+  {
+    "id": 15005,
+    "parent_id": 2,
+    "category_name": "Guitar Clearance"
+  },
+  {
+    "id": 15007,
+    "parent_id": 5,
+    "category_name": "Bass Amp Types"
+  },
+  {
+    "id": 15008,
+    "parent_id": 1,
+    "category_name": "Acoustic Clearance"
+  },
+  {
+    "id": 15016,
+    "parent_id": 16,
+    "category_name": "Bass Guitars"
+  },
+  {
+    "id": 15020,
+    "parent_id": 5,
+    "category_name": "Extended Range Basses"
+  },
+  {
+    "id": 15042,
+    "parent_id": 100,
+    "category_name": "Bass Combo Amps"
+  },
+  {
+    "id": 15049,
+    "parent_id": 5,
+    "category_name": "Bass Clearance"
+  },
+  {
+    "id": 15085,
+    "parent_id": 15,
+    "category_name": "Bass Guitar Bags"
+  },
+  {
+    "id": 15087,
+    "parent_id": 145,
+    "category_name": "Bags & Cases"
+  },
+  {
+    "id": 15097,
+    "parent_id": 15,
+    "category_name": "Electric Guitar Cases"
+  },
+  {
+    "id": 15116,
+    "parent_id": 174,
+    "category_name": "Delay Pedals"
+  },
+  {
+    "id": 15118,
+    "parent_id": 176,
+    "category_name": "Ukuleles"
+  },
+  {
+    "id": 15120,
+    "parent_id": 16,
+    "category_name": "Acoustic Guitars"
+  },
+  {
+    "id": 15166,
+    "parent_id": 7,
+    "category_name": "Straps"
+  },
+  {
+    "id": 15180,
+    "parent_id": 5,
+    "category_name": "Bass Guitar Types"
+  },
+  {
+    "id": 15184,
+    "parent_id": 242,
+    "category_name": "Live Clearance"
+  },
+  {
+    "id": 15248,
+    "parent_id": 306,
+    "category_name": "Acoustic Guitar Stands"
+  },
+  {
+    "id": 15252,
+    "parent_id": 7,
+    "category_name": "Stands"
+  },
+  {
+    "id": 15393,
+    "parent_id": 2,
+    "category_name": "Amp Accessories"
+  },
+  {
+    "id": 15446,
+    "parent_id": 7,
+    "category_name": "Parts & Spares"
+  },
+  {
+    "id": 15486,
+    "parent_id": 1,
+    "category_name": "Folk Instruments"
+  },
+  {
+    "id": 15661,
+    "parent_id": 7,
+    "category_name": "Tuners"
+  },
+  {
+    "id": 15745,
+    "parent_id": 824,
+    "category_name": "Taylor"
+  },
+  {
+    "id": 15808,
+    "parent_id": 100,
+    "category_name": "Bass Amp Heads"
+  },
+  {
+    "id": 15827,
+    "parent_id": 2,
+    "category_name": "Pedal Accessories"
+  },
+  {
+    "id": 15837,
+    "parent_id": 5,
+    "category_name": "Bass Amp Accessories"
+  },
+  {
+    "id": 15907,
+    "parent_id": 988,
+    "category_name": "Amp Cases"
+  },
+  {
+    "id": 16067,
+    "parent_id": 145,
+    "category_name": "Parts & Spares"
+  },
+  {
+    "id": 16252,
+    "parent_id": 145,
+    "category_name": "Strings"
+  },
+  {
+    "id": 16466,
+    "parent_id": 5,
+    "category_name": "Bass Guitar Pedals"
+  },
+  {
+    "id": 16471,
+    "parent_id": 242,
+    "category_name": "Live Sound Accessories"
+  },
+  {
+    "id": 16597,
+    "parent_id": 11,
+    "category_name": "Schecter"
+  },
+  {
+    "id": 16734,
+    "parent_id": 824,
+    "category_name": "Ortega"
+  },
+  {
+    "id": 16740,
+    "parent_id": 1,
+    "category_name": "Acoustic Accessories"
+  },
+  {
+    "id": 16771,
+    "parent_id": 15,
+    "category_name": "Bass Guitar Cases"
+  },
+  {
+    "id": 16792,
+    "parent_id": 824,
+    "category_name": "Yamaha"
+  },
+  {
+    "id": 16814,
+    "parent_id": 1906,
+    "category_name": "Controllers"
+  },
+  {
+    "id": 16818,
+    "parent_id": 145,
+    "category_name": "Stands"
+  },
+  {
+    "id": 16866,
+    "parent_id": 988,
+    "category_name": "Parts & Spares"
+  },
+  {
+    "id": 16925,
+    "parent_id": 2018,
+    "category_name": "MIDI Controllers"
+  },
+  {
+    "id": 16979,
+    "parent_id": 2072,
+    "category_name": "Artist"
+  },
+  {
+    "id": 17236,
+    "parent_id": 1906,
+    "category_name": "Studio Accessories"
+  },
+  {
+    "id": 17241,
+    "parent_id": 2336,
+    "category_name": "Studio Bags & Cases"
+  },
+  {
+    "id": 17278,
+    "parent_id": 176,
+    "category_name": "Banjos"
+  },
+  {
+    "id": 17305,
+    "parent_id": 2400,
+    "category_name": "LTD Series"
+  },
+  {
+    "id": 17315,
+    "parent_id": 11,
+    "category_name": "ESP"
+  },
+  {
+    "id": 17382,
+    "parent_id": 1906,
+    "category_name": "Studio Clearance"
+  },
+  {
+    "id": 17610,
+    "parent_id": 1906,
+    "category_name": "Studio Furniture"
+  },
+  {
+    "id": 17625,
+    "parent_id": 824,
+    "category_name": "Fender"
+  },
+  {
+    "id": 17626,
+    "parent_id": 1906,
+    "category_name": "Studio Monitors"
+  },
+  {
+    "id": 17699,
+    "parent_id": 242,
+    "category_name": "PA Speakers"
+  },
+  {
+    "id": 17936,
+    "parent_id": 3036,
+    "category_name": "Gear4music"
+  },
+  {
+    "id": 18087,
+    "parent_id": 1,
+    "category_name": "Acoustic Guitar Amps"
+  },
+  {
+    "id": 18096,
+    "parent_id": 3197,
+    "category_name": "Bags & Cases"
+  },
+  {
+    "id": 18266,
+    "parent_id": 242,
+    "category_name": "Wireless Systems"
+  },
+  {
+    "id": 18492,
+    "parent_id": 11,
+    "category_name": "Dean"
+  },
+  {
+    "id": 19130,
+    "parent_id": 11,
+    "category_name": "Yamaha"
+  },
+  {
+    "id": 19263,
+    "parent_id": 3197,
+    "category_name": "Music Stands"
+  },
+  {
+    "id": 19571,
+    "parent_id": 4696,
+    "category_name": "Accessories & Hardware"
+  },
+  {
+    "id": 19874,
+    "parent_id": 5004,
+    "category_name": "Floor Monitors"
+  },
+  {
+    "id": 19955,
+    "parent_id": 5085,
+    "category_name": "Drum Mics"
+  },
+  {
+    "id": 20003,
+    "parent_id": 11,
+    "category_name": "PRS Guitars"
+  },
+  {
+    "id": 20045,
+    "parent_id": 1906,
+    "category_name": "Studio Outboard"
+  },
+  {
+    "id": 20072,
+    "parent_id": 1906,
+    "category_name": "Audio Mixers"
+  },
+  {
+    "id": 20506,
+    "parent_id": 5640,
+    "category_name": "Offset"
+  },
+  {
+    "id": 21524,
+    "parent_id": 6659,
+    "category_name": "Wireless System Components"
+  },
+  {
+    "id": 21959,
+    "parent_id": 1906,
+    "category_name": "Synth Accessories"
+  },
+  {
+    "id": 23190,
+    "parent_id": 8331,
+    "category_name": "Kids Guitars"
+  },
+  {
+    "id": 25837,
+    "parent_id": 10978,
+    "category_name": "Accessories"
+  },
+  {
+    "id": 25839,
+    "parent_id": 2336,
+    "category_name": "Racks"
+  },
+  {
+    "id": 26764,
+    "parent_id": 6659,
+    "category_name": "Wireless Microphone Systems"
+  },
+  {
+    "id": 28062,
+    "parent_id": 13206,
+    "category_name": "Viola Accessories"
+  },
+  {
+    "id": 28280,
+    "parent_id": 13424,
+    "category_name": "Acoustic Kit Types"
+  },
+  {
+    "id": 29447,
+    "parent_id": 2,
+    "category_name": "Guitar Brands"
+  }
+]

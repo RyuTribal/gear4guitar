@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "category_name": "Acoustic Guitars"
+  },
+  {
+    "id": 2,
+    "category_name": "Electric Guitars"
+  },
+  {
+    "id": 5,
+    "category_name": "Bass Guitars"
+  },
+  {
+    "id": 7,
+    "category_name": "Guitar Accessories"
+  },
+  {
+    "id": 11,
+    "category_name": "Guitar Brands"
+  },
+  {
+    "id": 15,
+    "category_name": "Bags & Cases"
+  },
+  {
+    "id": 16,
+    "category_name": "Home"
+  },
+  {
+    "id": 100,
+    "category_name": "Bass Amp Types"
+  },
+  {
+    "id": 145,
+    "category_name": "Acoustic Accessories"
+  },
+  {
+    "id": 174,
+    "category_name": "Guitar Pedals"
+  },
+  {
+    "id": 176,
+    "category_name": "Folk Instruments"
+  },
+  {
+    "id": 242,
+    "category_name": "Live Sound & Lighting"
+  },
+  {
+    "id": 306,
+    "category_name": "Stands"
+  },
+  {
+    "id": 824,
+    "category_name": "Acoustic Brands"
+  },
+  {
+    "id": 988,
+    "category_name": "Amp Accessories"
+  },
+  {
+    "id": 1906,
+    "category_name": "Studio & Production"
+  },
+  {
+    "id": 2018,
+    "category_name": "Controllers"
+  },
+  {
+    "id": 2072,
+    "category_name": "Schecter"
+  },
+  {
+    "id": 2336,
+    "category_name": "Studio Accessories"
+  },
+  {
+    "id": 2400,
+    "category_name": "ESP"
+  },
+  {
+    "id": 3036,
+    "category_name": "Bass Guitar Brands"
+  },
+  {
+    "id": 3197,
+    "category_name": "Accessories"
+  },
+  {
+    "id": 4696,
+    "category_name": "Percussion"
+  },
+  {
+    "id": 5004,
+    "category_name": "PA Speakers"
+  },
+  {
+    "id": 5085,
+    "category_name": "Drum Accessories"
+  },
+  {
+    "id": 5640,
+    "category_name": "Fender"
+  },
+  {
+    "id": 6659,
+    "category_name": "Wireless Systems"
+  },
+  {
+    "id": 8331,
+    "category_name": "Guitar Types"
+  },
+  {
+    "id": 10978,
+    "category_name": "Pianos & Keyboards"
+  },
+  {
+    "id": 13206,
+    "category_name": "String Accessories"
+  },
+  {
+    "id": 13424,
+    "category_name": "Drums & Percussion"
+  }
+]
