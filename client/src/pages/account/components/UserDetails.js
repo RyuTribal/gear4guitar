@@ -1,10 +1,4 @@
-import {
-  Grid,
-  Box,
-  TextField,
-  Typography,
-  Tooltip,
-} from "@mui/material";
+import { Grid, Box, TextField, Typography, Tooltip } from "@mui/material";
 import GavelIcon from "@mui/icons-material/Gavel";
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -34,6 +28,11 @@ export default function UserDetails(props) {
                 <GavelIcon sx={{ color: "primary.main" }} />
               </Tooltip>
             )}
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle" gutterBottom>
+              {`User ID: ${props.user.id}`}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField

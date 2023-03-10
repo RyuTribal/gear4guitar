@@ -194,6 +194,15 @@ export default function ProductBasic(props) {
           type="number"
         />
       </Tooltip>
+      <Tooltip title="Product brand">
+        <TextField
+          value={props.brand}
+          onChange={(e) => props.setBrand(e.target.value)}
+          label="Brand"
+          variant="outlined"
+          fullWidth
+        />
+      </Tooltip>
       <FormControl sx={{ width: "100%" }}>
         <InputLabel id="test-select-label">Color</InputLabel>
         <Tooltip title="The color of the product">

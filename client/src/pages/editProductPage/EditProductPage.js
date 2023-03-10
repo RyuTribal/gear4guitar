@@ -56,7 +56,6 @@ class EditProductPage extends React.Component {
     let res = await getProductInfo(id).catch((err) => {
       return err.response;
     });
-    console.log(res)
     if (res.status === 200) {
       this.setState({
         title: res.data.title ? res.data.title : "",
@@ -74,7 +73,7 @@ class EditProductPage extends React.Component {
 
   handleSubmit = async () => {
     this.setState({ button_loading: true });
-    const { title, price, description, in_stock, color, images, specs } =
+    const { title, price, description, in_stock, color, images, specs, brand } =
       this.state;
     const product = {
       id: this.state.id,
@@ -85,13 +84,13 @@ class EditProductPage extends React.Component {
       color,
       images,
       specs,
+      brand,
       categories: this.state.categories,
     };
 
     let res = await editProduct(product).catch((err) => {
       return err.response;
     });
-    console.log(res);
     if (res.status === 200) {
       this.props.showSnackBar({
         message: "Product edited successfully",
@@ -99,6 +98,18 @@ class EditProductPage extends React.Component {
         duration: 3000,
       });
       this.props.router.navigate("/productPage/" + this.state.id);
+    } else if (res.status === 400) {
+      this.props.showSnackBar({
+        message: res.data.message,
+        severity: "error",
+        duration: 3000,
+      });
+    } else {
+      this.props.showSnackBar({
+        message: "Something went wrong",
+        severity: "error",
+        duration: 3000,
+      });
     }
     this.setState({ button_loading: false });
   };
@@ -141,11 +152,13 @@ class EditProductPage extends React.Component {
           description={this.state.description}
           in_stock={this.state.in_stock}
           color={this.state.color}
+          brand={this.state.brand}
           setTitle={(title) => this.setState({ title })}
           setPrice={(price) => this.setState({ price })}
           setDescription={(description) => this.setState({ description })}
           setInStock={(in_stock) => this.setState({ in_stock })}
           setColor={(color) => this.setState({ color })}
+          setBrand={(brand) => this.setState({ brand })}
         />
         <Categories
           categories={this.state.categories}

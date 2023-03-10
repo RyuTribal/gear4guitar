@@ -174,12 +174,16 @@ exports.save_user_data = async function (req, res) {
 exports.get_orders = async function (req, res) {
   connection.query(
     `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings, 
-    COALESCE(orders.price_at_payment, products.price) AS price
+    COALESCE(orders.price_at_payment, products.price) AS price,
+    COALESCE(orders.status, 'pending') AS status,
+    COALESCE(orders.id, 0) AS order_id,
+    COALESCE(orders.quantity, 0) AS quantity,
+    COALESCE(orders.added, '1970-01-01') AS order_date
   FROM products
   LEFT JOIN grades ON products.id = grades.product_id
   LEFT JOIN orders ON products.id = orders.product_id AND orders.user_id = $1
   WHERE products.id IN (SELECT product_id FROM orders WHERE user_id = $1)
-  GROUP BY products.id, orders.price_at_payment, products.price`,
+  GROUP BY products.id, orders.price_at_payment, products.price, orders.status, orders.id, orders.quantity, orders.added`,
     [req.user],
     (err, result) => {
       if (err) {
@@ -188,4 +192,92 @@ exports.get_orders = async function (req, res) {
       return res.status(200).send(result.rows);
     }
   );
+};
+
+exports.get_order = async function (req, res) {
+  if (!req.user_admin) {
+    return res.status(401).send({ error: "Not an admin" });
+  }
+  connection.query(
+    `SELECT * FROM orders WHERE id = ${req.params.id}`,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.stack });
+      }
+      return res.status(200).send(result.rows);
+    }
+  );
+};
+
+exports.get_status = async function (req, res) {
+  if (!req.user_admin) {
+    return res.status(401).send({ error: "Not an admin" });
+  }
+
+  connection.query(
+    `SELECT unnest(enum_range(NULL::order_status))`,
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.stack });
+      }
+      return res.status(200).send(result.rows);
+    }
+  );
+};
+
+exports.update_order = async function (req, res) {
+  if (!req.user_admin) {
+    return res.status(401).send({ error: "Not an admin" });
+  }
+  if (!req.body.order) {
+    return res.status(400).send({ error: "Missing order" });
+  }
+  await connection.query("BEGIN");
+  if (
+    req.body.order.status === "cancelled" &&
+    req.body.order.og_status !== req.body.order.status
+  ) {
+    let update_product_qty = await connection.query(
+      "UPDATE products SET in_stock = in_stock + $1 WHERE id = $2",
+      [req.body.order.quantity, req.body.order.product_id]
+    );
+
+    if (update_product_qty instanceof Error) {
+      await connection.query("ROLLBACK");
+      return res.status(500).json({ error: update_product_qty.stack });
+    }
+  } else if (
+    req.body.order.status !== "cancelled" &&
+    req.body.order.og_status === "cancelled"
+  ) {
+    let update_product_qty = await connection.query(
+      "UPDATE products SET in_stock = in_stock - $1 WHERE id = $2",
+      [req.body.order.quantity, req.body.order.product_id]
+    );
+    if (update_product_qty instanceof Error) {
+      await connection.query("ROLLBACK");
+      return res.status(500).json({ error: update_product_qty.stack });
+    }
+  }
+  let update_order = await connection.query(
+    "UPDATE orders SET email = $1, first_name = $2, last_name = $3, street_name = $4, house_number = $5, city = $6, postal_code = $7, country = $8, status = $9 WHERE id = $10",
+    [
+      req.body.order.email.toLowerCase(),
+      req.body.order.first_name.toLowerCase(),
+      req.body.order.last_name.toLowerCase(),
+      req.body.order.street_name.toLowerCase(),
+      req.body.order.house_number.toLowerCase(),
+      req.body.order.city.toLowerCase(),
+      req.body.order.postal_code,
+      req.body.order.country.toLowerCase(),
+      req.body.order.status.toLowerCase(),
+      req.params.id,
+    ]
+  );
+  if (update_order instanceof Error) {
+    await connection.query("ROLLBACK");
+    return res.status(500).json({ error: update_order.stack });
+  }
+  await connection.query("COMMIT");
+  return res.status(200).send({ message: "Updated" });
 };

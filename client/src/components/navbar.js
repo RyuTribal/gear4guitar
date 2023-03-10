@@ -5,19 +5,28 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { ButtonBase, Button, IconButton, Badge } from "@mui/material";
+import {
+  ButtonBase,
+  Button,
+  IconButton,
+  Badge,
+  Backdrop,
+  SpeedDial,
+  SpeedDialIcon,
+  SpeedDialAction,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "./images/logo.png";
 import logo_mobile from "./images/logo_small.png";
 import theme from "../themes/theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import TuneIcon from "@mui/icons-material/Tune";
 import PersonIcon from "@mui/icons-material/Person";
 import { useSelector } from "react-redux";
 import useWindowSize from "../redundant_functions/WindowSize";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LoginIcon from "@mui/icons-material/Login";
-import AddIcon from "@mui/icons-material/Add";
 import withRouter from "./routes";
 import Cart from "./cart";
 
@@ -56,11 +65,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const ADMIN_ACTIONS = [
+  { icon: <SpeedDialIcon />, name: "Add Product", link: "/add_product" },
+  { icon: <TuneIcon />, name: "Edit Orders", link: "/edit_orders" },
+];
+
 function SearchAppBar(props) {
   const size = useWindowSize();
   const [token, setToken] = React.useState(null);
   const [basket, setBasket] = React.useState([]);
   const [admin, setAdmin] = React.useState(false);
+  const [speed_dial_open, setSpeedDialOpen] = React.useState(false);
   const [searchbar, setSearchbar] = React.useState(false);
   const [openCart, setOpenCart] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -241,6 +256,20 @@ function SearchAppBar(props) {
                   </Badge>
                 </IconButton>
               )}
+              {admin && size.width > 851 && (
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="editOrders"
+                  component={Link}
+                  to="/edit_orders"
+                >
+                  <Badge>
+                    <TuneIcon />
+                  </Badge>
+                </IconButton>
+              )}
               <IconButton
                 size="large"
                 edge="start"
@@ -294,22 +323,28 @@ function SearchAppBar(props) {
         )}
       </AppBar>
       {size.width <= 851 && admin && (
-        <Button
-          sx={{
-            borderRadius: "50%",
-            position: "fixed",
-            zIndex: 300,
-            bottom: 20,
-            right: 20,
-            width: "3rem",
-            height: "4rem",
-          }}
-          component={Link}
-          to="/add_product"
-          variant="contained"
-        >
-          <AddIcon color="secondary.main" />
-        </Button>
+        <Box>
+          <Backdrop sx={{ zIndex: 999 }} open={speed_dial_open} />
+          <SpeedDial
+            ariaLabel="admin menu"
+            sx={{ position: "fixed", bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+            onClose={() => setSpeedDialOpen(false)}
+            onOpen={() => setSpeedDialOpen(true)}
+            open={speed_dial_open}
+          >
+            {ADMIN_ACTIONS.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                component={Link}
+                to={action.link}
+                onClick={() => setSpeedDialOpen(false)}
+              />
+            ))}
+          </SpeedDial>
+        </Box>
       )}
     </Box>
   );

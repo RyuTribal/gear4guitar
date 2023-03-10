@@ -187,6 +187,20 @@ function ProductMain(props) {
               </Typography>
             </Grid>
           </Grid>
+          {props.product.brand && (
+            <Grid container item xs={12}>
+              <Grid item xs={4}>
+                <Typography sx={{ color: "text.third" }} variant="h5">
+                  Brand
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography sx={{ color: "text.primary" }} variant="body1">
+                  {props.product.brand}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
           {props.product.color && (
             <Grid container item xs={12}>
               <Grid item xs={4}>
@@ -389,10 +403,12 @@ export default function Results(props) {
           <Grid item xs={12}>
             <ProductVariations variations={props.variations} />
           </Grid>
-          <Grid sx={{display: "flex", flexDirection: "column", gap: "20px"}} item xs={12}>
-            <Typography variant="h5">
-              Rate the product!
-            </Typography>
+          <Grid
+            sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            item
+            xs={12}
+          >
+            <Typography variant="h5">Rate the product!</Typography>
             <Rating
               name="user-rating"
               value={props.grade ? props.grade : 0.0}

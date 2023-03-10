@@ -88,10 +88,10 @@ export default function SignIn(props) {
             value={props.password}
             onChange={(e) => props.setPassword(e.target.value)}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <LoadingButton
             type="submit"
             fullWidth
@@ -103,9 +103,9 @@ export default function SignIn(props) {
           </LoadingButton>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              {/* <Link href="#" variant="body2">
                 Forgot password?
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
               <Link href="/register" variant="body2">

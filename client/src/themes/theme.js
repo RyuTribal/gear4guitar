@@ -44,7 +44,7 @@ const theme = createTheme({
     text: {
       primary: "#d1cfcf",
       secondary: "#d1cfcf",
-      third: "#F8F5FA",
+      third: "#F8F5FA"
     },
     background: {
       default: "#262725",

@@ -245,13 +245,42 @@ exports.get_category_path = function (req, res) {
 
 exports.get_variants = function (req, res) {
   id = req.params.id;
+  // db.query(
+  //   `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
+  //   FROM products
+  //   JOIN variations ON products.id = variations.variation_id
+  //   LEFT JOIN grades ON products.id = grades.product_id
+  //   WHERE variations.product_id = ${id}
+  //   GROUP BY products.id;`
+  // )
+  //   .then((result) => res.status(200).send(result.rows))
+  //   .catch((err) => res.status(500).send({ message: "Error: " + err }));
+
   db.query(
-    `SELECT products.*, COALESCE(AVG(grades.grade), 0.0) as average_grade, COUNT(grades.grade) AS total_ratings
-    FROM products 
-    JOIN variations ON products.id = variations.variation_id 
-    LEFT JOIN grades ON products.id = grades.product_id
-    WHERE variations.product_id = ${id}
-    GROUP BY products.id;`
+    `WITH RECURSIVE cte AS (
+      SELECT id, category_name, parent_id
+      FROM product_categories
+      WHERE id IN (
+      SELECT category_id FROM categories WHERE product_id = ${id} LIMIT 1
+      )
+      UNION ALL
+      SELECT pc.id, pc.category_name, pc.parent_id
+      FROM cte
+      JOIN product_categories pc ON cte.parent_id = pc.id
+      )
+      SELECT p.*, COALESCE(AVG(g.grade), 0.0) as average_grade, COUNT(g.grade) AS total_ratings, similarity(p.title, (SELECT title FROM products WHERE id = ${id})) AS title_similarity
+      FROM products p
+      LEFT JOIN grades g ON p.id = g.product_id
+      WHERE p.brand = (SELECT brand FROM products WHERE id = ${id})
+      AND p.id NOT IN (${id})
+      AND p.id IN (
+      SELECT product_id FROM categories WHERE category_id IN (
+      SELECT id FROM cte
+      )
+      )
+      GROUP BY p.id
+      ORDER BY title_similarity DESC
+      LIMIT 5;`
   )
     .then((result) => res.status(200).send(result.rows))
     .catch((err) => res.status(500).send({ message: "Error: " + err }));
@@ -312,15 +341,18 @@ exports.addProduct = async function (req, res) {
     req.body.product.images[0] === "" ||
     req.body.product.images[0] === " "
   ) {
-    res.status(404).send({ message: "No images provided" });
+    res.status(400).send({ message: "No images provided" });
     return;
   } else if (
     !req.body.product.title ||
     !req.body.product.price ||
     !req.body.product.in_stock ||
-    !req.body.product.color
+    !req.body.product.color ||
+    !req.body.product.brand ||
+    req.body.product.brand === "" ||
+    req.body.product.brand === " "
   ) {
-    res.status(404).send({ message: "Missing required fields" });
+    res.status(400).send({ message: "Missing required fields" });
     return;
   }
   let categories = req.body.product.categories;
@@ -330,9 +362,11 @@ exports.addProduct = async function (req, res) {
       `INSERT INTO products (title, price, description, in_stock, color, images, specs) 
     VALUES ('${req.body.product.title}', ${req.body.product.price}, '${
         req.body.product.description
-      }', ${req.body.product.in_stock}, '${
-        req.body.product.color
-      }', '${JSON.stringify(req.body.product.images)}', '${JSON.stringify(req.body.product.specs)}') RETURNING id`
+      }', ${req.body.product.in_stock}, '${req.body.product.color}', brand='${
+        req.body.product.brand
+      }', '${JSON.stringify(req.body.product.images)}', '${JSON.stringify(
+        req.body.product.specs
+      )}') RETURNING id`
     )
     .then((result) => {
       return result.rows[0].id;
@@ -453,15 +487,18 @@ exports.editProduct = async function (req, res) {
     req.body.product.images[0] === "" ||
     req.body.product.images[0] === " "
   ) {
-    res.status(404).send({ message: "No images provided" });
+    res.status(400).send({ message: "No images provided" });
     return;
   } else if (
     !req.body.product.title ||
     !req.body.product.price ||
     !req.body.product.in_stock ||
-    !req.body.product.color
+    !req.body.product.color ||
+    !req.body.product.brand ||
+    req.body.product.brand === "" ||
+    req.body.product.brand === " "
   ) {
-    res.status(404).send({ message: "Missing required fields" });
+    res.status(400).send({ message: "Missing required fields" });
     return;
   }
   let categories = req.body.product.categories;
@@ -579,7 +616,7 @@ exports.editProduct = async function (req, res) {
         req.body.product.in_stock
       }, color='${req.body.product.color}', images='${JSON.stringify(
         req.body.product.images
-      )}', specs='${JSON.stringify(
+      )}', brand='${req.body.product.brand}', specs='${JSON.stringify(
         req.body.product.specs
       )}' WHERE id=${req.body.product.id}`
     )

@@ -48,7 +48,7 @@ class AddProductPage extends React.Component {
 
   handleSubmit = async () => {
     this.setState({ loading: true });
-    const { title, price, description, in_stock, color, images, specs } =
+    const { title, price, description, in_stock, color, images, specs, brand } =
       this.state;
     const product = {
       title,
@@ -58,6 +58,7 @@ class AddProductPage extends React.Component {
       color,
       images,
       specs,
+      brand,
       categories: this.state.categories,
     };
     const response = await addProducts(product).catch((err) => {
@@ -71,10 +72,14 @@ class AddProductPage extends React.Component {
         duration: 3000,
       });
       this.props.router.navigate("/productPage/" + response.data.id);
-    } else {
-      console.log(response);
+    } else if (response.status === 400) {
       this.props.showSnackBar({
-        snackbar: true,
+        message: response.data.message,
+        severity: "error",
+        duration: 3000,
+      });
+    } else {
+      this.props.showSnackBar({
         message: "Something went wrong",
         severity: "error",
         duration: 3000,
@@ -106,11 +111,13 @@ class AddProductPage extends React.Component {
             description={this.state.description}
             in_stock={this.state.in_stock}
             color={this.state.color}
+            brand={this.state.brand}
             setTitle={(title) => this.setState({ title })}
             setPrice={(price) => this.setState({ price })}
             setDescription={(description) => this.setState({ description })}
             setInStock={(in_stock) => this.setState({ in_stock })}
             setColor={(color) => this.setState({ color })}
+            setBrand={(brand) => this.setState({ brand })}
             categories={this.state.categories}
           />
           <Categories

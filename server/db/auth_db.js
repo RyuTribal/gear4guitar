@@ -66,32 +66,6 @@ async function CreateTablesIfNeeded() {
       console.log("Product categories table created");
     });
 
-  // Product variations table
-  await auth_connection
-    .query(
-      `CREATE TABLE IF NOT EXISTS public.variations
-        (
-            id SERIAL NOT NULL,
-            product_id integer NOT NULL,
-            variation_id integer NOT NULL,
-            variation_image character varying(255),
-            CONSTRAINT variations_pkey PRIMARY KEY (id),
-            CONSTRAINT fk_product_id FOREIGN KEY (product_id)
-                REFERENCES public.products (id) MATCH SIMPLE
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION,
-            CONSTRAINT fk_variation_id FOREIGN KEY (variation_id)
-                REFERENCES public.products (id) MATCH SIMPLE
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION
-        )
-        
-        TABLESPACE pg_default;`
-    )
-    .then((res) => {
-      console.log("Variations table created");
-    });
-
   // Users table
   await auth_connection
     .query(
@@ -256,6 +230,26 @@ async function CreateTablesIfNeeded() {
     )
     .then((res) => {
       console.log("Grades table created");
+    });
+
+  // order_status ENUM
+  await auth_connection
+    .query(
+      `DO $$ BEGIN
+      CREATE TYPE order_status AS ENUM ('pending', 'shipped', 'delivered', 'cancelled');
+      EXCEPTION
+      WHEN duplicate_object THEN null;
+      END $$;`
+    )
+    .then((res) => {
+      console.log("Order status enum created");
+    });
+
+  // Extension needed for similarity function
+  await auth_connection
+    .query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;`)
+    .then((res) => {
+      console.log("pg_trgm extension created");
     });
 
   console.log("All tables checked and created if needed");

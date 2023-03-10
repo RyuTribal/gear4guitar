@@ -17,6 +17,7 @@ import Checkout from "./pages/checkout/checkout";
 import { CssBaseline, Snackbar, Alert } from "@mui/material";
 import Account from "./pages/account/account";
 import NotFound from "./pages/not_found/NotFound";
+import EditOrders from "./pages/editOrders/EditOrders";
 
 function App() {
   const [snackbar, setSnackbar] = React.useState(false);
@@ -154,6 +155,21 @@ function App() {
               path="/edit_product/:id"
               element={
                 <EditProduct
+                  showSnackBar={(snackbar) => {
+                    showSnackBar(
+                      true,
+                      snackbar.message,
+                      snackbar.severity,
+                      snackbar.duration
+                    );
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/edit_orders"
+              element={
+                <EditOrders
                   showSnackBar={(snackbar) => {
                     showSnackBar(
                       true,

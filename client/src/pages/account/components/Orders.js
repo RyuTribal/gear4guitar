@@ -48,7 +48,14 @@ export default function Orders(props) {
         {props.orders && props.orders.length > 0
           ? props.orders.map((order, index) => (
               <Box sx={{ maxWidth: "90%", display: "flex" }} key={index}>
-                <CardDisplay product={order} index={index} />
+                <CardDisplay
+                  product={order}
+                  index={index}
+                  order_ref={order.order_id}
+                  order_status={order.status}
+                  quantity={order.quantity}
+                  date={order.order_date}
+                />
               </Box>
             ))
           : [...Array(3)].map((_, index) => (
